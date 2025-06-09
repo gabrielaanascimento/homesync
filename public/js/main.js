@@ -1,7 +1,6 @@
-// Chave de API do OpenAI (essa linha pode ser removida se não for usada)
 function sendMessage(){
     var messageInput = document.getElementById('message-input'); // Renomeado para evitar confusão
-    var messageText = messageInput.value.trim(); // Pega o valor e remove espaços em branco
+    var messageText = messageInput.value; // Pega o valor e remove espaços em branco
 
     if (!messageText) { // Verifica se o texto da mensagem não está vazio
         messageInput.style.border = '1px solid red';
