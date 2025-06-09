@@ -27,6 +27,8 @@ const publicDirectoryPath = path.join(__dirname, 'public')
 
 app.use(express.static(publicDirectoryPath))
 
+//rotas publicas
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(publicDirectoryPath, 'html', 'index.html'))
 })
@@ -52,14 +54,6 @@ app.post('/verificar', (req, res) => {
 
 })
 
-app.get('/home', (req, res) => {
-    if (req.session.loggedIn) {
-    res.sendFile(path.join(publicDirectoryPath, 'html', 'chat.html'))  
-    } else {
-        res.redirect('/')
-    }     
-})
-
 app.post('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -71,12 +65,24 @@ app.post('/logout', (req, res) => {
     });
 })
 
+//rotas protegidas
+
+app.get('/home', (req, res) => {
+    if (req.session.loggedIn) {
+    res.sendFile(path.join(publicDirectoryPath, 'html', 'chat.html'))  
+    } else {
+        res.redirect('/login')
+    }     
+})
+
 app.post("/pergunta", async (req, res) => {
+
+  if(req.session.loggedIn) {
     const text = req.body.text
 
-    const apiKey = process.env.API_KEY || "AIzaSyD3ewSohefXoIqshWF_eCbxvpDrJkoribg";
-    const apiUrl = process.env.API_URL || "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-    const instru = `Responda com base nesses imóveis: ${JSON.stringify(imoveis)}, caso a pergunta não seja relacionada ao objeto rotorne 'Imovel não encontrado ou indisponível'. Retorne um pequeno dialogo com dicas e recomendações e os imoveis em topicos`;
+    const apiKey = process.env.API_KEY;
+    const apiUrl = process.env.API_URL;
+    const instru = `Responda com base nesses imóveis: ${JSON.stringify(imoveis)}, caso a pergunta não seja relacionada ao objeto rotorne 'Imovel não encontrado ou indisponível'`;
   
     try {
       const response = await fetch(apiUrl, {
@@ -108,9 +114,12 @@ app.post("/pergunta", async (req, res) => {
       console.error(`Erro ao enviar prompt para o Gemini: ${error}`);
       return;
     }
+  } else {
+    res.redirect('/login')
+  }
 
 })
 
 
-app.listen(port, () => console.log(`http://localhost:${port}`))
+app.listen(port)
 
