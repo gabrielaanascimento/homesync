@@ -74,8 +74,8 @@ app.post('/logout', (req, res) => {
 app.post("/pergunta", async (req, res) => {
     const text = req.body.text
 
-    const apiKey = process.env.API_KEY;
-    const apiUrl = process.env.API_URL;
+    const apiKey = process.env.API_KEY || "AIzaSyD3ewSohefXoIqshWF_eCbxvpDrJkoribg";
+    const apiUrl = process.env.API_URL || "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
     const instru = `Responda com base nesses imóveis: ${JSON.stringify(imoveis)}, caso a pergunta não seja relacionada ao objeto rotorne 'Imovel não encontrado ou indisponível'`;
   
     try {
