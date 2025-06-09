@@ -1,7 +1,7 @@
 function sendMessage(){
     var messageInput = document.getElementById('message-input'); // Renomeado para evitar confusão
     var messageText = messageInput.value.trim(); // Pega o valor e remove espaços em branco
-
+    console.log(messageText)
     if (!messageText) { // Verifica se o texto da mensagem não está vazio
         messageInput.style.border = '1px solid red';
         return;
