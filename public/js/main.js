@@ -27,6 +27,8 @@ function sendMessage(){
         })
     })
     .then((response) => {
+        console.log(response);
+        
         if (!response.ok) { // Verifica se a resposta HTTP foi bem-sucedida (status 2xx)
             // Se não for bem-sucedida, lança um erro para o bloco .catch
             return response.json().then(errorData => {
