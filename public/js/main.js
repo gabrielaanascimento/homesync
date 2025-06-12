@@ -19,7 +19,7 @@ function sendMessage(){
 
     const token = localStorage.getItem('authToken');
 
-    fetch("http://localhost:3000/pergunta", {
+    fetch("https://backendtcc.vercel.app/pergunta", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
