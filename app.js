@@ -75,51 +75,5 @@ app.get('/home', (req, res) => {
     }     
 })
 
-app.post("/pergunta", async (req, res) => {
-
-  if(req.session.loggedIn) {
-    const text = req.body.text
-
-    const apiKey = process.env.API_KEY || "AIzaSyD3ewSohefXoIqshWF_eCbxvpDrJkoribg";
-    const apiUrl = process.env.API_URL || "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
-    const instru = `Responda com base nesses imóveis: ${JSON.stringify(imoveis)}, caso a pergunta não seja relacionada ao objeto rotorne 'Imovel não encontrado ou indisponível'`;
-  
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': apiKey,
-        },
-        body: JSON.stringify({
-          contents: [
-            { role: 'user', parts: [{ text: instru }] },
-            { role: 'user', parts: [{ text: text }] }
-          ],
-        }),
-      });
-
-        if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Erro na resposta da API:", errorData);
-        throw new Error(`Erro na requisição: ${response.status}`);
-      }
-  
-      const data = await response.json();
-      const msg = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      const msgRobo = msg?.replace(/\*/g, '') || '';
-      res.status(220).json(msgRobo);
-  
-    } catch (error) {
-      console.error(`Erro ao enviar prompt para o Gemini: ${error}`);
-      return;
-    }
-  } else {
-    res.redirect('/login')
-  }
-
-})
-
-
 app.listen(port)
 
