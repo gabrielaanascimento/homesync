@@ -1,10 +1,11 @@
 const button = document.querySelector('#entrar')
 
 button.addEventListener('click', () => {
+   localStorage.removeItem('authToken')
    const email = document.querySelector('.email').value 
    const password = document.querySelector('.password').value 
 
-   fetch('https://backendtcc.vercel.app/login', {
+   fetch('http://localhost:3000/login', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
@@ -20,7 +21,7 @@ button.addEventListener('click', () => {
    .then(data => {
     console.log(data)
     if (data.status) {
-      verificar(data.status, data.name, data.id)
+      verificar(data.status, data.name, data.id, data.token)
     } else {
         alert(data.msg)
         console.log(data.msg);
@@ -29,7 +30,7 @@ button.addEventListener('click', () => {
    .catch(err => console.error(err))
 })
 
-const verificar = (status, nome, id) => {
+const verificar = (status, nome, id, token) => {
     fetch('/verificar', {
     method: 'POST',
     headers: {
@@ -47,6 +48,7 @@ const verificar = (status, nome, id) => {
    .then(data => {
     if(data.session) {
       window.location = '/home'
+      localStorage.setItem('authToken', token);
     }
    })
    .catch(err => console.error(err))
