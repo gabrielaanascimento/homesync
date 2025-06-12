@@ -5,7 +5,7 @@ button.addEventListener('click', () => {
    const email = document.querySelector('.email').value 
    const password = document.querySelector('.password').value 
 
-   fetch('http://localhost:3000/login', {
+   fetch('https://backendtcc.vercel.app/login', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
