@@ -1,7 +1,10 @@
 function sendMessage(){
     var messageInput = document.getElementById('message-input'); // Renomeado para evitar confusão
     var messageText = messageInput.value.trim(); // Pega o valor e remove espaços em branco
-    console.log(messageText)
+
+    console.log(messageText);
+    
+
     if (!messageText) { // Verifica se o texto da mensagem não está vazio
         messageInput.style.border = '1px solid red';
         return;
@@ -17,7 +20,7 @@ function sendMessage(){
     btnSubmit.style.cursor = 'not-allowed';
     messageInput.disabled = true; // Desabilita o input da mensagem também
 
-    fetch("/pergunta", { // A URL '/pergunta' está correta para o seu backend
+    fetch("https://backendtcc.vercel.app/pergunta", { // A URL '/pergunta' está correta para o seu backend
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -39,7 +42,7 @@ function sendMessage(){
     })
     .then((apiResponseText) => { // 'apiResponseText' já é a string da resposta do Gemini
         status.style.display = 'none';
-        showHistory(messageText, apiResponseText); // Passa o texto original e a resposta do Gemini
+        showHistory(messageText, apiResponseText.msg); // Passa o texto original e a resposta do Gemini
     })
     .catch((e) => {
         console.error(`Error -> ${e}`); // Use console.error para erros
