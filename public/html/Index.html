@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Sync</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/index.css" />
+  <!-- CSS do Swiper -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+</head>
+<body>
+  <header>
+    <div class="topo-site" data-aos="fade-down" data-aos-duration="800" data-aos-easing="ease-in-out">
+      <img src="/imagens/home-sync-branco.png" alt="Logo Home Sync" width="180px"/>
+      <div>
+        <button class="botao-log">Login</button>
+        <button class="botao-log">Experimente Grátis</button>
+      </div>
+      <div class="menu-btn">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+    <div class="menu-mobile"></div>
+
+    <h2 class="titulo-header" data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-in-out">CONECTANDO CONSTRUTORAS AOS MELHORES CORRETORES</h2>
+
+    <div class="filter-search-container" data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-in-out">
+      <div class="filter-search-box">
+        <select class="filter-select">
+          <option>Filtros</option>
+          <option>Cidade</option>
+          <option>Região</option>
+          <option>Estado</option>
+        </select>
+        <input type="text" class="search-input" placeholder="Digite o Nome da Cidade, Região ou Estado">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+      </div>
+    </div>
+   <a href="/home"> <button class="botao-ia" data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-in-out">Experimente nossa IA</button></a>
+  </header>
+  </header>
+  
+
+  <section class="iframe-section">
+    <div class="iframe-container">
+      <iframe src='https://my.spline.design/iphone14procopy-GiiqzngLM0MwOUMzWrS9xFY1/' frameborder='0' width='100%' height='100%'></iframe>
+    </div>
+    <div class="mobile-info">
+      <h3>Em breve para Mobile</h3>
+      <div class="app-stores">
+        <img src="/imagens/play-store.png" alt="Google Play Store" class="store-logo">
+        <img src="/imagens/app-store.png" alt="Apple App Store" class="store-logo">
+      </div>
+    </div>
+  </section>
+
+  <section class="secao">
+    <h2>Funcionalidades</h2>
+    <!-- Versão Desktop (3 divs lado a lado) -->
+    <div class="cartoes cartoes-desktop" data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-in-out">
+      <div class="cartao"><center>
+        <img src="/imagens/encontre-o-imovel.png" width="40px">
+        <h3>Encontre o imóvel Perfeito em Segundos</h3>
+        <p>Nossa IA aprende com suas buscas e mostra apenas os imóveis que realmente interessam aos seus clientes.</p></center>
+      </div>
+      <div class="cartao">
+        <center><img src="/imagens/portifolio.png" width="40px">
+        <h3>Portfólio Completo das Construtoras</h3>
+        <p>Acesso exclusivo aos lançamentos das principais construtoras do mercado, com fotos, plantas e detalhes técnicos atualizados. </p></center>
+      </div>
+      <div class="cartao"><center>
+         <img src="/imagens/organize-suas-oportunidades.png" width="40px">
+        <h3>Organize suas Oportunidades</h3>
+        <p>Gerencie seus clientes e imóveis favoritos em um painel intuitivo. Salve buscas, compartilhe links diretos e receba alertas quando surgirem novidades que combinam com seu perfil.</p></center>
+      </div>
+    </div>
+    
+    <!-- Versão Mobile (Carrossel Swiper) -->
+    <div class="swiper-container cartoes-mobile" data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-in-out">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide cartao">
+          <center>
+            <img src="/imagens/encontre-o-imovel.png" width="40px">
+            <h3>Encontre o imóvel Perfeito em Segundos</h3>
+            <p>Nossa IA aprende com suas buscas e mostra apenas os imóveis que realmente interessam aos seus clientes.</p>
+          </center>
+        </div>
+        <div class="swiper-slide cartao">
+          <center>
+            <img src="/imagens/portifolio.png" width="40px">
+            <h3>Portfólio Completo das Construtoras</h3>
+            <p>Nossa IA aprende com suas buscas e mostra apenas os imóveis que realmente interessam aos seus clientes.</p>
+          </center>
+        </div>
+        <div class="swiper-slide cartao">
+          <center>
+            <img src="/imagens/organize-suas-oportunidades.png" width="40px">
+            <h3>Organize suas Oportunidades</h3>
+            <p>Nossa IA aprende com suas buscas e mostra apenas os imóveis que realmente interessam aos seus clientes.</p>
+          </center>
+        </div>
+      </div>
+      <!-- Paginação -->
+      <div class="swiper-pagination"></div>
+    </div>
+  </section>
+
+  <section class="secao escolher">
+    <h2>Por que Escolher a HomeSync?</h2>
+    <!-- Versão Desktop (3 divs lado a lado) -->
+    <div class="cards-beneficios cards-beneficios-desktop" data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-in-out">
+      <div class="beneficio">
+        <img src="/imagens/icone-construtora.png" width="40px">
+        <h3>Para Construtoras</h3><br>
+        <p>Exponha seus lançamentos para milhares de corretores qualificados em um único canal. Reduza custos com divulgação e aumente suas vendas com nossa inteligência de match automático.</p>
+        <button>Participe</button>
+      </div>
+      <div class="beneficio">
+         <img src="/imagens/icone-imobiliaria.png" width="40px">
+        <h3>Para Imobiliárias</h3><br>
+        <p>Tenha acesso privilegiado aos melhores imóveis do mercado, com dados centralizados e atualizados. Sua equipe vende mais sem perder tempo com buscas fragmentadas.</p><br>
+        <button>Participe</button>
+      </div>
+      <div class="beneficio">
+        <img src="/imagens/icone-corretor.png" width="40px">
+        <h3>Para Corretores</h3><br>
+        <p>Encontre o imóvel ideal para cada cliente em segundos, com uma IA que aprende seu perfil de negócios. Menos trabalho braçal, mais fechamentos e clientes satisfeitos.</p>
+        <button>Participe</button>
+      </div>
+    </div>
+    
+    <!-- Versão Mobile (Carrossel Swiper) -->
+    <div class="swiper-container beneficios-mobile">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide beneficio">
+          <img src="/imagens/icone-construtora.png" width="40px">
+          <h3>Para Construtoras</h3><br>
+          <p>Exponha seus lançamentos para milhares de corretores qualificados em um único canal. Reduza custos com divulgação e aumente suas vendas com nossa inteligência de match automático.</p>
+          <button>Participe</button>
+        </div>
+        <div class="swiper-slide beneficio">
+          <img src="/imagens/icone-imobiliaria.png" width="40px">
+          <h3>Para Imobiliárias</h3><br>
+          <p>Tenha acesso privilegiado aos melhores imóveis do mercado, com dados centralizados e atualizados. Sua equipe vende mais sem perder tempo com buscas fragmentadas.</p><br>
+          <button>Participe</button>
+        </div>
+        <div class="swiper-slide beneficio">
+          <img src="/imagens/icone-corretor.png" width="40px">
+          <h3>Para Corretores</h3><br>
+          <p>Encontre o imóvel ideal para cada cliente em segundos, com uma IA que aprende seu perfil de negócios. Menos trabalho braçal, mais fechamentos e clientes satisfaits.</p>
+          <button>Participe</button>
+        </div>
+      </div>
+      <!-- Paginação -->
+      <div class="swiper-pagination"></div>
+    </div>
+  </section>
+
+  <section class="mapa">
+    <h2>Onde Estamos</h2>
+    <img src="/imagens/mapa do brasil.png" alt="Mapa do Brasil com estados em azul" width="650px" data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-in-out"/>
+    <p><h2>A <strong>HOME SYNC</strong> está presente em <strong>9 estados</strong> e chegando em mais mercados. Em breve em todo o <strong>Brasil</strong>.</h2></p>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-coluna">
+        <h4>HomeSync:</h4>
+        <ul>
+          <li>Sobre Nós</li>
+          <li>Como Funciona</li>
+          <li>Planos e Preços</li>
+          <li>Cases de Sucesso</li>
+        </ul>
+      </div>
+      <div class="footer-coluna">
+        <h4>Clientes:</h4>
+        <ul>
+          <li>Para Corretores</li>
+          <li>Para Imobiliárias</li>
+          <li>Para Construtoras</li>
+          <li>Cadastre-se Grátis</li>
+        </ul>
+      </div>
+      <div class="footer-coluna">
+        <h4>Institucional:</h4>
+        <ul>
+          <li>Central de Ajuda</li>
+          <li>Blog</li>
+          <li>LGPD e Segurança</li>
+          <li>Termos de Uso</li>
+        </ul>
+      </div>
+    </div>
+    <p class="direitos">© 2025 HomeSync. Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <!-- Script do Swiper -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script>
+    AOS.init({ once: true });
+    
+    // Configurações comuns para ambos carrosséis
+    const swiperConfig = {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      loop: true,
+      autoplay: {
+        delay: 6000,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      preventInteractionOnTransition: true,
+      resistanceRatio: 0,
+      noSwiping: true,
+      noSwipingClass: 'swiper-slide',
+    };
+
+    function initCarousels() {
+      if (window.innerWidth <= 768) {
+        // Carrossel de Funcionalidades
+        new Swiper('.cartoes-mobile', {
+          ...swiperConfig,
+          pagination: {
+            el: '.cartoes-mobile .swiper-pagination',
+            clickable: true,
+          },
+        });
+        
+        // Carrossel de Benefícios
+        new Swiper('.beneficios-mobile', {
+          ...swiperConfig,
+          pagination: {
+            el: '.beneficios-mobile .swiper-pagination',
+            clickable: true,
+          },
+        });
+      }
+    }
+
+    // Menu hambúrguer
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuBtn = document.querySelector('.menu-btn');
+      const mobileMenu = document.querySelector('.menu-mobile');
+      
+      // Clona os botões originais para o menu mobile
+      const originalButtons = document.querySelector('.topo-site > div').cloneNode(true);
+      originalButtons.className = '';
+      mobileMenu.appendChild(originalButtons);
+      
+      menuBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        mobileMenu.classList.toggle('active');
+      });
+      
+      // Fecha o menu ao clicar fora
+      document.addEventListener('click', function() {
+        mobileMenu.classList.remove('active');
+      });
+      
+      // Previne que o clique no menu feche ele
+      mobileMenu.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+      
+      // Inicializa os carrosséis
+      initCarousels();
+    });
+    
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        const carrosseis = document.querySelectorAll('.swiper-container');
+        carrosseis.forEach(container => {
+          if (container.swiper) {
+            container.swiper.destroy(true, true);
+          }
+        });
+        initCarousels();
+      }, 250);
+    });
+  </script>
+</body>
+</html>
