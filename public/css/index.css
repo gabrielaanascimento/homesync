@@ -1,3 +1,6 @@
+/*Estou Usando Comentários para me localizar no código*/
+/*NÃO tira os comentarios por enquanto*/
+
 * {
       margin: 0;
       padding: 0;
@@ -17,13 +20,6 @@
       padding: 2rem;
       position: relative;
     }
-     .menu-btn {
-      position: absolute;
-      top: 9%;
-      right: 1%;
-      font-size: 2.0rem;
-      
-    }
 
     .botao-log{
         border: #ffffff 1px solid;
@@ -38,9 +34,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-     height: 40px;
-      
-    
+      height: 40px;
     }
 
     .titulo-header {
@@ -106,6 +100,10 @@
       font-family:'Roboto';
     }
 
+    .cartao :hover {
+     transform: scale(1.05);
+    }
+
     .cartao i {
       font-size: 2rem;
       color: #0047FF;
@@ -135,6 +133,10 @@
       width: 280px;
       height: 370px;
       backdrop-filter: blur(2px);   
+    }
+
+    .beneficio :hover {
+     transform: scale(1.05);
     }
 
     .beneficio i {
@@ -194,77 +196,291 @@
       font-size: 0.8rem;
     }
 
+    /* barra de pesquisa dos produtos */
+    .filter-search-container {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    .filter-search-box {
+      display: flex;
+      align-items: center;
+      border: 1px solid #d1d1d1;
+      border-radius: 20px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .filter-search-box:focus-within {
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 4px rgba(74, 145, 226, 0.374);
+    }
+
+    .filter-select {
+      padding: 10px 12px;
+      border: none;
+      border-right: 1px solid #eee;
+      background: transparent;
+      font-size: 14px;
+      color: #555;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      padding: 10px 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search-input::placeholder {
+      color: #999;
+    }
+
+    .search-icon {
+      width: 20px;
+      height: 20px;
+      margin: 0 12px;
+      fill: #555;
+      cursor: pointer;
+    }
+
+    .filter-select:hover {
+      background-color: #f5f5f5;
+    }
+
+    .search-icon:hover {
+      fill: #4a90e2;
+    }
+
+
+
+
+
+
+    /* Carrosel para mobile */
+
+    .swiper-container {
+      display: none; 
+      width: 100%;
+      padding-bottom: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .swiper-wrapper {
+      padding-bottom: 0;
+    }
+
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: auto !important;
+    }
+
+    .swiper-pagination {
+      position: absolute;
+      bottom: 10px !important;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .swiper-pagination-bullet {
+      width: 12px;
+      height: 12px;
+      background: #0047FF;
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+
+    .swiper-pagination-bullet-active {
+      opacity: 1;
+    }
+
+    strong { 
+      color: #0047FF;
+    }
+
+
+
+
+
+
+
+    /* menu hambúrguer */
+    .menu-btn {
+      display: none;
+      cursor: pointer;
+      z-index: 1000;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    .menu-mobile {
+      display: none;
+      position: absolute;
+      top: 30px;
+      right: 10px;
+      background: rgba(207, 207, 207, 0.078);
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      padding: 15px;
+      z-index: 999;
+      min-width: 180px;
+    }
+
+    .menu-mobile.active {
+      display: block;
+    }
+
+    .menu-mobile button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      background: transparent;
+      color: white;
+      border: 1px solid white;
+      border-radius: 20px;
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+
+    .menu-mobile button:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Estilos específicos para mobile */
     @media (max-width: 768px) {
-      .cartoes,
-      .cards-beneficios,
+      .cartoes-desktop,
+      .cards-beneficios-desktop {
+        display: none !important;
+      }
+      
+      .swiper-container {
+        display: block;
+      }
+      
+      .swiper-slide .cartao {
+        width: 85%;
+        margin: 0 auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      
+      .swiper-slide .beneficio {
+        width: 85%;
+        margin: 0 auto;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+      
+      .topo-site > div:first-of-type {
+        display: none;
+      }
+      
+      .topo-site img {
+        width: 120px;
+      }
+      
+      .botao-log {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+        margin-right: 0;
+      }
+
       .footer-grid {
         flex-direction: column;
         align-items: center;
       }
     }
- strong{ 
-    color: #0047FF;
- }
 
-    /* barra de pesquisa dos produtos (tem q mudar umas coisas depois mas blz) */
-  .filter-search-container {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  max-width: 600px;
-  margin: 20px auto;
-}
 
-.filter-search-box {
+
+
+    /* Nova seção do iframe */
+.iframe-section {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  border: 1px solid #d1d1d1;
-  border-radius: 20px;
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
+  padding: 4rem 2rem;
+  background-color: #f8f9fa;
+  flex-direction: row-reverse; /* Esta linha inverte a ordem dos elementos */
 }
 
-.filter-search-box:focus-within {
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 4px rgba(74, 145, 226, 0.374);
+.iframe-container {
+  width: 60%;
+  height: 560px;
 }
 
-.filter-select {
-  padding: 10px 12px;
-  border: none;
-  border-right: 1px solid #eee;
-  background: transparent;
-  font-size: 14px;
-  color: #555;
-  cursor: pointer;
-  outline: none;
+.mobile-info {
+  width: 35%;
+  text-align: left; /* Alterado para alinhar o texto à esquerda */
+  padding-left: 2rem; /* Adicionado espaçamento à esquerda */
 }
 
-.search-input {
-  flex: 1;
-  border: none;
-  padding: 10px 12px;
-  font-size: 14px;
-  outline: none;
+.mobile-info h3 {
+  font-size: 2rem;
+  color: #0047FF;
+  margin-bottom: 2rem;
 }
 
-.search-input::placeholder {
-  color: #999;
+.app-stores {
+  display: flex;
+  justify-content: flex-start; /* Alterado para alinhar à esquerda */
+  gap: 20px;
 }
 
-.search-icon {
-  width: 20px;
-  height: 20px;
-  margin: 0 12px;
-  fill: #555;
-  cursor: pointer;
+.store-logo {
+  height: 50px;
+  transition: transform 0.3s ease;
 }
 
-
-.filter-select:hover {
-  background-color: #f5f5f5;
+.store-logo:hover {
+  transform: scale(1.05);
 }
 
-.search-icon:hover {
-  fill: #4a90e2;
+/* Estilos para mobile */
+@media (max-width: 768px) {
+  .iframe-section {
+    flex-direction: column;
+    padding: 2rem 1rem;
+  }
+  
+  .iframe-container {
+    width: 100%;
+    height: 300px;
+    margin-bottom: 2rem;
+    order: 2; /* Garante que o iframe fica abaixo no mobile */
+  }
+  
+  .mobile-info {
+    width: 100%;
+    text-align: center; /* Centraliza no mobile */
+    padding-left: 0; /* Remove o padding no mobile */
+    margin-bottom: 2rem;
+  }
+  
+  .mobile-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .app-stores {
+    justify-content: center; /* Centraliza os logos no mobile */
+    gap: 10px;
+  }
+  
+  .store-logo {
+    height: 40px;
+  }
 }
