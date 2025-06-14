@@ -1,6 +1,6 @@
 ## Sistema para Imobiliárias - TCC
 
-Este sistema foi desenvolvido como Trabalho de Conclusão de Curso (TCC) para o curso técnico em Informática para Internet. O projeto em questão é uma solução voltada ao dia a dia do **corretor de imóveis**, objetivando otimizar a gestão de imóveis, clientes e propostas comerciais.
+Este sistema foi desenvolvido como Trabalho de Conclusão de Curso (TCC) para o curso técnico em Informática para Internet. O projeto em questão é uma solução voltada ao dia a dia do **corretor de imóveis**, objetivando otimizar a gestão de imóveis, clientes e propostas comerciais..
 
 ##  Objetivo
 
