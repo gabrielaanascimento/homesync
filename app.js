@@ -2,7 +2,6 @@ import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import session from 'express-session'
-import { imoveis } from './imoveis.js'
 import  env from 'dotenv'
 env.config()
 
