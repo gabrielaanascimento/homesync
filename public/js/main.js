@@ -19,7 +19,7 @@ function sendMessage(){
 
     const token = localStorage.getItem('authToken');
 
-    fetch("https://backendtcc.vercel.app/pergunta", {
+    fetch("https://backendtcc.vercel.app/chat/pergunta", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
