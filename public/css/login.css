@@ -109,7 +109,7 @@ button {
 @media (max-width: 600px) {
     .logo {
         width: 15%;
-        margin-bottom: 1.5rem;
+        margin-bottom: -1.5rem;
     }
 
     .login {
@@ -162,4 +162,5 @@ button {
     .container {
         height: 100%;
     }
+    
 }
