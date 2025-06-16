@@ -110,6 +110,7 @@ button {
     .logo {
         width: 15%;
         margin-bottom: -1.5rem;
+        margin-top: 3rem;
     }
 
     .login {
