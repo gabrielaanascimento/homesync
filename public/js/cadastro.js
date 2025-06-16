@@ -17,7 +17,7 @@ document.getElementById('cadastrar').addEventListener('click', async function(ev
     }
 
     try {
-        const response = await fetch('http://localhost:3000/auth/cadastrar', {
+        const response = await fetch('https://backendtcc.vercel.app/auth/cadastrar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
