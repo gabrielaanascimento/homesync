@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+body, .container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cadastro-form {
+    border: 1px solid #E9E6E6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 20%;
+    min-height: 25%;
+    max-width: 45%;
+    max-height: 95%;
+    border-radius: 10%;
+    backdrop-filter: 2px;
+    background-color: rgba(255, 255, 255, 0.6);
+    margin-bottom: -7rem;
+    z-index: 998;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.email, .password {
+    margin-bottom: 2rem;
+    width: 90%;
+    height: 2rem;
+    border-radius: 20px;
+    border: 1px solid #E9E6E6;
+    padding: 2.5px 0 2.5px 7px;
+}
+
+footer {
+    width: 100%;
+    height: 15%;
+}
+
+footer img {
+    width: 101%;
+}
+
+button {
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    background-color: #004EFF;
+    width: 70%;
+    color: #fff;
+    margin: 1rem;
+}
+
+.descr {
+    font-size: 87%;
+}
+
+.label_nasc {
+    font-size: 80%;
+    opacity: 75%;
+}
+
+.cadastro a {
+    color: #004EFF;
+}
+
+.logo {
+    width: 4%;
+    margin-bottom: -2rem;
+    z-index: 999;
+}
