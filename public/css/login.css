@@ -2,21 +2,22 @@
     margin: 0;
     padding: 0;
     font-family: "Roboto", sans-serif;
-    box-sizing: border-box; /* Adiciona box-sizing para melhor controle de layout */
+    box-sizing: border-box; /* Essencial para um bom controle de layout */
 }
 
-body {
+html, body {
+    height: 100%; /* Garante que HTML e Body ocupem toda a altura da viewport */
     min-height: 100vh; /* Garante que o body ocupe no mínimo 100% da altura da viewport */
     display: flex;
     flex-direction: column; /* Organiza os filhos em coluna */
 }
 
 .container {
-    flex: 1; /* Faz o container ocupar todo o espaço disponível, empurrando o footer para baixo */
+    flex-grow: 1; /* Faz o container principal crescer e ocupar todo o espaço disponível */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column; /* Mantém o logo e o login em coluna */
+    justify-content: center; /* Centraliza horizontalmente o conteúdo (logo e login) */
+    align-items: center; /* Centraliza verticalmente o conteúdo (logo e login) */
+    flex-direction: column; /* Organiza logo e login em coluna dentro do container */
     width: 100vw; /* Garante que o container ocupe a largura total */
 }
 
@@ -27,14 +28,17 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 20%;
-    height: 50%; /* Pode ser ajustado se o conteúdo do login for muito dinâmico */
+    width: 20%; /* Valor padrão para telas maiores */
+    height: auto; /* Deixa a altura se ajustar ao conteúdo */
     border-radius: 10%;
-    backdrop-filter: 2px;
+    /* backdrop-filter: 2px; -- Verifique se essa propriedade está correta. Pode ser 'blur(2px)' */
     background-color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 0; /* Remove a margem negativa que causava sobreposição */
+    /* margin-bottom: -7rem; -- Removido, pois pode causar problemas com o novo layout flex */
     z-index: 998;
-    position: relative; /* Adiciona position relative para ajuste fino, se necessário */
+    position: relative;
+    /* Adicionado margin-top e margin-bottom para dar um espaçamento em relação ao logo e ao footer */
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 }
 
 .email, .password {
@@ -65,15 +69,14 @@ body {
 
 footer {
     width: 100%;
-    /* Removido height fixo para permitir que o conteúdo do footer defina sua altura */
-    /* Adicionado padding-top para espaçamento, se a imagem for muito colada */
-    /* padding-top: 10px; */
+    /* O footer será naturalmente empurrado para baixo pelo flex-grow: 1 do .container */
+    /* Removido altura fixa ou margens que possam interferir */
 }
 
 footer img {
-    width: 100%; /* Ajustado para 100% para evitar rolagem horizontal indesejada */
-    height: auto; /* Garante que a imagem mantenha sua proporção */
-    display: block; /* Remove espaço extra abaixo da imagem */
+    width: 100%;
+    height: auto;
+    display: block; /* Remove o espaço extra abaixo da imagem */
 }
 
 button {
@@ -96,7 +99,7 @@ button {
 
 .logo {
     width: 5%;
-    margin-bottom: 2rem; /* Aumenta a margem para separar do login */
+    margin-bottom: 2rem; /* Espaçamento entre o logo e o formulário de login */
     z-index: 999;
 }
 
@@ -105,14 +108,15 @@ button {
 @media (max-width: 600px) {
     .logo {
         width: 15%;
-        margin-bottom: 1.5rem; /* Ajusta a margem para telas menores */
+        margin-bottom: 1.5rem;
     }
 
     .login {
         width: 85%;
         height: auto;
         padding: 30px 20px;
-        margin-bottom: 1rem; /* Ajusta a margem inferior para telas menores */
+        margin-top: 1.5rem; /* Ajusta a margem superior para telas menores */
+        margin-bottom: 1.5rem; /* Ajusta a margem inferior para telas menores */
     }
 
     .email, .password {
