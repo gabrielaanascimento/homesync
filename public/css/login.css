@@ -69,8 +69,6 @@ html, body {
 
 footer {
     width: 100%;
-    margin-bottom: 0;
-    position: fixed;
     /* O footer será naturalmente empurrado para baixo pelo flex-grow: 1 do .container */
     /* Removido altura fixa ou margens que possam interferir */
 }
@@ -154,5 +152,7 @@ button {
     footer img {
         width: 100%;
         height: auto;
+        margin-bottom: 0;
+        position: fixed;
     }
 }
