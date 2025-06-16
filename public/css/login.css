@@ -1,34 +1,23 @@
-/* Importação da fonte Roboto do Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-
-/* Reset básico e box-sizing para todos os elementos */
 * {
     margin: 0;
     padding: 0;
     font-family: "Roboto", sans-serif;
-    box-sizing: border-box; /* Essencial para um bom controle de layout */
 }
 
-/* Configurações para HTML e Body para garantir que ocupem toda a altura da viewport */
-html, body {
-    height: 100%; /* Garante que HTML e Body ocupem toda a altura da viewport */
-    min-height: 100vh; /* Garante que o body ocupe no mínimo 100% da altura da viewport */
+body, .container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
     display: flex;
-    flex-direction: column; /* Organiza os filhos diretos (container e footer) em coluna */
+    flex-direction: column;
 }
 
-/* Container principal que centraliza o conteúdo do login e o logo */
 .container {
-    flex-grow: 1; /* Faz o container principal crescer e ocupar todo o espaço disponível, empurrando o footer para baixo */
     display: flex;
-    justify-content: center; /* Centraliza horizontalmente o conteúdo (logo e login) */
-    align-items: center; /* Centraliza verticalmente o conteúdo (logo e login) */
-    flex-direction: column; /* Organiza logo e login em coluna dentro do container */
-    width: 100vw; /* Garante que o container ocupe a largura total da viewport */
-    overflow: hidden; /* Evita barras de rolagem indesejadas se o conteúdo transbordar ligeiramente */
+    justify-content: center;
+    align-items: center;
 }
 
-/* Estilos da caixa de login */
 .login {
     border: 2px solid #E9E6E6;
     padding: 20px;
@@ -36,70 +25,50 @@ html, body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 20%; /* Largura padrão para telas maiores */
-    height: auto; /* Deixa a altura se ajustar ao conteúdo */
+    width: 20%;
+    height: 50%;
     border-radius: 10%;
-    /* backdrop-filter: blur(2px); */ /* Correção sugerida: 'blur(2px)' para um efeito de desfoque */
-    background-color: rgba(255, 255, 255, 0.6); /* Fundo semi-transparente */
-    z-index: 998; /* Garante que fique acima de outros elementos se houver */
-    position: relative; /* Necessário para posicionamento de elementos filhos */
-    margin-top: 2rem; /* Espaçamento superior em relação ao logo */
-    margin-bottom: 2rem; /* Espaçamento inferior em relação ao footer/base do container */
-    max-width: 400px; /* Limita a largura máxima do formulário para não ficar muito grande em telas grandes */
-    min-width: 280px; /* Garante uma largura mínima para visibilidade em telas menores antes da media query */
+    backdrop-filter: 2px;
+    background-color: rgba(255, 255, 255, 0.6);
+    margin-bottom: -7rem;
+    z-index: 998;
 }
 
-/* Estilos para os campos de email e senha */
 .email, .password {
-    margin-bottom: 2rem; /* Espaçamento entre os campos */
-    width: 90%; /* Largura dentro do container .login */
+    margin-bottom: 2rem;
+    width: 90%;
     height: 2rem;
     border-radius: 20px;
     border: 1px solid #E9E6E6;
     padding: 2.5px 0 2.5px 7px;
-    font-size: 1rem; /* Garante um tamanho de fonte legível */
 }
 
-/* Estilos para a div de autenticação social (ícones do Google/Facebook) */
 .autenticacao {
     width: 100%;
-    height: .5rem; /* Altura um pouco baixa, pode precisar de ajuste dependendo do conteúdo */
+    height: .5rem;
     display: flex;
-    justify-content: center; /* Centraliza os ícones */
+    justify-content: center;
     align-items: center;
-    gap: 2rem; /* Espaçamento entre os ícones */
+    gap: 2rem;
     margin-bottom: 1.5rem;
     margin-top: 1rem;
 }
 
-/* Estilos para os ícones de autenticação */
 .icon {
     width: 38px;
     background-color: #fff;
-    border-radius: 50%; /* Torna os ícones circulares */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra para dar profundidade */
-    transition: transform 0.2s ease-in-out; /* Efeito de transição ao passar o mouse */
+    border-radius: 50%;
 }
 
-.icon:hover {
-    transform: scale(1.05); /* Pequeno zoom ao passar o mouse */
-}
-
-/* Estilos do footer */
 footer {
     width: 100%;
-    /* O footer será naturalmente empurrado para baixo pelo flex-grow: 1 do .container */
-    /* Nenhuma altura fixa é necessária aqui, a imagem do footer definirá sua altura */
+    height: 15%;
 }
 
-/* Estilos da imagem dentro do footer */
 footer img {
-    width: 100%; /* Garante que a imagem ocupe 100% da largura do footer */
-    height: auto; /* Mantém a proporção da imagem */
-    display: block; /* Remove o espaço extra abaixo da imagem (comportamento padrão de inline elements) */
+    width: 101%;
 }
 
-/* Estilos do botão de "Entrar" */
 button {
     padding: 10px;
     border-radius: 20px;
@@ -108,94 +77,18 @@ button {
     width: 70%;
     color: #fff;
     margin: 1rem;
-    cursor: pointer; /* Indica que é um elemento clicável */
-    font-size: 1rem;
-    transition: background-color 0.2s ease-in-out; /* Efeito de transição ao passar o mouse */
 }
 
-button:hover {
-    background-color: #003ECC; /* Escurece o botão ao passar o mouse */
-}
-
-/* Estilos para o link "Esqueceu sua senha" */
 .esqSenha {
     margin-bottom: .5rem;
-    font-size: 0.9rem; /* Tamanho da fonte menor */
 }
 
-/* Estilos gerais para links dentro da div de login */
 .login a {
     color: #004EFF;
-    text-decoration: none; /* Remove o sublinhado padrão dos links */
-    transition: color 0.2s ease-in-out; /* Efeito de transição ao passar o mouse */
 }
 
-.login a:hover {
-    color: #003ECC; /* Escurece o link ao passar o mouse */
-    text-decoration: underline; /* Adiciona sublinhado ao passar o mouse */
-}
-
-/* Estilos do logo (ícone "HS") */
 .logo {
-    width: 5%; /* Largura padrão para telas maiores */
-    margin-bottom: 2rem; /* Espaçamento entre o logo e o formulário de login */
-    z-index: 999; /* Garante que o logo fique acima de tudo */
-    max-width: 80px; /* Limita o tamanho máximo do logo */
-    min-width: 40px; /* Garante um tamanho mínimo para o logo */
-}
-
-
-/* --- MEDIA QUERIES PARA RESPONSIVIDADE (Telas menores que 600px) --- */
-@media (max-width: 600px) {
-    /* Ajustes para o logo em telas menores */
-    .logo {
-        width: 15%; /* Aumenta o tamanho do logo */
-        margin-bottom: 1.5rem; /* Ajusta o espaçamento */
-    }
-
-    /* Ajustes para a caixa de login em telas menores */
-    .login {
-        width: 85%; /* Aumenta a largura do formulário */
-        padding: 30px 20px; /* Aumenta o padding para melhor espaçamento interno */
-        margin-top: 1.5rem; /* Ajusta margem superior */
-        margin-bottom: 1.5rem; /* Ajusta margem inferior */
-    }
-
-    /* Ajustes para campos de input em telas menores */
-    .email, .password {
-        width: 100%; /* Ocupa a largura total do container .login */
-        height: 2.5rem; /* Ajusta a altura */
-        font-size: 1rem; /* Garante legibilidade */
-        margin-bottom: 1.5rem; /* Reduz espaçamento entre campos */
-    }
-
-    /* Ajustes para a div de autenticação em telas menores */
-    .autenticacao {
-        gap: 1.5rem; /* Reduz espaçamento entre ícones */
-        margin-bottom: 1rem;
-    }
-
-    /* Ajustes para os ícones de autenticação em telas menores */
-    .icon {
-        width: 45px; /* Aumenta o tamanho dos ícones para melhor toque */
-    }
-
-    /* Ajustes para o botão em telas menores */
-    button {
-        width: 90%; /* Aumenta a largura do botão */
-        font-size: 1.1rem; /* Aumenta o tamanho da fonte */
-        margin-top: 0.5rem;
-        margin-bottom: 1rem;
-    }
-
-    /* Ajustes para links em telas menores */
-    .esqSenha, .login a {
-        font-size: 0.9rem; /* Ajusta tamanho da fonte */
-        text-align: center; /* Centraliza o texto */
-    }
-
-    /* OCULTA O FOOTER em telas com largura de até 600px */
-    footer {
-        display: none;
-    }
+    width: 5%;
+    margin-bottom: -2rem;
+    z-index: 999;
 }
