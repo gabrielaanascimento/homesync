@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/cadastro.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>cadastro</title>
+</head>
+<body>
+    <main class="container">
+    <img src="../img/logoIcon.png" alt="logo" class="logo">
+    <form class="cadastro-form">
+        <br>
+            <input type="text" name="email" class="email" placeholder="Adicione seu melhor E-mail">
+
+            <input type="password" id="senha" class="password" placeholder="Senha">
+            <input type="password" id="check_senha" class="password" placeholder="Confirme sua Senha">
+            
+            <label for="nascimento" class="label_nasc">Sua Data de Nascimento:</label>
+            <input type="date" class="password" id="nascimento" maxlength="10">
+            
+            <select class="password" id="genero">
+                <option value="" disabled selected>Selecione seu gênero</option>
+                <option value="masculino">Masculino</option>
+                <option value="feminino">Feminino</option>
+                <option value="nao_informar">Prefiro não dizer</option>
+            </select>
+
+            <button type="submit" id="cadastrar">Cadastrar-se</button>
+            <br>
+            <p class="descr">Ao clicar em Cadastrar-se você concorda com nossos <a href=""><i>Termos de Uso e Políticas de Privacidade</i></a></p>
+        </form>
+    <footer>
+        <img src="../img/maginLogin.png" alt="footer">
+    </footer>
+    </main>
+    <script src="../js/cadastro.js"></script>
+</body>
+</html>
