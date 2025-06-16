@@ -178,7 +178,7 @@ button:active {
 /* NOVO: Estilo da bolha que vai conter a lista de imóveis */
 .response-message-wrapper {
     /* Estilo base de uma bolha de resposta */
-    background-color: var(--gray2); /* Fundo da bolha, igual ao response-message */
+    background-color: var(--gray); /* Fundo da bolha, igual ao response-message */
     border-radius: 20px; /* Cantos bem arredondados como na imagem de referência */
     margin: 0; /* Remove margens padrão */
     max-width: 80%; /* Ocupa a mesma largura de uma bolha de chat */
