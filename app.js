@@ -38,7 +38,6 @@ app.get('/login', (req, res) => {
 
 app.post('/verificar', (req, res) => {
     const {status, id, nome} = req.body 
-   
     
     if(id && nome) {
 
@@ -64,7 +63,12 @@ app.post('/logout', (req, res) => {
     });
 })
 
+app.get('/cadastro', (req, res) => {
+    res.sendFile(path.join(publicDirectoryPath, 'html', 'cadastro.html'))  
+})
+
 //rotas protegidas
+
 
 app.get('/home', (req, res) => {
     if (req.session.loggedIn) {
@@ -74,5 +78,7 @@ app.get('/home', (req, res) => {
     }     
 })
 
-app.listen(port)
+
+
+app.listen(port, () => console.log(`http://localhost:${port}`))
 
