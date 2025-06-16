@@ -92,6 +92,22 @@ button {
     margin-bottom: -2rem;
     z-index: 999;
 }
+
+/* OCULTA o logo e o footer e centraliza o login */
+.logo,
+footer {
+    display: none;
+}
+
+.container {
+    justify-content: center;
+    align-items: center;
+}
+
+.login {
+    margin-bottom: 0;
+}
+
 @media (max-width: 600px) {
   body, .container {
     height: auto;
@@ -146,4 +162,3 @@ button {
     margin-bottom: 1rem;
   }
 }
-
