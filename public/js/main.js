@@ -156,7 +156,7 @@ async function sendMessage() {
     const loadingBubble = showHistory(null, 'Carregando...', 'loading'); 
 
     try {
-        const response = await fetch("http://localhost:3000/chat/pergunta", {
+        const response = await fetch("https://backendtcc.vercel.app/chat/pergunta", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
