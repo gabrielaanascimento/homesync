@@ -4,16 +4,18 @@
     font-family: "Roboto", sans-serif;
 }
 
-body, .container {
+body {
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    display: flex; /* Adicionado: Usa flexbox no body */
+    flex-direction: column; /* Adicionado: Organiza os itens em coluna */
+    overflow: hidden; /* Mantido para evitar barras de rolagem indesejadas no body */
 }
 
 .container {
+    flex-grow: 1; /* Adicionado: Faz o container principal crescer e ocupar o espaço disponível */
     display: flex;
+    flex-direction: column; /* Mantido para o layout interno */
     justify-content: center;
     align-items: center;
 }
@@ -25,7 +27,7 @@ body, .container {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 20%; /* Valor padrão para telas maiores */
+    width: 20%;
     height: 50%;
     border-radius: 10%;
     backdrop-filter: 2px;
@@ -62,11 +64,13 @@ body, .container {
 
 footer {
     width: 100%;
-    height: 15%;
+    /* Removido: height: 15%; para permitir que o conteúdo do footer defina sua própria altura, ou você pode manter se for um requisito de design */
+    margin-top: auto; /* Adicionado: Empurra o footer para o final do flex container */
 }
 
 footer img {
     width: 101%;
+    /* height: auto;  Opcional: Garante que a altura da imagem se ajuste proporcionalmente */
 }
 
 button {
@@ -97,47 +101,47 @@ button {
 
 @media (max-width: 600px) {
     .logo {
-        width: 15%; /* Aumenta o tamanho do logo em telas menores */
-        margin-bottom: -1rem; /* Ajusta a margem para telas menores */
+        width: 15%;
+        margin-bottom: -1rem;
     }
 
     .login {
-        width: 85%; /* Aumenta a largura do formulário de login em telas menores */
-        height: auto; /* Permite que a altura se ajuste ao conteúdo */
-        padding: 30px 20px; /* Aumenta o padding para melhor espaçamento */
-        margin-bottom: -5rem; /* Ajusta a margem inferior */
+        width: 85%;
+        height: auto;
+        padding: 30px 20px;
+        margin-bottom: -5rem;
     }
 
     .email, .password {
-        width: 100%; /* Ocupa a largura total do container .login */
-        height: 2.5rem; /* Ajusta a altura dos inputs */
-        font-size: 1rem; /* Aumenta o tamanho da fonte para melhor leitura */
-        margin-bottom: 1.5rem; /* Reduz o espaçamento entre os inputs */
+        width: 100%;
+        height: 2.5rem;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     .autenticacao {
-        gap: 1.5rem; /* Reduz o espaçamento entre os ícones de autenticação */
-        margin-bottom: 1rem; /* Reduz a margem inferior */
+        gap: 1.5rem;
+        margin-bottom: 1rem;
     }
 
     .icon {
-        width: 45px; /* Aumenta o tamanho dos ícones */
+        width: 45px;
     }
 
     button {
-        width: 90%; /* Aumenta a largura do botão */
-        font-size: 1.1rem; /* Aumenta o tamanho da fonte do botão */
-        margin-top: 0.5rem; /* Ajusta a margem superior */
-        margin-bottom: 1rem; /* Ajusta a margem inferior */
+        width: 90%;
+        font-size: 1.1rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
     }
 
     .esqSenha, .login a {
-        font-size: 0.9rem; /* Ajusta o tamanho da fonte para links */
-        text-align: center; /* Centraliza o texto */
+        font-size: 0.9rem;
+        text-align: center;
     }
 
     footer img {
-        width: 100%; /* Garante que a imagem do rodapé ocupe 100% da largura */
-        height: auto; /* Permite que a altura se ajuste proporcionalmente */
+        width: 100%;
+        height: auto;
     }
 }
