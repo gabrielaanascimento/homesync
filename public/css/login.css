@@ -25,7 +25,7 @@ body, .container {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 20%;
+    width: 20%; /* Valor padrão para telas maiores */
     height: 50%;
     border-radius: 10%;
     backdrop-filter: 2px;
@@ -91,4 +91,53 @@ button {
     width: 5%;
     margin-bottom: -2rem;
     z-index: 999;
+}
+
+/* --- Media Queries --- */
+
+@media (max-width: 600px) {
+    .logo {
+        width: 15%; /* Aumenta o tamanho do logo em telas menores */
+        margin-bottom: -1rem; /* Ajusta a margem para telas menores */
+    }
+
+    .login {
+        width: 85%; /* Aumenta a largura do formulário de login em telas menores */
+        height: auto; /* Permite que a altura se ajuste ao conteúdo */
+        padding: 30px 20px; /* Aumenta o padding para melhor espaçamento */
+        margin-bottom: -5rem; /* Ajusta a margem inferior */
+    }
+
+    .email, .password {
+        width: 100%; /* Ocupa a largura total do container .login */
+        height: 2.5rem; /* Ajusta a altura dos inputs */
+        font-size: 1rem; /* Aumenta o tamanho da fonte para melhor leitura */
+        margin-bottom: 1.5rem; /* Reduz o espaçamento entre os inputs */
+    }
+
+    .autenticacao {
+        gap: 1.5rem; /* Reduz o espaçamento entre os ícones de autenticação */
+        margin-bottom: 1rem; /* Reduz a margem inferior */
+    }
+
+    .icon {
+        width: 45px; /* Aumenta o tamanho dos ícones */
+    }
+
+    button {
+        width: 90%; /* Aumenta a largura do botão */
+        font-size: 1.1rem; /* Aumenta o tamanho da fonte do botão */
+        margin-top: 0.5rem; /* Ajusta a margem superior */
+        margin-bottom: 1rem; /* Ajusta a margem inferior */
+    }
+
+    .esqSenha, .login a {
+        font-size: 0.9rem; /* Ajusta o tamanho da fonte para links */
+        text-align: center; /* Centraliza o texto */
+    }
+
+    footer img {
+        width: 100%; /* Garante que a imagem do rodapé ocupe 100% da largura */
+        height: auto; /* Permite que a altura se ajuste proporcionalmente */
+    }
 }
