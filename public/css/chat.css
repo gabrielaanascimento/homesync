@@ -287,7 +287,7 @@ button:active {
 .imovel-ver-mais {
     display: inline-block;
     padding: 8px 20px; /* Padding para o botão */
-    background-color: #28a745; /* Verde vibrante para o botão "See More" */
+    background-color: var(--deepseek-blue); /* Verde vibrante para o botão "See More" */
     color: var(--white);
     text-decoration: none;
     border-radius: 50px; /* Borda super arredondada (estilo pílula) */
