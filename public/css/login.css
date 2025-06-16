@@ -77,7 +77,8 @@ footer img {
     width: 100%;
     height: auto;
     display: block; /* Remove o espaço extra abaixo da imagem */
-    margin-bottom: 0; 
+    margin-bottom: 0;
+    position: fixed;
 }
 
 button {
