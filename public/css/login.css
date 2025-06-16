@@ -157,6 +157,7 @@ button {
 
     footer {
         margin-top: 50%;
+        margin-bottom: 0;
     }
     .container {
         height: 100%;
