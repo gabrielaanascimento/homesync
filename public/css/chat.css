@@ -1,170 +1,340 @@
-:root{
-  --dark: #0c0c0c;
-  --white: #fff;
-  --purple: #5959ff;
-  --gray: #949494;
-  --gray2: #cccccc;
-  --deepseek-blue: #2d6df6;
-  --deepseek-bg: rgba(255, 255, 255, 0.8);
+:root {
+    --dark: #0c0c0c;
+    --white: #fff;
+    --purple: #5959ff;
+    --gray: #949494; /* Cinza mais escuro para fundos de bolha de usuário */
+    --gray2: #cccccc; /* Cinza claro para fundos de bolha de resposta e imóveis */
+    --deepseek-blue: #2d6df6; /* Azul da marca */
+    --deepseek-bg: rgba(255, 255, 255, 0.8); /* Fundo semi-transparente para elementos maiores como caixa de texto */
 }
 
-body{
-  background-color: var(--dark);
-  font-family: Arial, Helvetica, sans-serif;
-  color: var(--white);
-  display: flex;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
+body {
+    background-color: var(--dark);
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
 }
 
-.box-questions{
-  background-color: var(--white);
-  color: var(--dark);
-  display: flex;
-  position: fixed;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  width: 100%;
-  border-radius: 10px;
-  text-align: center;
+.box-questions {
+    background-color: var(--white); /* Fundo da caixa principal */
+    color: var(--dark);
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    text-align: center;
 }
 
-.header{
-  background-color: rgba(246, 247, 255, 0.753);
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(4px);
-  color: var(--white);
-  border-radius: 10px 10px 0 0;
-  font-size: 1.4rem;
-  height: 7rem;
-  display: flex; /* Alterado para flex */
-  justify-content: center;
-  align-items: center;
-  position: relative; /* Adicionado para posicionamento absoluto do botão */
+.header {
+    background-color: rgba(246, 247, 255, 0.753);
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px); /* Para compatibilidade WebKit */
+    color: var(--dark); /* Cor do texto no header */
+    border-radius: 10px 10px 0 0;
+    font-size: 1.4rem;
+    height: 7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 .back-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }
 
 .back-button button {
-  background-color: var(--deepseek-blue); /* Usando uma cor existente ou defina uma nova */
-  color: var(--white);
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-size: 1rem;
-  border: none;
-  transition: all 0.2s ease;
+    background-color: var(--deepseek-blue);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    border: none;
+    transition: all 0.2s ease;
 }
 
 .back-button button:hover {
-  background-color: #1850c9; /* Tom mais escuro no hover */
-  transform: scale(1.02);
+    background-color: #1850c9;
+    transform: scale(1.02);
 }
 
 .back-button button:active {
-  transform: scale(0.98);
+    transform: scale(0.98);
 }
 
-
-.footer{
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.footer {
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .caixa-texto {
-  width: 100%;
-  max-width: 800px;
-  background-color: rgba(246, 247, 255, 0.753);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 1.5rem;
-  padding: 4px;
-  box-sizing: border-box;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 800px;
+    background-color: var(--deepseek-bg); /* Usando variável para integração */
+    backdrop-filter: blur(10px); /* Aumentei o blur para mais suavidade */
+    -webkit-backdrop-filter: blur(10px); /* Para compatibilidade WebKit */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 1.5rem;
+    padding: 4px;
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-input{
-  border: none;
-  outline: none;
-  padding: 12px 15px;
-  border-radius: 16px;
-  font-size: 1rem;
-  flex-grow: 1;
-  margin-right: 8px;
-  min-height: 48px;
-  background-color: transparent;
+input {
+    border: none;
+    outline: none;
+    padding: 12px 15px;
+    border-radius: 16px;
+    font-size: 1rem;
+    flex-grow: 1;
+    margin-right: 8px;
+    min-height: 48px;
+    background-color: transparent;
+    color: var(--dark); /* Cor do texto do input para contraste */
 }
 
-button{
-  border: none;
-  border-radius: 7rem;
-  width: 2.5rem;
-  height: 2.5rem;
-  white-space: nowrap;
-  margin-right: 1%;
-
-  background-color: #004EFF;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
+button {
+    border: none;
+    border-radius: 7rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    white-space: nowrap;
+    margin-right: 1%;
+    background-color: var(--deepseek-blue); /* Usando variável */
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-button:hover{
-  background-color: #1850c9;
-  transform: scale(1.02);
+button:hover {
+    background-color: #1850c9;
+    transform: scale(1.02);
 }
 
-button:active{
-  transform: scale(0.98);
+button:active {
+    transform: scale(0.98);
 }
 
-#history{
-  padding: 1rem;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  height: 100%;
+#history {
+    padding: 1rem;
+    overflow-y: auto; /* Apenas scroll vertical */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%; /* Ocupa o espaço restante */
+    flex-grow: 1;
 }
 
-.box-my-message{
-  display: flex;
-  justify-content: flex-end;
+.box-my-message {
+    display: flex;
+    justify-content: flex-end;
 }
 
-.box-response-message{
-  display: flex;
-  justify-content: flex-start;
+.box-response-message {
+    display: flex;
+    justify-content: flex-start;
 }
 
 .my-message,
-.response-message{
-  padding: 1rem;
-  border-radius: 10px;
-  color: white;
-  margin: 0;
-  max-width: 80%;
+.response-message {
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 0;
+    max-width: 80%;
 }
 
-.my-message{
-  text-align: right;
-  background-color: var(--gray);
+.my-message {
+    text-align: right;
+    background-color: var(--gray);
+    color: var(--white); /* Mantém o texto branco no cinza escuro */
 }
 
-.response-message{
-  text-align: left;
-  background-color: var(--gray2);
+.response-message {
+    text-align: left;
+    background-color: var(--gray2);
+    color: var(--dark); /* CORRIGIDO: Texto escuro para melhor contraste em fundo claro */
 }
+
+/* --- Estilos para Recomendações de Imóveis (Integrado como Mensagem de Chat) --- */
+
+/* NOVO: Estilo da bolha que vai conter a lista de imóveis */
+.response-message-wrapper {
+    /* Estilo base de uma bolha de resposta */
+    background-color: var(--gray2); /* Fundo da bolha, igual ao response-message */
+    border-radius: 20px; /* Cantos bem arredondados como na imagem de referência */
+    margin: 0; /* Remove margens padrão */
+    max-width: 80%; /* Ocupa a mesma largura de uma bolha de chat */
+    padding: 15px 20px; /* Preenchimento interno para a bolha */
+    text-align: left;
+    display: flex;
+    flex-direction: column; /* Organiza o conteúdo interno em coluna */
+    gap: 15px; /* Espaço entre a mensagem introdutória e a lista de imóveis, e entre os imóveis */
+    box-sizing: border-box; /* Inclui padding na largura total */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Sombra suave para a bolha */
+    color: var(--dark); /* Cor do texto principal dentro da bolha */
+}
+
+/* NOVO: Container da lista de imóveis DENTRO da bolha de resposta */
+.chat-imovel-recommendations {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espaço entre cada item de imóvel */
+    /* Remove estilos que eram do container externo, agora a bolha os controla */
+    margin: 0;
+    padding: 0;
+    background: transparent; /* Fundo transparente pois a bolha pai já tem background */
+    border: none;
+    box-shadow: none;
+    
+    /* Permite rolagem interna se a lista de imóveis for muito longa dentro da bolha */
+    max-height: 300px; /* Altura máxima para a lista de imóveis dentro da bolha */
+    overflow-y: auto; /* Adiciona scroll se a lista for muito longa */
+}
+
+/* Estilo para barra de rolagem WebKit (Chrome, Safari) para lista interna */
+.chat-imovel-recommendations::-webkit-scrollbar {
+    width: 6px; /* Mais estreito */
+}
+.chat-imovel-recommendations::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05); /* Fundo da trilha da barra de rolagem */
+    border-radius: 3px;
+}
+.chat-imovel-recommendations::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2); /* Cor do "polegar" da barra de rolagem */
+    border-radius: 3px;
+}
+
+/* NOVO: Estilo para a mensagem introdutória antes da lista de imóveis (dentro da bolha) */
+.chat-imovel-intro-message {
+    font-size: 0.95em;
+    color: var(--dark);
+    margin-bottom: 10px; /* Espaço antes do primeiro item do imóvel */
+    font-weight: 500;
+}
+
+/* Estilo para cada item individual de imóvel, agora DENTRO da bolha */
+.recommended-imovel-item {
+    display: flex;
+    align-items: flex-start; /* Alinha a imagem e o texto no topo, como na imagem de referência */
+    padding: 10px; /* Padding para cada item */
+    border: none; /* Remover bordas */
+    border-radius: 12px; /* Cantos arredondados do item individual */
+    background-color: rgba(255, 255, 255, 0.9); /* Fundo branco levemente transparente */
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05); /* Sombra sutil */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recommended-imovel-item:hover {
+    transform: translateY(-2px); /* Efeito de elevação sutil */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.imovel-image-container {
+    margin-right: 10px; /* Espaço à direita da imagem */
+    flex-shrink: 0; /* Impede que a imagem encolha */
+}
+
+.imovel-image {
+    width: 60px; /* Tamanho da imagem */
+    height: 60px;
+    border-radius: 50%; /* Imagem redonda */
+    object-fit: cover; /* Garante que a imagem preencha o círculo */
+    border: 2px solid var(--white); /* Borda branca na imagem, como no exemplo */
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); /* Sombra para a imagem */
+}
+
+.imovel-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Permite que os detalhes ocupem o espaço restante */
+    text-align: left;
+}
+
+.imovel-name {
+    margin-top: 0;
+    margin-bottom: 3px;
+    font-size: 1em;
+    font-weight: bold;
+    color: var(--dark); /* Texto escuro */
+}
+
+.imovel-description {
+    margin-top: 0;
+    margin-bottom: 6px;
+    font-size: 0.8em;
+    color: var(--gray); /* Texto cinza para descrição */
+    line-height: 1.2;
+}
+
+.imovel-ver-mais {
+    display: inline-block;
+    padding: 8px 20px; /* Padding para o botão */
+    background-color: #28a745; /* Verde vibrante para o botão "See More" */
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 50px; /* Borda super arredondada (estilo pílula) */
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    align-self: flex-start; /* Alinha o link à esquerda na coluna */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Sombra para o botão */
+}
+
+.imovel-ver-mais:hover {
+    background-color: #218838; /* Tom mais escuro no hover */
+}
+
+/* Estilo para a mensagem de "nenhuma recomendação" dentro da bolha */
+.no-recommendations-chat {
+    color: var(--dark); /* Texto escuro para contrastar com o fundo da bolha */
+    font-style: italic;
+    text-align: left; /* Alinha à esquerda dentro da bolha */
+    padding: 5px; /* Pequeno padding */
+}
+
+/* Adicione isso ao seu chat.css */
+
+.loading-animation {
+    border-radius: 10px; /* Cantos arredondados */
+    padding: 1rem; /* Espaçamento interno */
+    display: flex;
+    justify-content: center; /* Centraliza a imagem */
+    align-items: center;
+    max-width: 80%; /* Mesma largura das bolhas de chat */
+    min-height: 40px; /* Altura mínima para a bolha */
+    box-sizing: border-box;
+    /* Adicionalmente, se quiser uma bolha completa como as outras: */
+    text-align: left; /* Alinha o conteúdo à esquerda */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Sombra suave */
+}
+
+.loading-animation img {
+    width: 40px; /* Tamanho do GIF */
+    height: 40px;
+    display: block; /* Remove espaços extras abaixo da imagem */
+    /* Se a imagem for muito pequena e você quiser um spinner redondo: */
+    /* animation: spin 1s linear infinite; */
+}
+
+/* @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} */
