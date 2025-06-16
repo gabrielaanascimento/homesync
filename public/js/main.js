@@ -1,97 +1,245 @@
-function sendMessage(){
-    var messageInput = document.getElementById('message-input'); // Renomeado para evitar confusão
-    var messageText = messageInput.value.trim(); // Pega o valor e remove espaços em branco    
+// main.js (ou seu arquivo JS consolidado)
 
-    if (!messageText) { // Verifica se o texto da mensagem não está vazio
-        messageInput.style.border = '1px solid red';
-        return;
-    }
-    messageInput.style.border = 'none';
+// --- 1. FUNÇÕES AUXILIARES ---
 
-    var status = document.getElementById('status');
-    var btnSubmit = document.getElementById('btn-submit');
-
-    status.style.display = 'block';
-    status.innerHTML = 'Carregando...';
-    btnSubmit.disabled = true;
-    btnSubmit.style.cursor = 'not-allowed';
-    messageInput.disabled = true; // Desabilita o input da mensagem também
-
-    const token = localStorage.getItem('authToken');
-
-    fetch("https://backendtcc.vercel.app/chat/pergunta", {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            text: messageText
-        })
-    })
-    .then((response) => {
-        console.log(response);
-        
-        if (!response.ok) { // Verifica se a resposta HTTP foi bem-sucedida (status 2xx)
-            // Se não for bem-sucedida, lança um erro para o bloco .catch
-            return response.json().then(errorData => {
-                throw new Error(errorData.error || `Erro HTTP: ${response.status}`);
-            });
-        }
-        return response.json(); // Pega o JSON da resposta
-    })
-    .then((apiResponseText) => { // 'apiResponseText' já é a string da resposta do Gemini
-        status.style.display = 'none';
-        showHistory(messageText, apiResponseText.msg); // Passa o texto original e a resposta do Gemini
-    })
-    .catch((e) => {
-        console.error(`Error -> ${e}`); // Use console.error para erros
-        status.innerHTML = `Erro: ${e.message || 'tente novamente mais tarde...'}`; // Mostra a mensagem de erro
-    })
-    .finally(() => {
-        btnSubmit.disabled = false;
-        btnSubmit.style.cursor = 'pointer';
-        messageInput.disabled = false;
-        messageInput.value = ''; // Limpa o input
+async function fetchImovelDetails(id) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            switch (id) {
+                case 1:
+                    resolve({ id: 1, nome: 'Apartamento Aconchegante', descricao: 'Lindo apartamento com vista para o mar, 2 quartos, perto da praia.', imageUrl: 'https://cdn-icons-png.flaticon.com/512/1695/1695213.png' });
+                    break;
+                case 5:
+                    resolve({ id: 5, nome: 'Casa Espaçosa', descricao: 'Casa grande com jardim, piscina e 3 suítes, ideal para família.', imageUrl: 'https://cdn-icons-png.flaticon.com/512/1695/1695213.png' });
+                    break;
+                case 10:
+                    resolve({ id: 10, nome: 'Studio Moderno', descricao: 'Studio compacto e bem localizado no centro da cidade, mobiliado.', imageUrl: 'https://cdn-icons-png.flaticon.com/512/1695/1695213.png' });
+                    break;
+                default:
+                    resolve({ id: 0, nome: 'Imóvel Genérico', descricao: 'Detalhes genéricos para imóveis não mapeados.', imageUrl: 'https://cdn-icons-png.flaticon.com/512/1695/1695213.png' });
+            }
+        }, 200);
     });
 }
 
-function showHistory(message, response){
+// showHistory agora retorna o elemento da bolha criado, e aceita 'type' para 'loading'
+function showHistory(messageContent, responseContent, type = null) { // Adicionado type com valor padrão null
     var historyBox = document.getElementById('history');
 
-    // Minha mensagem (pergunta do usuário)
-    var boxMyMessage = document.createElement('div');
-    boxMyMessage.className = 'box-my-message';
+    if (!historyBox) {
+        console.error("Elemento com ID 'history' não encontrado. Não é possível exibir o histórico.");
+        return null;
+    }
 
-    var myMessage = document.createElement('p');
-    myMessage.className = 'my-message';
-    myMessage.innerHTML = message;
+    let createdBubble = null;
 
-    boxMyMessage.appendChild(myMessage);
-    historyBox.appendChild(boxMyMessage);
+    if (messageContent) {
+        var boxMyMessage = document.createElement('div');
+        boxMyMessage.className = 'box-my-message';
 
-    // Mensagem de resposta do Chatbot
-    var boxResponseMessage = document.createElement('div');
-    boxResponseMessage.className = 'box-response-message';
+        var myMessage = document.createElement('p');
+        myMessage.className = 'my-message';
+        myMessage.innerHTML = messageContent;
 
-    var chatResponse = document.createElement('p');
-    chatResponse.className = 'response-message';
-    chatResponse.innerHTML = response; // 'response' já é o texto puro vindo do backend
+        boxMyMessage.appendChild(myMessage);
+        historyBox.appendChild(boxMyMessage);
+        createdBubble = boxMyMessage;
+    }
 
-    boxResponseMessage.appendChild(chatResponse);
-    historyBox.appendChild(boxResponseMessage);
+    if (responseContent) {
+        var boxResponseMessage = document.createElement('div');
+        boxResponseMessage.className = 'box-response-message';
 
-    // Levar scroll para o final
+        if (type === 'loading') { // Condição para exibir a imagem de loading
+            var loadingDiv = document.createElement('div'); // Um div para conter a imagem
+            loadingDiv.className = 'loading-animation'; // Classe para estilizar a animação
+            loadingDiv.innerHTML = `<img src='https://cdn.pixabay.com/animation/2023/11/30/10/11/10-11-02-622_512.gif' alt='Carregando...' >`;
+            boxResponseMessage.appendChild(loadingDiv);
+        } else if (typeof responseContent === 'string') { // Conteúdo é uma string normal
+            var chatResponse = document.createElement('p');
+            chatResponse.className = 'response-message';
+            chatResponse.innerHTML = responseContent;
+            boxResponseMessage.appendChild(chatResponse);
+        } else if (responseContent instanceof HTMLElement || responseContent instanceof DocumentFragment) { // Conteúdo é um elemento HTML (ex: lista de imóveis)
+            var responseBubbleWrapper = document.createElement('div');
+            responseBubbleWrapper.className = 'response-message-wrapper';
+            responseBubbleWrapper.appendChild(responseContent);
+            boxResponseMessage.appendChild(responseBubbleWrapper);
+        }
+
+        historyBox.appendChild(boxResponseMessage);
+        createdBubble = boxResponseMessage; // Armazena a bolha de resposta
+    }
+
     historyBox.scrollTop = historyBox.scrollHeight;
+    return createdBubble; // Retorna a bolha que foi adicionada
 }
 
-// Para usar a função sendMessage, você precisa chamá-la.
-// Geralmente, isso é feito por um botão de enviar ou pelo evento 'submit' de um formulário.
-// Exemplo (se houver um botão com id="btn-submit" e um input com id="message-input" dentro de um formulário):
-// document.getElementById('btn-submit').addEventListener('click', sendMessage);
+function displayImovelDetails(imovel, container) {
+    if (!imovel || !container) {
+        console.error("Dados do imóvel ou container inválidos para exibição.");
+        return;
+    }
 
-// Ou se o formulário inteiro submeter:
-// document.getElementById('yourFormId').addEventListener('submit', function(event) {
-//     event.preventDefault(); // Impede o recarregamento da página
-//     sendMessage();
-// });
+    const imovelDiv = document.createElement('div');
+    imovelDiv.className = 'recommended-imovel-item';
+
+    const imageDiv = document.createElement('div');
+    imageDiv.className = 'imovel-image-container';
+    const image = document.createElement('img');
+    image.className = 'imovel-image';
+    image.src = imovel.imageUrl;
+    image.alt = imovel.nome;
+    imageDiv.appendChild(image);
+
+    const detailsDiv = document.createElement('div');
+    detailsDiv.className = 'imovel-details';
+
+    const nameHeading = document.createElement('h3');
+    nameHeading.className = 'imovel-name';
+    nameHeading.textContent = imovel.nome;
+
+    const descriptionParagraph = document.createElement('p');
+    descriptionParagraph.className = 'imovel-description';
+    descriptionParagraph.textContent = imovel.descricao;
+
+    const verMaisLink = document.createElement('a');
+    verMaisLink.className = 'imovel-ver-mais';
+    verMaisLink.href = `/imovel/${imovel.id}`;
+    verMaisLink.textContent = 'Ver mais';
+    verMaisLink.target = '_blank';
+
+    detailsDiv.appendChild(nameHeading);
+    detailsDiv.appendChild(descriptionParagraph);
+    detailsDiv.appendChild(verMaisLink);
+
+    imovelDiv.appendChild(imageDiv);
+    imovelDiv.appendChild(detailsDiv);
+
+    container.appendChild(imovelDiv);
+}
+
+function logout() {
+   localStorage.removeItem('authToken');
+   window.location.href = '/login';
+}
+
+
+// --- 2. FUNÇÕES PRINCIPAIS DAS ROTAS / LISTENERS ---
+
+async function sendMessage() {
+    var messageInput = document.getElementById('message-input');
+    var messageText = messageInput ? messageInput.value.trim() : '';
+
+    if (!messageText) {
+        if (messageInput) messageInput.style.border = '1px solid red';
+        return;
+    }
+    if (messageInput) messageInput.style.border = 'none';
+
+    var btnSubmit = document.getElementById('btn-submit'); // statusElement removido
+
+    // Desabilitar input e botão de envio
+    if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.style.cursor = 'not-allowed';
+    }
+    if (messageInput) messageInput.disabled = true;
+
+    const token = localStorage.getItem('authToken');
+
+    // --- 1. Mostrar a mensagem do usuário ---
+    showHistory(messageText, null);
+
+    // --- 2. Mostrar a bolha de "Carregando..." com a imagem ---
+    // Passamos o terceiro argumento 'loading' para showHistory para ativar a lógica da imagem
+    const loadingBubble = showHistory(null, 'Carregando...', 'loading'); 
+
+    try {
+        const response = await fetch("http://localhost:3000/chat/pergunta", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                text: messageText
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || errorData.message || `Erro HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        let generalResponseMessage = '';
+        if (data && typeof data === 'object' && data.mensagemGeral) {
+            generalResponseMessage = data.mensagemGeral;
+        }
+
+        let aiResponseContent = null;
+
+        if (data && Array.isArray(data.ids) && data.ids.length > 0) {
+            const recommendedPropertiesListDiv = document.createElement('div');
+            recommendedPropertiesListDiv.className = 'chat-imovel-recommendations';
+
+            if (generalResponseMessage) {
+                const introMessage = document.createElement('p');
+                introMessage.textContent = generalResponseMessage;
+                introMessage.className = 'chat-imovel-intro-message';
+                recommendedPropertiesListDiv.appendChild(introMessage);
+            }
+            
+            for (const imovelId of data.ids) {
+                const imovelDetails = await fetchImovelDetails(imovelId);
+                if (imovelDetails) {
+                    displayImovelDetails(imovelDetails, recommendedPropertiesListDiv);
+                } else {
+                    console.warn(`Não foi possível obter detalhes para o imóvel ID: ${imovelId}`);
+                }
+            }
+            aiResponseContent = recommendedPropertiesListDiv;
+        } else {
+            if (generalResponseMessage) {
+                aiResponseContent = generalResponseMessage;
+            } else {
+                aiResponseContent = "Nenhum imóvel relevante encontrado com base na sua busca.";
+            }
+        }
+
+        // --- Remover a bolha de "Carregando..." antes de exibir a resposta real ---
+        if (loadingBubble && loadingBubble.parentNode) {
+            loadingBubble.parentNode.removeChild(loadingBubble);
+        }
+
+        // --- Mostrar a bolha de resposta final do bot (APENAS UMA VEZ) ---
+        if (aiResponseContent) {
+            showHistory(null, aiResponseContent);
+        }
+        
+    } catch (e) {
+        console.error(`Erro ao enviar pergunta para o Gemini:`, e);
+        
+        // --- Remover a bolha de "Carregando..." no caso de erro ---
+        if (loadingBubble && loadingBubble.parentNode) {
+            loadingBubble.parentNode.removeChild(loadingBubble);
+        }
+        // Mostrar a mensagem de erro como a resposta final do bot
+        showHistory(null, `Erro: ${e.message || 'Não foi possível obter a resposta do chat. Tente novamente.'}`);
+    } finally {
+        // Reabilitar input e botão
+        if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.style.cursor = 'pointer';
+        }
+        if (messageInput) {
+            messageInput.disabled = false;
+            messageInput.value = '';
+        }
+    }
+}
+
+// ... (Restante do código consolidado, incluindo a função 'verificar' e o listener DOMContentLoaded) ...
+
