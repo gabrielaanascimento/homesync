@@ -30,7 +30,7 @@ body, .container {
     max-height: 95%;
     border-radius: 10%;
     backdrop-filter: 2px;
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgb(255 255 255 / 0.6);
     margin-bottom: -7rem;
     z-index: 998;
     padding: 20px;
@@ -74,7 +74,7 @@ button {
     opacity: 75%;
 }
 
-.cadastro a {
+.cadastro-form a {
     color: #004EFF;
 }
 
@@ -82,4 +82,17 @@ button {
     width: 4%;
     margin-bottom: -2rem;
     z-index: 999;
+}
+
+/* Responsivo para até 600px */
+@media (max-width: 600px) {
+    .logo,
+    footer {
+        display: none;
+    }
+    .cadastro-form {
+        width: 80%;
+        height: auto;
+        margin-bottom: 0;
+    }
 }
