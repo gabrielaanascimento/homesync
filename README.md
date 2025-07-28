@@ -10,7 +10,7 @@ Aplicar os conhecimentos adquiridos durante o curso no desenvolcimento de um sis
 
 - HTML5 / CSS3 / JavaScript;
 - MySQL;
-- Bootstrap.
+- Postgresql.
 
 ## Funcionalidades
 
