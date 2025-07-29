@@ -25,4 +25,4 @@ Aplicar os conhecimentos adquiridos durante o curso no desenvolcimento de um sis
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/gabrielaanascimento/homesync.git
+   git clone https://github.com/Gustavo0293/homesync.git
