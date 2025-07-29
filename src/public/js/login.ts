@@ -1,17 +1,15 @@
 const button = document.querySelector('#entrar');
 
-button.addEventListener('click', async (event) => { // Use async event handler
-    event.preventDefault(); // Prevent default form submission if the button is inside a form
+button.addEventListener('click', async (event) => {
+    event.preventDefault();
+    localStorage.removeItem('authToken'); 
 
-    localStorage.removeItem('authToken'); // Clear any existing token on new login attempt
+    const email: string = (document.querySelector('.email') as HTMLInputElement).value;
+    const password: string = (document.querySelector('.password') as HTMLInputElement).value;
 
-    const email = document.querySelector('.email').value;
-    const password = document.querySelector('.password').value;
-
-    // Basic client-side validation
     if (!email || !password) {
         alert('Por favor, preencha o email e a senha.');
-        return; // Stop execution if fields are empty
+        return;
     }
 
     try {
@@ -26,7 +24,7 @@ button.addEventListener('click', async (event) => { // Use async event handler
             })
         });
 
-        const data = await response.json(); // Await the JSON parsing
+        const data = await response.json();
 
         // The backend now returns { success: true/false, message: "...", user: {...}, token: "..." }
         if (data.success) {
@@ -52,18 +50,17 @@ button.addEventListener('click', async (event) => { // Use async event handler
     }
 });
 
-// This function seems to verify the session with your backend
-// It might be used for additional session management or to set cookies/session state on the backend
-const verificar = async (status, nome, id) => { // Use async
+
+const verificar = async (status, nome, id) => {
     try {
-        const response = await fetch('/verificar', { // Ensure '/verificar' is a valid backend route
+        const response = await fetch('/verificar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // It's crucial to send the token for server-side verification if this route is protected
+
             },
             body: JSON.stringify({
-                status, // 'status' might not be needed if 'token' is sufficient for verification
+                status,
                 nome,
                 id
             })
@@ -71,15 +68,23 @@ const verificar = async (status, nome, id) => { // Use async
 
         const data = await response.json();
 
-        if (data.session) { // Assuming 'data.session' indicates successful session verification
-            window.location.href = '/home'; // Redirect to home page
+        if (data.session) {
+            window.location.href = '/home';
         } else {
             alert('Sessão inválida ou expirada. Por favor, faça login novamente.');
-            // Optional: clear token if session verification fails
             localStorage.removeItem('authToken'); 
         }
+
     } catch (err) {
         console.error('Erro ao verificar sessão:', err);
         alert('Erro ao verificar sessão. Tente novamente.');
     }
 };
+
+async function logout() {
+   localStorage.removeItem('authToken');
+   window.location.href = '/login';
+};
+
+export { logout };
+
