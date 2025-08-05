@@ -1,8 +1,9 @@
 import express from 'express'
-import path from 'path'
+import { Request, Response } from 'express';
+import * as path from 'path'
 import { fileURLToPath } from 'url'
 import session from 'express-session'
-import  env from 'dotenv'
+import * as env from 'dotenv'
 env.config()
 
 const app = express()
@@ -28,16 +29,16 @@ app.use(express.static(publicDirectoryPath))
 
 //rotas publicas
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(publicDirectoryPath, 'html', 'index.html'))
 })
 
-app.get('/login', (req, res) => {
+app.get('/login', (req: Request, res: Response) => {
     res.sendFile(path.join(publicDirectoryPath, 'html', 'login.html'))
 })
 
-app.post('/verificar', (req, res) => {
-    const {status, id, nome} = req.body 
+app.post('/verificar', (req: Request, res: Response) => {
+    const {status, id, nome}: { status: boolean; id: number; nome: string } = req.body 
     
     if(id && nome) {
 
@@ -52,7 +53,7 @@ app.post('/verificar', (req, res) => {
 
 })
 
-app.post('/logout', (req, res) => {
+app.post('/logout', (req: Request, res: Response) => {
     req.session.destroy(err => {
         if (err) {
             console.error('Erro ao fazer logout:', err);
@@ -63,14 +64,14 @@ app.post('/logout', (req, res) => {
     });
 })
 
-app.get('/cadastro', (req, res) => {
+app.get('/cadastro', (req: Request, res: Response) => {
     res.sendFile(path.join(publicDirectoryPath, 'html', 'cadastro.html'))  
 })
 
 //rotas protegidas
 
 
-app.get('/home', (req, res) => {
+app.get('/home', (req: Request, res: Response) => {
     if (req.session.loggedIn) {
     res.sendFile(path.join(publicDirectoryPath, 'html', 'chat.html'))  
     } else {

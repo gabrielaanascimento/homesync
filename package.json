@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dist": "tsup src",
+    "start:dev": "tsx --env-file=.env src/server.ts",
+    "start:watch": "tsx watch --env-file=.env  src/server.ts",
+    "start:dist": "npm run dist && node dist/src/index.js"
   },
   "type": "module",
   "keywords": [],
@@ -15,5 +18,9 @@
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "nodemon": "^3.1.10"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "typescript": "^5.8.3"
   }
 }

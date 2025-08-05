@@ -1,19 +1,29 @@
 document.getElementById('cadastrar').addEventListener('click', async function(event) {
     event.preventDefault(); 
 
-    const nome = " "; 
-    const email = document.querySelector(".email").value;
-    const password = document.getElementById('senha').value; 
-    const confirmacao_senha = document.getElementById('check_senha').value;
+    const nome: string = " "; 
+    const email: string = (document.getElementById('email') as HTMLInputElement).value;
+    const password: string = (document.getElementById('senha') as HTMLInputElement).value; 
+    const confirmacao_senha: string = (document.getElementById('check_senha') as HTMLInputElement).value;
+
+    async function validarEmail(email: string): Promise<boolean> {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
 
     if (!nome || !email || !password || !confirmacao_senha) {
         alert('Por favor, preencha todos os campos obrigatórios!');
         return; 
     }
 
+    if (!await validarEmail(email)) {
+        alert('Por favor, insira um email válido!');
+        return; 
+    }
+
     if (password !== confirmacao_senha) {
         alert('As senhas não coincidem!');
-        return; 
+        return;
     }
 
     try {
