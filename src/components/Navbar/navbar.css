@@ -1,0 +1,22 @@
+.navbar {
+  display: "flex";
+  justify-content: "space-between";
+  align-items: "center";
+  background-color: "blue";
+  width: "400px";
+
+  padding: "0px 0px";
+  box-shadow: "0 2px 4px rgba(0,0,0,0.1)";
+}
+.logo {
+  display: "flex";
+  align-items: "center";
+}
+.icons {
+  display: "flex";
+  align-items: "center";
+  gap: "20px";
+}
+.icon {
+  cursor: "pointer";
+}

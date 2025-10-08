@@ -1,0 +1,17 @@
+[
+  {
+    "name": "João Silva",
+    "comment": "Esse é um comentário de teste!",
+    "date": "2025-09-22"
+  },
+  {
+    "name": "Maria Oliveira",
+    "comment": "Muito interessante, adorei o post!",
+    "date": "2025-09-21"
+  },
+  {
+    "name": "Carlos Souza",
+    "comment": "Gostaria de saber mais sobre esse assunto.",
+    "date": "2025-09-20"
+  }
+]

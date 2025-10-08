@@ -1,0 +1,179 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+body,
+.containerLogin {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-image: linear-gradient(
+    to bottom,
+    #fff,
+    #fff,
+    #fff,
+    rgba(153, 184, 254, 0.5)
+  );
+}
+
+.gradient {
+  width: 29%;
+  height: 64%;
+  border-radius: 10%;
+  z-index: 997;
+  background-color: gray;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  padding: 3px;
+  background-image: linear-gradient(to bottom, #99b8fe, #dba1fc);
+}
+
+.containerLogin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 10%;
+  backdrop-filter: 2px;
+  background-color: rgb(255 255 255);
+  z-index: 998;
+  position: relative;
+}
+
+.email,
+.password {
+  margin-top: 2rem;
+  width: 90%;
+  height: 3rem;
+  border-radius: 20px;
+  border: 1px solid #99b8fe;
+  padding: 2.5px 0 2.5px 7px;
+  color: black;
+}
+
+.autenticacao {
+  width: 70%;
+  height: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+  padding: 2px;
+}
+
+.iconLogin {
+  width: 100%;
+  border-radius: 20px;
+  padding: 2px;
+  border: 1px solid #99b8fe;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-weight: 600;
+}
+
+.autenticacao:hover {
+  width: 75%;
+  height: 0.9rem;
+}
+
+button {
+  padding: 10px;
+  border-radius: 30px;
+  border: none;
+  background-color: #004eff;
+  width: 70%;
+  color: #fff;
+  margin: 1rem;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #174ab8;
+  transform: scale(1.05);
+}
+
+.titleAuth {
+  margin-bottom: 2rem;
+  font-size: 20px;
+  font-weight: 600;
+  color: #004eff;
+}
+
+.esqSenha {
+  margin-bottom: 0.5rem;
+}
+
+.login a {
+  color: #004eff;
+}
+
+.logo {
+  width: 100px;
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  transform: translateY(-65%);
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Garante que a imagem esteja acima de tudo */
+}
+
+.loading-image {
+  max-width: 150px; /* Ajuste o tamanho da imagem conforme necessário */
+  max-height: 150px;
+}
+
+/* Responsividade para tablets (até 768px) */
+@media (max-width: 768px) {
+  .gradient {
+    width: 50%;
+    height: 70%;
+  }
+}
+
+/* Responsividade para celulares (até 600px) */
+@media (max-width: 600px) {
+  .logo,
+  footer {
+    display: none;
+  }
+  .login {
+    width: 100%;
+    height: auto;
+    margin-bottom: 0;
+  }
+  .gradient {
+    width: 90%;
+    height: auto;
+    border-radius: 10%;
+    padding: 5px;
+  }
+}

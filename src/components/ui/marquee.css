@@ -1,0 +1,42 @@
+.marquee-row {
+  display: flex;
+  gap: 20px;
+  /* animação infinita */
+  animation: scroll-left var(--speed) linear infinite;
+}
+
+.marquee-left {
+  animation-name: scroll-left;
+}
+
+.marquee-right {
+  animation-name: scroll-right;
+}
+
+.marquee-row:hover {
+  animation-play-state: paused; /* pausa toda a linha ao passar o mouse */
+}
+
+.marquee-item {
+  flex-shrink: 0; /* evita que encolha */
+}
+
+/* Animação esquerda → direita */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Animação direita → esquerda */
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "image": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=250&fit=crop&crop=center",
+    "title": "Apartamento Elegante em Alphaville",
+    "buyPrice": "R$ 850.000",
+    "location": "Suzano",
+    "bedrooms": "2",
+    "area": "50"
+  },
+  {
+    "id": 2,
+    "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=250&fit=crop&crop=center",
+    "title": "Casa Moderna em Condomínio",
+    "buyPrice": "R$ 750.000",
+    "location": "Mogi das Cruzes",
+    "bedrooms": "3",
+    "area": "70"
+  },
+  {
+    "id": 3,
+    "image": "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&h=250&fit=crop&crop=center",
+    "title": "Cobertura com Vista Panorâmica",
+    "buyPrice": "R$ 1.750.000",
+    "location": "Guarulhos",
+    "bedrooms": "4",
+    "area": "60"
+  },
+  {
+    "id": 4,
+    "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&h=250&fit=crop&crop=center",
+    "title": "Sobrado em Condomínio Fechado",
+    "buyPrice": "R$ 650.000",
+    "location": "Poá",
+    "bedrooms": "3",
+    "area": "120"
+  }
+]
