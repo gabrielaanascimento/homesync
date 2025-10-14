@@ -37,11 +37,11 @@ function Login() {
       {loading && (
         <div className="loading-overlay">
           <img 
-            src="https://cdn.pixabay.com/animation/2023/11/30/10/11/10-11-02-622_512.gif" 
+            src="https://blogson.com.br/wp-content/uploads/2017/10/d9933c4e2c272f33b74ef18cdf11a7d5.gif" 
             alt="Carregando..." 
-            className="loading-image" 
+            className="loading-imagem" 
           />
-        </div>
+        </div> 
       )}
       <div className="gradient">
         <form onSubmit={handleLogin} className="login">
