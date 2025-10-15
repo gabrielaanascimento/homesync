@@ -2,35 +2,43 @@
 import { cn } from "@/lib/utils";
 import { Marquee } from "../../ui/marquee";
 
+//Edição nos comentários do sistema, editei e adicionei comentários autênticos e em pt-br
+
 const reviews = [
   {
-    name: "Jack",
-    username: "@jack",
-    body: "I've never seen anything like this before. It's amazing. I love it.",
-    img: "https://avatar.vercel.sh/jack",
+    name: "Antonio Soares",
+    username: "@antonio123",
+    body: "Eu realmente vejo um grande potencial nesta plataforma. Facilitou meu trabalho!",
+    img: "https://avatar.vercel.sh/jack", 
   },
   {
-    name: "Jill",
-    username: "@jill",
-    body: "I don't know what to say. I'm speechless. This is amazing.",
+    name: "André Júnior",
+    username: "@junior_2020",
+    body: "Achei um imóvel que é a cara do meu cliente com esse app. Recomendo",
     img: "https://avatar.vercel.sh/jill",
   },
   {
-    name: "John",
-    username: "@john",
-    body: "I'm at a loss for words. This is amazing. I love it.",
+    name: "José Fabrício",
+    username: "@corretor007",
+    body: "Sistema muito bom 👍",
     img: "https://avatar.vercel.sh/john",
   },
   {
-    name: "Alice",
-    username: "@alice",
-    body: "Absolutely stunning work!",
+    name: "Thales Carnete",
+    username: "@thalescanet3",
+    body: "Os meninos se superaram nessa, o projeto ficou bom d+",
+    img: "https://avatar.vercel.sh/bob",
+  },
+  {
+    name: "Ana Alice",
+    username: "@Corretora203",
+    body: "Simplesmente incrível!",
     img: "https://a.storyblok.com/f/191576/1176x882/9bdc5d8400/round_profile_picture_hero_before.webp",
   },
   {
-    name: "Bob",
-    username: "@bob",
-    body: "Can't get enough of this!",
+    name: "Gregory",
+    username: "@Greg_226",
+    body: "Muito bom",
     img: "https://avatar.vercel.sh/bob",
   },
 ];
@@ -81,7 +89,7 @@ export function Marquee3D() {
           reverse={index % 2 === 0}
           className="flex w-full"
           vertical
-          style={{ "--duration": "20s" } as React.CSSProperties}
+          style={{ "--duration": "30s" } as React.CSSProperties}
         >
           {col.map((review) => (
             <ReviewCard key={review.username} {...review} />
