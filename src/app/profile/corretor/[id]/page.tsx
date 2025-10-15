@@ -1,65 +1,51 @@
-"use client";
+import React from "react";
+import ProfilePage from "./components/ProfilePage";
 
-import { useState, useEffect } from "react";
-import HeaderProfile from "@/components/profile/HeaderProfileCorretor";
-import Rating from "@/components/profile/Rating";
-import SalesStats from "@/components/profile/SalesCard";
-import ConversionChart from "@/components/profile/ConversionChart";
-import Features from "@/components/profile/Features";
-import { useSession } from "next-auth/react";
+const App: React.FC = () => {
+  return (
+    <ProfilePage
+      name="Lucas Almeida"
+      title="Corretor Imobiliário"
+      photo="https://via.placeholder.com/150"
+      bio="Sou corretor imobiliário há mais de 5 anos, especializado em imóveis residenciais e de alto padrão. Acredito que cada lar conta uma história, e meu papel é ajudar você a encontrar o cenário perfeito para a sua."
+      contacts={[
+        {
+          type: "phone",
+          label: "Telefone",
+          value: "(11) 98765-4321",
+          link: "tel:+5511987654321",
+        },
+        {
+          type: "email",
+          label: "Email",
+          value: "lucas@imoveis.com",
+          link: "mailto:lucas@imoveis.com",
+        },
+        {
+          type: "whatsapp",
+          label: "WhatsApp",
+          value: "(11) 98765-4321",
+          link: "https://wa.me/5511987654321",
+        },
+        {
+          type: "linkedin",
+          label: "LinkedIn",
+          value: "lucasalmeida",
+          link: "https://linkedin.com/in/lucasalmeida",
+        },
+      ]}
+      experiences={[
+        "5 anos de experiência no mercado imobiliário",
+        "Especializado em imóveis residenciais",
+        "Atendimento personalizado e consultoria completa",
+      ]}
+      gallery={[
+        "https://via.placeholder.com/300x200",
+        "https://via.placeholder.com/300x200",
+        "https://via.placeholder.com/300x200",
+      ]}
+    />
+  );
+};
 
-export default function Home() {
-    const { status } = useSession();
-
-    const features = [
-        "Especializado em Lançamentos",
-        "Certificado e atualizado",
-        "Estrategista de vendas",
-        "Networking qualificado"
-    ];
-
-    if (status === "loading") {
-        return <p>Carregando sessão...</p>;
-    }
-
-    if (status === "unauthenticated") {
-        window.location.href = '/login';
-        return null; // Retorna null para evitar que o componente renderize antes do redirecionamento
-    }
-
-    return (
-        <main
-            style={{
-                minHeight: "100vh",
-                height: "100%",
-                paddingBottom: "40px",
-                background: "linear-gradient(to bottom, white, #f3e8ff)"
-            }}
-        >
-            <div
-                style={{
-                    maxWidth: "960vw",
-                    margin: "0 auto",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "24px"
-                }}
-            >
-                <HeaderProfile
-                    description="Especialista em vendas, lançamentos e estratégias digitais."
-                    imageUrl="/perfil.jpg"
-                />
-
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "30px", paddingLeft: '70px', paddingRight: "70px", height: "200px" }}>
-                    <Rating stars={3} totalReviews={50000} score={4.25} />
-                    <SalesStats monthlySales={75} annualSales={900} />
-                </div>
-
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "30px", paddingLeft: '70px', paddingRight: "70px" }}>
-                    <ConversionChart />
-                    <Features features={features} />
-                </div>
-            </div>
-        </main>
-    );
-}
+export default App;
