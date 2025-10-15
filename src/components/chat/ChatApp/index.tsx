@@ -17,7 +17,7 @@ interface MessageData {
   imoveis?: Imovel[];
 }
 
-const API_BASE_URL = process.env.URL_API || 'http://localhost:3001';
+const API_BASE_URL = process.env.URL_API || 'https://homesyncapi.vercel.app';
 
 
 const ChatApp: React.FC = () => {
