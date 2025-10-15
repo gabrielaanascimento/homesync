@@ -17,6 +17,9 @@ interface MessageData {
   imoveis?: Imovel[];
 }
 
+const API_BASE_URL = process.env.URL_API || 'http://localhost:3001';
+
+
 const ChatApp: React.FC = () => {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -51,7 +54,7 @@ const ChatApp: React.FC = () => {
 
     try {
       // 2. Faz a requisição para o backend
-      const response = await fetch("http://localhost:3001/chat/pergunta", {
+      const response = await fetch(`${API_BASE_URL}/chat/pergunta`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
@@ -74,15 +77,15 @@ const ChatApp: React.FC = () => {
       // 3. Busca detalhes dos imóveis se existirem
       if (data && Array.isArray(data.ids) && data.ids.length > 0) {
         const fetchedImoveisPromises = data.ids.map((id: number) =>
-          fetch(`http://localhost:3001/imovel/imoveis/${id}`, {
+          fetch(`${API_BASE_URL}/imovel/imoveis/${id}`, {
             headers: {
               "Authorization": `Bearer ${token}`
             }
           })
           .then(res => res.json())
-          .then(imovelData => {
-            if (imovelData.success) {
-              const apiImovel = imovelData.imovel;
+          .then(imovelResponse => {
+            if (imovelResponse.statusCode === 200 && imovelResponse.body) {
+              const apiImovel = imovelResponse.body;
               return {
                 id: apiImovel.imovel_id,
                 nome: `${apiImovel.tipo_imovel} - ${apiImovel.local}`,

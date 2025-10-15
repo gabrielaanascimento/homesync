@@ -1,3 +1,5 @@
+// gabrielaanascimento/homesync/homesync-9e54974e0e209196e3d557d82b6195c7d4979ffe/src/services/property-registration.ts
+
 import { Property } from "@/types/property";
 
 // Define a estrutura de dados esperada para envio para o backend
@@ -23,7 +25,7 @@ interface RegistrationResult {
   message: string;
 }
 
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = process.env.URL_API || 'http://localhost:3001';
 
 /**
  * Registra um novo imóvel e faz o upload de suas imagens em duas etapas.
@@ -35,7 +37,8 @@ export const registerProperty = async (
   propertyData: PropertyData, 
   images: FileList | null
 ): Promise<RegistrationResult> => {
-  const token = "hkdhdnkdshncsfbcbfbfkbvk"
+  // CORREÇÃO: Obter o token real do localStorage para autenticação
+  const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
 
   if (!token) {
     return { success: false, message: 'Autenticação necessária. Faça login novamente.' };
@@ -49,7 +52,7 @@ export const registerProperty = async (
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}` // Usa o token obtido
       },
       body: JSON.stringify(propertyData)
     });
@@ -70,7 +73,8 @@ export const registerProperty = async (
 
   } catch (error) {
     console.error('Erro de rede ao cadastrar dados do imóvel:', error);
-    return { success: false, message: 'Erro de conexão ao cadastrar os dados do imóvel.' };
+    // Retorna uma mensagem de erro mais detalhada em caso de falha de rede/fetch
+    return { success: false, message: 'Erro de conexão ao cadastrar os dados do imóvel. (Verifique o backend e o CORS)' };
   }
   
   // --- 2. Enviar as imagens, se houverem ---
@@ -98,9 +102,9 @@ export const registerProperty = async (
 
         const imageResult = await imageResponse.json();
 
-        if (!imageResponse.ok || imageResult.statusCode !== 201) {
+        if (!imageResponse.ok || imageResult.success === false) {
             // O imóvel foi cadastrado, mas o upload falhou
-            const errorMsg = imageResult.body?.message || 'Falha ao fazer upload das imagens.';
+            const errorMsg = imageResult.body?.message || imageResult.message || 'Falha ao fazer upload das imagens.';
             return { success: false, message: `Erro no Upload (Imagens): ${errorMsg}. O imóvel foi cadastrado, mas sem fotos.` };
         }
     } catch (error) {

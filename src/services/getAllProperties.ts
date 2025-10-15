@@ -1,7 +1,10 @@
+
+const API_BASE_URL = process.env.URL_API || 'http://localhost:3001';
+
 export const getAllProperties = async () => {
     try {
         // CORREÇÃO 1: Mudança do endpoint de /chat/imoveis para /imovel/imoveis/
-        const response = await fetch(`http://localhost:3001/imovel/imoveis/`, {
+        const response = await fetch(`${API_BASE_URL}/imovel/imoveis/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

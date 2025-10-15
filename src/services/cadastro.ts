@@ -1,6 +1,7 @@
+const API_BASE_URL = process.env.URL_API || 'http://localhost:3001';
 
 export const cadastrar = async (email: string, password: string, cpf: string, name: string, creci: string, telefone: string ) => {
-  const response = await fetch(`http://localhost:3001/auth/cadastrar`, {
+  const response = await fetch(`${API_BASE_URL}/auth/cadastrar`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

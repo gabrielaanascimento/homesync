@@ -1,9 +1,11 @@
 // Next-main/src/services/getPropertyById.ts
 import { Property } from "@/types/property";
 
+const API_BASE_URL = process.env.URL_API || 'http://localhost:3001';
+
 export const getPropertyById = async (id: string): Promise<Property | null> => {
     try {
-        const response = await fetch(`http://localhost:3001/imovel/imoveis/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/imovel/imoveis/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
