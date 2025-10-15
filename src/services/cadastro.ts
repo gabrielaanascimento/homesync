@@ -1,6 +1,12 @@
-const API_BASE_URL = process.env.URL_API || 'http://localhost:3001';
+const API_BASE_URL = process.env.URL_API || 'https://homesyncapi.vercel.app';
 
 export const cadastrar = async (email: string, password: string, cpf: string, name: string, creci: string, telefone: string ) => {
+
+  if (!email || !password || !cpf || !name || !creci || !telefone) {
+    alert('Preencha todos os campos');
+    return null;
+  }
+
   const response = await fetch(`${API_BASE_URL}/auth/cadastrar`, {
     method: 'POST',
     headers: {
@@ -12,6 +18,7 @@ export const cadastrar = async (email: string, password: string, cpf: string, na
        nome: name,
        CPF: cpf,
        CRECI: creci,
+       telefone: telefone
        })
           });
       if (!response.ok) {
