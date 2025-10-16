@@ -1,7 +1,7 @@
 // Next-main/src/services/getPropertyById.ts
 import { Property } from "@/types/property";
 
-const API_BASE_URL = process.env.URL_API || 'http://localhost:3001';
+const API_BASE_URL = process.env.URL_API || 'https://homesyncapi.vercel.app';
 
 export const getPropertyById = async (id: string): Promise<Property | null> => {
     try {

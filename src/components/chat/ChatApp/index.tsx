@@ -87,7 +87,7 @@ const ChatApp: React.FC = () => {
             if (imovelResponse.statusCode === 200 && imovelResponse.body) {
               const apiImovel = imovelResponse.body;
               return {
-                id: apiImovel.imovel_id,
+                id: apiImovel.id,
                 nome: `${apiImovel.tipo_imovel} - ${apiImovel.local}`,
                 descricao: apiImovel.descricao,
                 imageUrl: apiImovel.image || 'https://cdn-icons-png.flaticon.com/512/1695/1695213.png',
