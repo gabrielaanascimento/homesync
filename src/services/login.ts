@@ -1,5 +1,7 @@
 
 export const login = async (email: string, password: string) => {
+
+  const URL = process.env.URL_API || "https://homesyncapi.vercel.app"
   const response = await fetch(`${process.env.URL_API}/auth/login`, {
     method: 'POST',
     headers: {
