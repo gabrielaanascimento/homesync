@@ -23,7 +23,7 @@ export default function PropertyList({ properties }: PropertyListProps) {
                 local={property.local}
                 quartos={property.quartos || 0}
                 area={property.area || 0}
-                imovel_id={property.imovel_id} // CORREÇÃO: Passando o ID de navegação
+                imovel_id={property.id} // CORREÇÃO: Passando o ID de navegação
               />
             </div>
           ))}
