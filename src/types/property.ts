@@ -1,3 +1,4 @@
+// gabrielaanascimento/homesync/homesync-76cb64e06ff844bd6ad572848ed1b06dd57d35ba/src/types/property.ts
 export interface Property {
     // --- Campos Operacionais e Chaves Estrangeiras ---
     id: number; // ID da Negociação (sistema_imoveis.id)
@@ -18,7 +19,8 @@ export interface Property {
     endereco: string;
     
     // --- Campos Adicionais ---
-    image?: string;         // Caminho da imagem (placeholder)
+    image?: string;         // Caminho da imagem principal (thumbnail)
+    images?: string[];      // NOVO: Array com todas as URLs de imagem para o carrossel
     descricao?: string;
     destaques?: string;
     area_construida?: number;

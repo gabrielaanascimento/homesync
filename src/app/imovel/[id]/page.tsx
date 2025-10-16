@@ -1,4 +1,4 @@
-// src/app/imovel/[id]/page.tsx
+// gabrielaanascimento/homesync/homesync-76cb64e06ff844bd6ad572848ed1b06dd57d35ba/src/app/imovel/[id]/page.tsx
 import Carrosel from "@/components/imovel/Carrossel/index";
 import Navbar from "@/components/Navbar/navbar";
 import Caracteristicas from "@/components/imovel/Caracteristicas";
@@ -7,7 +7,6 @@ import MenuBotoes from "@/components/imovel/MenuBotoes";
 import { getPropertyById } from "@/services/getPropertyById";
 import "./page.css";
 
-// Define the precise type for the page props
 type ImovelPageProps = {
   params: Promise<{ id: string }>;
 };
@@ -41,7 +40,17 @@ export default async function ImovelPage({ params }: ImovelPageProps) {
     propertyData.descricao,
   ].filter((feature): feature is string => !!feature);
 
-  const carouselImages = propertyData.image ? [propertyData.image] : [];
+  // LÓGICA DO CARROSSEL MODIFICADA
+  // Usa o array 'images' se existir e tiver itens.
+  // Caso contrário, usa a 'image' principal como fallback.
+  // Se nenhuma imagem existir, passa um array vazio.
+  const carouselImages = 
+    propertyData.images && propertyData.images.length > 0
+      ? propertyData.images
+      : propertyData.image
+      ? [propertyData.image]
+      : [];
+
   const destaquesText = propertyData.destaques || "Nenhum destaque especial fornecido.";
 
   return (
