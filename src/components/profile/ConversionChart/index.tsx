@@ -38,6 +38,26 @@ export default function ConversionChart() {
             </Pie>
           </PieChart>
       </div>
+
+      <button
+        style={{
+          marginTop: "10px",
+          padding: "10px 20px",
+          borderRadius: "20px",
+          backgroundColor: "#004EFF",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+          fontWeight: 600,
+          display: "block",
+          marginLeft: "auto",
+          marginRight: "auto"
+        }}
+
+        onClick={() => window.location.href = "/imovel/cadastro"}
+      >
+        Cadastrar Imóvel
+      </button>
     </div>
   );
 }

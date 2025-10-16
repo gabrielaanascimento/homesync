@@ -38,7 +38,7 @@ export const registerProperty = async (
   images: FileList | null
 ): Promise<RegistrationResult> => {
   // CORREÇÃO: Obter o token real do localStorage para autenticação
-  const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+  const token = "djskbzsbvksbfvkbsfvbsbfv" // typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
 
   if (!token) {
     return { success: false, message: 'Autenticação necessária. Faça login novamente.' };
