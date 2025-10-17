@@ -28,7 +28,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       <HeaderProfile 
         imageUrl={photo}
-        description={bio}
       />
       
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-8">
