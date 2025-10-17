@@ -53,7 +53,7 @@ function Login() {
           <ButtonGoogle />
           <button type="submit" id="entrar">Entrar</button>
           <a href="#" className="esqSenha"><i>Esqueceu sua senha</i></a>
-          <a href="/cadastro">Ainda não tem uma conta?</a>
+          <a href="/cadastro/corretor">Ainda não tem uma conta?</a>
         </form>
       </div>
       <footer></footer>

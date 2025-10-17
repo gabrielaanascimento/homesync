@@ -6,13 +6,11 @@ export async function POST(request: Request) {
 
     const response = await login(email, password);
 
-    // Verificação simplificada para propósitos de teste
-    if (response) {
-        console.log(response);
-        
-        const user = {id: response.id, email: response.email}
-
-        return NextResponse.json(user, { status: 200 });
+    // Verificação para garantir que a resposta e o objeto de usuário existam
+    if (response && response.user) {
+        console.log("API Response:", response);
+        // Retorna APENAS o objeto de usuário para o NextAuth
+        return NextResponse.json(response.user, { status: 200 });
     } else {
         // Retorna um erro para login falhado
         return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });

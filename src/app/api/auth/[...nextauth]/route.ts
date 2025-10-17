@@ -8,8 +8,10 @@ import { redirect } from "next/navigation";
 // Define a interface para o objeto de usuário retornado pela API
 interface AuthUser extends User {
   id: string;
-  nivel: string;
+  nome: string;
   email: string;
+  telefone: string;
+  creci: string;
 }
 
 // Define a interface para as credenciais esperadas
@@ -18,14 +20,16 @@ interface AuthCredentials {
   password: string;
 }
 
-// Define a interface para a sessão, estendendo a padrão para incluir id e nivel
+// Define a interface para a sessão, estendendo a padrão para incluir os novos campos
 interface AuthSession extends Session {
   user: {
     name?: string | null;
     email: string;
     image?: string | null;
     id: string;
-    nivel: string;
+    nome: string;
+    telefone: string;
+    creci: string;
   };
 }
 
@@ -65,7 +69,6 @@ const handler = NextAuth({
 
           if (response.ok) {
             const user = await response.json();
-            console.log(user);
             return user as AuthUser;
           } else {
             return null;
@@ -87,8 +90,10 @@ const handler = NextAuth({
       if (user) {
         const authUser = user as AuthUser;
         token.id = authUser.id;
-        token.nivel = authUser.nivel;
+        token.nome = authUser.nome;
         token.email = authUser.email;
+        token.telefone = authUser.telefone;
+        token.creci = authUser.creci;
       }
       return token;
     },
@@ -96,8 +101,10 @@ const handler = NextAuth({
       if (token) {
         const authSession = session as AuthSession;
         authSession.user.id = token.id as string;
-        authSession.user.nivel = token.nivel as string;
+        authSession.user.nome = token.nome as string;
         authSession.user.email = token.email as string;
+        authSession.user.telefone = token.telefone as string;
+        authSession.user.creci = token.creci as string;
       }
       return session;
     },
