@@ -6,7 +6,6 @@ import React from "react";
 import "./ProfilePage.css"; 
 import EditarPerfil from "../EditProfile";
 import { signOut } from "next-auth/react";
-import { Products } from "@/components/profile/Products";
 
 // ... (imports do ChartJS)
 
@@ -93,12 +92,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
         </div>
         
-        {/* 2. GALERIA DE IMÓVEIS */}
-        <div className="properties-gallery">
-          {/* 4. Passa a lista de imóveis (com ID) para o componente */}
-          <Products title="Meus Imóveis" properties={userProperties} />
-        </div>
-
         {/* 3. Botão "Editar Perfil" */}
         <EditarPerfil />
 
