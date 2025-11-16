@@ -122,6 +122,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <p style={{textAlign: 'center', color: '#555'}}>Nenhuma avaliação encontrada.</p>
           )}
         </div>
+        <div className="EditProfile">
+          <EditarPerfil />
+        </div>
       </main>
     </div>
   );
