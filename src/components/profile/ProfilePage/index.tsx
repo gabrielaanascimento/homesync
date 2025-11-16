@@ -9,6 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import "./ProfilePage.css"; // o CSS adaptado que coloco abaixo
+import EditarPerfil from "../EditProfile/EditProfile";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -118,6 +119,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
               <div className="stars">{"⭐".repeat(rev.stars)}</div>
             </div>
           ))}
+        </div>
+        <div className="EditProfile">
+          <EditarPerfil />
         </div>
       </main>
     </div>
