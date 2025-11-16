@@ -66,6 +66,8 @@ const CorretorProfilePage: React.FC = () => {
     }
   }, [profileId, status, session, router]);
 
+  // Renderização condicional
+
   return (
     <PrivateRouteWrapper>
       {loadingProfile ? (
