@@ -10,11 +10,10 @@ import PrivateRouteWrapper from '@/components/PrivateRouteWrapper';
 import ProfilePage from '@/components/profile/ProfilePage';
 import { Avaliacao, getComentariosByPerfil } from '@/services/comentariosService';
 
-// 1. IMPORTS ADICIONADOS PARA BUSCAR OS IMÓVEIS
 import { Property } from '@/types/property';
 import { getAllProperties } from '@/services/getAllProperties';
 
-// Interface para os reviews formatados
+// ... (interface FormattedReview inalterada)
 interface FormattedReview {
   client: string;
   comment: string;
@@ -22,6 +21,7 @@ interface FormattedReview {
 }
 
 const CorretorProfilePage: React.FC = () => {
+  // ... (hooks inalterados)
   const { data: session, status } = useSession();
   const router = useRouter();
   const params = useParams();
@@ -30,10 +30,10 @@ const CorretorProfilePage: React.FC = () => {
   const [corretor, setCorretor] = useState<Corretor | null>(null);
   const [reviews, setReviews] = useState<FormattedReview[]>([]);
   
-  // 2. NOVO STATE PARA OS IMÓVEIS
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
+  // ... (lógica do useEffect inalterada, ela já busca os imóveis)
   useEffect(() => {
     if (status === "authenticated" && profileId) {
       const loggedInUserId = session.user.id;
@@ -47,16 +47,14 @@ const CorretorProfilePage: React.FC = () => {
       const fetchData = async () => {
         setLoadingProfile(true);
         
-        // 3. BUSCA OS IMÓVEIS EM PARALELO
         const [corretorData, comentariosData, allProps] = await Promise.all([
           getCorretorById(profileId, token),
           getComentariosByPerfil(profileId),
-          getAllProperties() // Adicionado
+          getAllProperties()
         ]);
 
         setCorretor(corretorData);
 
-        // Formata os comentários
         if (comentariosData && comentariosData.length > 0) {
           const formatted = comentariosData.map((c: Avaliacao) => ({
             client: c.autor_nome,
@@ -66,7 +64,6 @@ const CorretorProfilePage: React.FC = () => {
           setReviews(formatted);
         }
 
-        // 4. FILTRA E SALVA OS IMÓVEIS DO CORRETOR
         if (allProps) {
             const corretorIdNum = parseInt(profileId);
             const userProps = allProps.filter((p: Property) => p.corretor_id === corretorIdNum);
@@ -80,8 +77,10 @@ const CorretorProfilePage: React.FC = () => {
     }
   }, [profileId, status, session, router]);
 
-  // 5. FORMATA A LISTA DE IMÓVEIS PARA O COMPONENTE
+
+  // 1. ATUALIZAÇÃO AQUI: Garante que o 'id' do imóvel seja incluído
   const productList = properties.map(p => ({
+      id: p.id, // <-- ID ADICIONADO AQUI
       image: p.image || "/semImagem.jpg",
       name: p.nome,
       address: p.local,
@@ -96,6 +95,7 @@ const CorretorProfilePage: React.FC = () => {
       ) : !corretor ? (
         <div>Perfil do corretor não encontrado. (ID: {profileId})</div>
       ) : (
+        // 2. Passa a lista (agora com ID) para o componente
         <ProfilePage
           name={corretor.nome_exibicao || "Corretor"}
           title={corretor.descricao || "Corretor de Imóveis"}
@@ -110,8 +110,7 @@ const CorretorProfilePage: React.FC = () => {
           averageSales={0} 
           rating={parseFloat(corretor.avaliacao as any) || 0}
           
-          // 6. PASSA OS IMÓVEIS PARA O COMPONENTE
-          userProperties={productList}
+          userProperties={productList} // Passa a lista com IDs
         />
       )}
     </PrivateRouteWrapper>
