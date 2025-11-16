@@ -123,6 +123,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           )}
         </div>
         <div className="EditProfile">
+          //Editar dados 
           <EditarPerfil />
         </div>
       </main>
