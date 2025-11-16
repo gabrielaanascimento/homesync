@@ -74,6 +74,22 @@ body, .container {
   text-decoration: none;
   font-weight: 500;
   margin-top: 20px;
+  
+  /* Reset do estilo de botão */
+  background: none;
+  border: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem; /* Tamanho consistente */
+  cursor: pointer;
+  padding: 0;
+  width: 100%;
+}
+
+.logout:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin: 8px 0;
 }
 .main {
   flex: 1;
@@ -105,9 +121,6 @@ body, .container {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
 }
 
-
-
-
 .card h3 {
   color: #1d3fff;
   margin-bottom: 10px;
@@ -118,18 +131,31 @@ body, .container {
   font-weight: bold;
 }
 
-/* ======== CHART SECTION ======== */
-.chart {
+/* ======== NOVA SEÇÃO DA GALERIA DE IMÓVEIS ======== */
+.properties-gallery {
   background: #fff;
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.chart h3 {
+/* Sobrescreve o CSS do componente 'Products' para se ajustar a esta página */
+.properties-gallery .titleProducts {
   color: #1d3fff;
-  margin-bottom: 15px;
+  font-size: 1.5rem; /* Tamanho de título da ProfilePage */
+  text-align: left;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #1d3fff;
 }
+
+.properties-gallery .containerItemsProducts {
+  /* 2 colunas, se couber. 1 se for muito pequeno */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+/* ======== FIM DA NOVA SEÇÃO ======== */
 
 
 .reviews {
@@ -142,6 +168,8 @@ body, .container {
 .reviews h3 {
   color: #1d3fff;
   margin-bottom: 15px;
+  font-size: 1.5rem; /* Padronizando o tamanho do título */
+  text-align: left;
 }
 
 .review {
@@ -193,10 +221,36 @@ body, .container {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    padding: 10px 20px; /* Reduz padding no mobile */
+    height: auto;
+  }
+  
+  .sidebar h2 {
+    margin-bottom: 0; /* Remove margem do título no mobile */
   }
 
   .profile {
-    display: none;
+    display: none; /* Oculta foto/nome no mobile */
+  }
+
+  .menu {
+    display: flex; /* Menu na horizontal */
+    gap: 10px;
+  }
+  
+  .menu a {
+    margin: 0;
+    padding: 8px 12px;
+  }
+  
+  .logout {
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 1rem;
+  }
+  
+  .logout:hover {
+    margin: 0; /* Reseta margem de hover no mobile */
   }
 
   .main {
@@ -206,30 +260,8 @@ body, .container {
   .cards {
     flex-direction: column;
   }
-}
-
-/* Adicione isso ao final do arquivo, se necessário */
-
-.logout {
-  color: #fff;
-  text-align: center;
-  text-decoration: none;
-  font-weight: 500;
-  margin-top: 20px;
   
-  /* Adicionado para resetar o estilo do botão */
-  background: none;
-  border: none;
-  font-family: 'Poppins', sans-serif; /* Garante a mesma fonte */
-  font-size: 0.9rem; /* Ajuste o tamanho se necessário */
-  cursor: pointer;
-  padding: 0;
-  width: 100%; /* Faz ocupar a largura */
-}
-
-.logout:hover {
-  background: rgba(255, 255, 255, 0.3); /* Mesmo hover dos itens de menu */
-  border-radius: 8px; /* Mesmo radius */
-  padding: 12px 20px; /* Mesmo padding */
-  margin: 8px 0; /* Mesma margem */
+  .properties-gallery .containerItemsProducts {
+     grid-template-columns: 1fr; /* 1 coluna no mobile */
+  }
 }

@@ -13,9 +13,20 @@ import {
 } from "chart.js";
 import "./ProfilePage.css"; // Seu CSS
 import EditarPerfil from "../EditProfile";
-import { signOut } from "next-auth/react"; // 1. IMPORTAR O SIGNOUT
+import { signOut } from "next-auth/react";
+// 1. IMPORTAR O COMPONENTE DE PRODUTOS
+import { Products } from "@/components/produtos/products";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+// 2. TIPO PARA A PROPRIEDADE (ESPERADO PELO COMPONENTE 'Products')
+interface ProductItem {
+  image: string;
+  name: string;
+  address: string;
+  rooms: string;
+  area: number;
+}
 
 // Interface para as props do componente
 export interface ProfilePageProps {
@@ -25,15 +36,16 @@ export interface ProfilePageProps {
   reviews: { client: string; comment: string; stars: number }[];
   salesData?: number[];
   
-  // --- CAMPOS ATUALIZADOS ---
   email: string;
   creci: string;
   celular?: string;
 
-  // Campos antigos (removidos da visualização dos cards, mas mantidos na interface)
   totalSales: number; 
   averageSales: number;
   rating: number;
+  
+  // 3. ADICIONAR A NOVA PROP DE IMÓVEIS
+  userProperties: ProductItem[];
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({
@@ -45,9 +57,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   email,
   creci,
   celular,
-  totalSales,
-  averageSales,
-  rating,
+  // 4. RECEBER A PROP DE IMÓVEIS
+  userProperties,
 }) => {
   // (Lógica do gráfico permanece inalterada...)
   const dadosGrafico = {
@@ -61,7 +72,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
       },
     ],
   };
-
   const opcoesGrafico = {
     responsive: true,
     plugins: { legend: { display: false } },
@@ -73,7 +83,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
 
   return (
     <div className="container">
-      {/* Sidebar */}
+      {/* Sidebar (inalterada) */}
       <aside className="sidebar">
         <div>
           <h2>Corretor+</h2>
@@ -82,15 +92,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <h3>{name}</h3>
             <p>{title}</p>
           </div>
-
-          {/* 2. MENU ATUALIZADO */}
           <nav className="menu">
             <a href="/chat">Chat IA</a>
             <a href="/imovel/cadastro">Cadastrar Imóvel</a>
           </nav>
         </div>
-        
-        {/* 3. BOTÃO SAIR FUNCIONAL */}
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
           className="logout"
@@ -101,7 +107,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
 
       {/* Conteúdo Principal */}
       <main className="main">
-        {/* Cards de Contato (inalterados desta vez) */}
+        {/* 1. Cards de Contato */}
         <div className="cards">
           <div className="card">
             <h3>Email</h3>
@@ -116,11 +122,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <p>{celular || 'Não cadastrado'}</p>
           </div>
         </div>
+        
+        {/* 2. GALERIA DE IMÓVEIS (NOVA SEÇÃO) */}
+        <div className="properties-gallery">
+          <Products title="Meus Imóveis" properties={userProperties} />
+        </div>
 
-        {/* Botão "Editar Perfil" que abre o modal */}
+        {/* 3. Botão "Editar Perfil" (já existia, apenas movido) */}
         <EditarPerfil />
 
-        {/* Reviews (inalterado) */}
+        {/* 4. REVIEWS DINÂMICAS */}
         <div className="reviews">
           <h3>Avaliações Recentes</h3>
           {reviews.length > 0 ? (
@@ -135,8 +146,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <p style={{textAlign: 'center', color: '#555'}}>Nenhuma avaliação encontrada.</p>
           )}
         </div>
-        
-        {/* 4. SEÇÃO DUPLICADA REMOVIDA */}
       </main>
     </div>
   );

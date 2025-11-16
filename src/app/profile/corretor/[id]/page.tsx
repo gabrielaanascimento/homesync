@@ -7,11 +7,14 @@ import { useRouter, useParams } from "next/navigation";
 import { getCorretorById, Corretor } from '@/services/getCorretorById';
 import { Loader2 } from 'lucide-react';
 import PrivateRouteWrapper from '@/components/PrivateRouteWrapper';
-// 1. Importe o ProfilePage e os serviços de comentários
 import ProfilePage from '@/components/profile/ProfilePage';
 import { Avaliacao, getComentariosByPerfil } from '@/services/comentariosService';
 
-// 2. Defina o tipo para os reviews formatados
+// 1. IMPORTS ADICIONADOS PARA BUSCAR OS IMÓVEIS
+import { Property } from '@/types/property';
+import { getAllProperties } from '@/services/getAllProperties';
+
+// Interface para os reviews formatados
 interface FormattedReview {
   client: string;
   comment: string;
@@ -25,7 +28,10 @@ const CorretorProfilePage: React.FC = () => {
   const profileId = params.id as string; 
 
   const [corretor, setCorretor] = useState<Corretor | null>(null);
-  const [reviews, setReviews] = useState<FormattedReview[]>([]); // 3. State para reviews
+  const [reviews, setReviews] = useState<FormattedReview[]>([]);
+  
+  // 2. NOVO STATE PARA OS IMÓVEIS
+  const [properties, setProperties] = useState<Property[]>([]);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
   useEffect(() => {
@@ -41,15 +47,16 @@ const CorretorProfilePage: React.FC = () => {
       const fetchData = async () => {
         setLoadingProfile(true);
         
-        // 4. Busca dados do corretor e comentários em paralelo
-        const [corretorData, comentariosData] = await Promise.all([
+        // 3. BUSCA OS IMÓVEIS EM PARALELO
+        const [corretorData, comentariosData, allProps] = await Promise.all([
           getCorretorById(profileId, token),
-          getComentariosByPerfil(profileId) // Não precisa de token (rota pública)
+          getComentariosByPerfil(profileId),
+          getAllProperties() // Adicionado
         ]);
 
         setCorretor(corretorData);
 
-        // 5. Formata os comentários para o formato que o ProfilePage espera
+        // Formata os comentários
         if (comentariosData && comentariosData.length > 0) {
           const formatted = comentariosData.map((c: Avaliacao) => ({
             client: c.autor_nome,
@@ -57,6 +64,13 @@ const CorretorProfilePage: React.FC = () => {
             stars: c.estrelas,
           }));
           setReviews(formatted);
+        }
+
+        // 4. FILTRA E SALVA OS IMÓVEIS DO CORRETOR
+        if (allProps) {
+            const corretorIdNum = parseInt(profileId);
+            const userProps = allProps.filter((p: Property) => p.corretor_id === corretorIdNum);
+            setProperties(userProps);
         }
         
         setLoadingProfile(false);
@@ -66,7 +80,14 @@ const CorretorProfilePage: React.FC = () => {
     }
   }, [profileId, status, session, router]);
 
-  // Renderização condicional
+  // 5. FORMATA A LISTA DE IMÓVEIS PARA O COMPONENTE
+  const productList = properties.map(p => ({
+      image: p.image || "/semImagem.jpg",
+      name: p.nome,
+      address: p.local,
+      rooms: `${p.quartos || 0} quartos`,
+      area: p.area || 0
+  }));
 
   return (
     <PrivateRouteWrapper>
@@ -75,22 +96,22 @@ const CorretorProfilePage: React.FC = () => {
       ) : !corretor ? (
         <div>Perfil do corretor não encontrado. (ID: {profileId})</div>
       ) : (
-        // 6. ATUALIZAÇÃO AQUI: Passe os novos dados para o ProfilePage
         <ProfilePage
           name={corretor.nome_exibicao || "Corretor"}
           title={corretor.descricao || "Corretor de Imóveis"}
           photo={corretor.foto || "/semImagem.jpg"}
-          reviews={reviews} // Passa os comentários dinâmicos
+          reviews={reviews} 
 
-          // --- NOVAS PROPS ---
           email={corretor.email}
           creci={corretor.creci}
           celular={corretor.celular || 'Não cadastrado'}
           
-          // --- PROPS ANTIGAS (Mantidas para a interface) ---
           totalSales={corretor.vendas_anual || 0}
           averageSales={0} 
           rating={parseFloat(corretor.avaliacao as any) || 0}
+          
+          // 6. PASSA OS IMÓVEIS PARA O COMPONENTE
+          userProperties={productList}
         />
       )}
     </PrivateRouteWrapper>
