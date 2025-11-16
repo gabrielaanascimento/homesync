@@ -21,26 +21,38 @@ export interface ProfilePageProps {
   name: string;
   title: string;
   photo: string;
-  totalSales: number;
-  averageSales: number; // API não fornece, usaremos 0
-  rating: number;
-  // Prop de reviews agora é obrigatória para os dados dinâmicos
   reviews: { client: string; comment: string; stars: number }[];
-  // Dados do gráfico (API não fornece, usaremos padrão)
   salesData?: number[];
+  
+  // --- CAMPOS ATUALIZADOS ---
+  // Adicione os novos campos que você quer exibir
+  email: string;
+  creci: string;
+  celular?: string;
+
+  // Campos antigos (removidos da visualização dos cards, mas mantidos na interface)
+  totalSales: number; 
+  averageSales: number;
+  rating: number;
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({
   name,
   title,
   photo,
+  reviews,
+  salesData,
+  // --- CAMPOS ATUALIZADOS ---
+  // Receba os novos campos aqui
+  email,
+  creci,
+  celular,
+  // (Campos antigos ainda são recebidos, mas não serão usados nos cards)
   totalSales,
   averageSales,
   rating,
-  reviews,
-  salesData,
 }) => {
-  // Dados do gráfico: use os dados passados ou um fallback estático
+  // Dados do gráfico (lógica inalterada)
   const dadosGrafico = {
     labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out"],
     datasets: [
@@ -64,12 +76,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
 
   return (
     <div className="container">
-      {/* Sidebar */}
+      {/* Sidebar (inalterada) */}
       <aside className="sidebar">
         <div>
           <h2>Corretor+</h2>
           <div className="profile">
-            {/* DADOS DINÂMICOS */}
             <img src={photo} alt={`Foto de ${name}`} />
             <h3>{name}</h3>
             <p>{title}</p>
@@ -87,27 +98,30 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
 
       {/* Conteúdo Principal */}
       <main className="main">
+        {/* --- SEÇÃO DE CARDS ATUALIZADA --- */}
         <div className="cards">
           <div className="card">
-            <h3>Total de Vendas</h3>
-            {/* DADO DINÂMICO */}
-            <p>{totalSales}</p>
+            <h3>Email</h3>
+            {/* DADO DINÂMICO NOVO */}
+            <p style={{ fontSize: '1rem' }}>{email}</p> 
           </div>
           <div className="card">
-            <h3>Média de Vendas</h3>
-            {/* DADO DINÂMICO (com padrão) */}
-            <p>R$ {averageSales.toLocaleString()}</p>
+            <h3>CRECI</h3>
+            {/* DADO DINÂMICO NOVO */}
+            <p>{creci}</p>
           </div>
           <div className="card">
-            <h3>Avaliação Geral</h3>
-            {/* DADO DINÂMICO */}
-            <p>⭐ {rating.toFixed(2)} / 5</p>
+            <h3>Telefone</h3>
+            {/* DADO DINÂMICO NOVO */}
+            <p>{celular || 'Não cadastrado'}</p>
           </div>
         </div>
+        {/* --- FIM DA SEÇÃO ATUALIZADA --- */}
+
 
         <EditarPerfil />
 
-        {/* REVIEWS DINÂMICAS */}
+        {/* REVIEWS DINÂMICAS (inalterado) */}
         <div className="reviews">
           <h3>Avaliações Recentes</h3>
           {reviews.length > 0 ? (
@@ -123,7 +137,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           )}
         </div>
         <div className="EditProfile">
-          //Editar dados 
+          {/* //Editar dados  */}
           <EditarPerfil />
         </div>
       </main>

@@ -75,20 +75,23 @@ const CorretorProfilePage: React.FC = () => {
       ) : !corretor ? (
         <div>Perfil do corretor não encontrado. (ID: {profileId})</div>
       ) : (
-        // 6. Renderiza APENAS o ProfilePage com todos os dados dinâmicos
+        // 6. ATUALIZAÇÃO AQUI: Passe os novos dados para o ProfilePage
         <ProfilePage
           name={corretor.nome_exibicao || "Corretor"}
           title={corretor.descricao || "Corretor de Imóveis"}
           photo={corretor.foto || "/semImagem.jpg"}
-          totalSales={corretor.vendas_anual || 0}
-          averageSales={0} // API não fornece, valor padrão 0
-          rating={parseFloat(corretor.avaliacao as any) || 0}
           reviews={reviews} // Passa os comentários dinâmicos
-          // salesData={corretor.conversao_data} // Você pode usar isso se a API retornar os dados do gráfico
+
+          // --- NOVAS PROPS ---
+          email={corretor.email}
+          creci={corretor.creci}
+          celular={corretor.celular || 'Não cadastrado'}
+          
+          // --- PROPS ANTIGAS (Mantidas para a interface) ---
+          totalSales={corretor.vendas_anual || 0}
+          averageSales={0} 
+          rating={parseFloat(corretor.avaliacao as any) || 0}
         />
-        
-        // O componente <Comentarios> foi removido
-        // pois o <ProfilePage> agora renderiza os comentários
       )}
     </PrivateRouteWrapper>
   );
@@ -107,7 +110,6 @@ const styles: { [key: string]: React.CSSProperties } = {
         gap: '1rem',
         backgroundColor: '#f0f5ff'
     },
-    // Removido mainContainer e grid, pois ProfilePage agora controla o layout
 };
 
 export default CorretorProfilePage;
