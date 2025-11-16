@@ -1,6 +1,6 @@
 import React from "react";
 import "./styles.css";
-import { ItemProducts } from "../ItemProduct";
+import { ItemProducts } from "../ItemProducts";
 
 interface Property {
   id: number; // 1. ADICIONAR ID AQUI
