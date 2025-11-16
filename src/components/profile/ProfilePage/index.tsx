@@ -2,15 +2,24 @@
 "use client";
 
 import React from "react";
-// ... (outros imports)
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import "./ProfilePage.css"; 
-import EditarPerfil from "../EditProfile";
+import EditarPerfil from "../EditProfile"; // O componente em si
 import { signOut } from "next-auth/react";
+import { Products } from "@/components/produtos/products"; 
 
-// ... (imports do ChartJS)
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 interface ProductItem {
-  id: number; // 1. ADICIONAR ID AQUI
+  id: number; 
   image: string;
   name: string;
   address: string;
@@ -19,7 +28,6 @@ interface ProductItem {
 }
 
 export interface ProfilePageProps {
-  // ... (outros campos: name, title, photo, etc.)
   name: string;
   title: string;
   photo: string;
@@ -31,8 +39,7 @@ export interface ProfilePageProps {
   totalSales: number; 
   averageSales: number;
   rating: number;
-  
-  userProperties: ProductItem[]; // 2. Esta interface agora inclui o ID
+  userProperties: ProductItem[];
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({
@@ -44,14 +51,32 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   email,
   creci,
   celular,
-  userProperties, // 3. A lista de imóveis (com ID)
+  userProperties,
 }) => {
-  // ... (Lógica do gráfico e do sidebar inalterada) ...
-  // ...
+  // (Lógica do gráfico inalterada)
+  const dadosGrafico = {
+    labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out"],
+    datasets: [
+      {
+        label: "Vendas (R$)",
+        data: salesData || [80, 95, 70, 110, 90, 100, 125, 98, 113, 102],
+        backgroundColor: "#1d3fffcc",
+        borderRadius: 8,
+      },
+    ],
+  };
+  const opcoesGrafico = {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, ticks: { color: "#555" } },
+      x: { ticks: { color: "#555" } },
+    },
+  };
 
   return (
     <div className="container">
-      {/* Sidebar (inalterado) */}
+      {/* Sidebar */}
       <aside className="sidebar">
         <div>
           <h2>Corretor+</h2>
@@ -63,6 +88,23 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           <nav className="menu">
             <a href="/chat">Chat IA</a>
             <a href="/imovel/cadastro">Cadastrar Imóvel</a>
+            
+            {/* 1. COMPONENTE MOVIDO PARA CÁ E USANDO A NOVA PROP */}
+            <EditarPerfil 
+              renderButton={(openModal) => (
+                <a 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault(); // Previne o link de navegar
+                    openModal();        // Abre o modal
+                  }}
+                  // Estilo idêntico aos outros <a> do menu
+                  className="menu-button-style"
+                >
+                  Editar Perfil
+                </a>
+              )}
+            />
           </nav>
         </div>
         <button
@@ -77,7 +119,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
       <main className="main">
         {/* 1. Cards de Contato */}
         <div className="cards">
-          {/* ... (cards de email, creci, celular) ... */}
           <div className="card">
             <h3>Email</h3>
             <p style={{ fontSize: '1rem' }}>{email}</p> 
@@ -92,13 +133,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           </div>
         </div>
         
-        {/* 3. Botão "Editar Perfil" */}
-        <EditarPerfil />
+        {/* 2. GALERIA DE IMÓVEIS */}
+        <div className="properties-gallery">
+          <Products title="Meus Imóveis" properties={userProperties} />
+        </div>
+
+        {/* 3. <EditarPerfil /> FOI REMOVIDO DAQUI */}
 
         {/* 4. REVIEWS DINÂMICAS */}
         <div className="reviews">
           <h3>Avaliações Recentes</h3>
-          {/* ... (lógica de renderização das reviews) ... */}
           {reviews.length > 0 ? (
             reviews.map((rev, i) => (
               <div key={i} className="review">

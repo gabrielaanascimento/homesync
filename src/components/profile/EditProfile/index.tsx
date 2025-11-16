@@ -1,22 +1,13 @@
 // src/components/profile/EditProfile/index.tsx
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react"; // Importar loader
+"use client"; // Necessário para hooks
 
+import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
+
+// Função para pegar o ID do usuário (sua lógica original)
 function getUserIdFromToken() {
-  // Tenta pegar o token da sessão, se não, do localStorage (fallback)
-  // NOTA: O ideal é pegar o token da sessão (useSession), mas
-  // este componente parece ser usado fora de um Provedor de Sessão direto.
-  // Esta função de localStorage VAI FALHAR se você não salvar o token lá.
-  // A lógica em `[id]/page.tsx` que USA a sessão é a mais correta.
-  
-  // Vamos usar o token da sessão que está no next-auth
-  // Esta função pode ser simplificada se o componente for filho
-  // de um <SessionProvider>
-  
-  // Por enquanto, vou manter sua lógica original de localStorage
   const token = localStorage.getItem("token"); 
   if (!token) return null;
-
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
     return payload.id;
@@ -25,7 +16,16 @@ function getUserIdFromToken() {
   }
 }
 
-export default function EditarPerfil() {
+// 1. ADICIONADA UMA INTERFACE PARA AS PROPS
+interface EditarPerfilProps {
+  /**
+   * Permite passar uma função que renderiza um botão customizado.
+   * A função recebe 'openModal' como argumento, que deve ser chamado no onClick.
+   */
+  renderButton?: (openModal: () => void) => React.ReactNode;
+}
+
+export default function EditarPerfil({ renderButton }: EditarPerfilProps) { // 2. RECEBE A PROP
   const userId = getUserIdFromToken();
 
   const [open, setOpen] = useState(false);
@@ -45,21 +45,16 @@ export default function EditarPerfil() {
   useEffect(() => {
     async function fetchData() {
       if (!userId) {
-        // Não defina erro, apenas não mostre o botão
         setLoading(false);
         return;
       }
-
       try {
         const res = await fetch(
           `https://homesyncapi.vercel.app/corretor/corretores/${userId}`
         );
-
         if (!res.ok) throw new Error("Falha no GET");
-
         const json = await res.json();
         setData(json);
-
         setNomeExibicao(json.nome_exibicao);
         setEmail(json.email);
         setCelular(json.celular);
@@ -69,7 +64,6 @@ export default function EditarPerfil() {
         setLoading(false);
       }
     }
-
     fetchData();
   }, [userId]);
 
@@ -78,7 +72,6 @@ export default function EditarPerfil() {
     setSaving(true);
     setError("");
     setSuccess("");
-
     try {
       const res = await fetch(
         `https://homesyncapi.vercel.app/corretor/corretores/${userId}`,
@@ -86,26 +79,22 @@ export default function EditarPerfil() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            // IMPORTANTE: Se sua rota PUT for protegida, você precisa enviar o token
-            // "Authorization": `Bearer ${seuTokenAqui}`
+            // NOTA: Se sua rota PUT for protegida, você precisará adicionar o token aqui
           },
           body: JSON.stringify({
             nome_exibicao: nomeExibicao,
             email,
             celular,
-            // Só envia a senha se ela não estiver vazia
             senha: senha || undefined, 
           }),
         }
       );
-
       if (!res.ok) throw new Error("Falha ao salvar. Verifique os campos.");
-
       setSuccess("Dados atualizados com sucesso!");
-      setTimeout(() => { // Fecha o modal 2s após o sucesso
+      setTimeout(() => {
         setOpen(false);
         setSuccess("");
-        window.location.reload(); // Recarrega a página para ver as mudanças
+        window.location.reload(); 
       }, 2000);
     } catch(err: any) {
       setError(err.message || "Erro ao salvar.");
@@ -114,19 +103,25 @@ export default function EditarPerfil() {
     }
   }
 
-  // Não renderiza nada se estiver carregando ou se não houver userId
+  // 3. FUNÇÃO PARA SER PASSADA PARA O BOTÃO
+  const handleOpen = () => setOpen(true);
+
   if (loading || !userId) return null;
 
   return (
     <div>
-      {/* Botão para abrir o modal/form */}
-      <button onClick={() => setOpen(true)} style={styles.openButton}>
-        Editar Perfil
-      </button>
+      {/* 4. LÓGICA CONDICIONAL: Usa o botão customizado ou o padrão */}
+      {renderButton ? (
+        renderButton(handleOpen)
+      ) : (
+        <button onClick={handleOpen} style={styles.openButton}>
+          Editar Perfil
+        </button>
+      )}
 
-      {/* O formulário (modal/popup) */}
+      {/* O formulário (modal/popup) - ESTA PARTE CONTINUA IGUAL */}
       {open && (
-        <div style={styles.overlay}> {/* Fundo escuro */}
+        <div style={styles.overlay}> 
           <div style={styles.gradientContainer}>
             <div style={styles.formContainer}>
               <h3 style={styles.title}>Editar Perfil</h3>
@@ -184,7 +179,6 @@ export default function EditarPerfil() {
                   )}
                 </button>
               </div>
-
             </div>
           </div>
         </div>
@@ -193,8 +187,7 @@ export default function EditarPerfil() {
   );
 }
 
-// --- NOVOS ESTILOS ---
-// Baseado nos estilos de `cadastro/corretor/page.tsx`
+// Estilos (O modal usa estes estilos)
 const styles: { [key: string]: React.CSSProperties } = {
   openButton: {
     padding: '10px 20px',
@@ -290,7 +283,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '45px', // Altura fixa
+    height: '45px', 
   },
   cancelButton: {
     padding: '10px',
@@ -302,7 +295,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     cursor: 'pointer',
     fontSize: '1rem',
     fontWeight: 'bold',
-    height: '45px', // Altura fixa
+    height: '45px', 
   },
   errorText: {
     color: 'red',
