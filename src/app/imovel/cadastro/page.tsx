@@ -1,3 +1,4 @@
+// src/app/imovel/cadastro/page.tsx
 "use client"
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -6,7 +7,6 @@ import logo from '@/img/logoLogin.png';
 import { useSession } from 'next-auth/react';
 import { Loader2 } from 'lucide-react'; 
 
-// Lista de opções para Tipo de Imóvel baseada nos modelos do backend
 const TIPO_IMOVEL_OPTIONS = ['Apartamento', 'Casa', 'Terreno', 'SalaComercial'];
 
 export default function CadastroImovel() {
@@ -16,25 +16,21 @@ export default function CadastroImovel() {
     const [error, setError] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Redirecionamento se não estiver autenticado (corretor)
     if (status === "loading") {
         return <div style={styles.loadingContainer}><Loader2 style={{ animation: 'spin 1s linear infinite' }} size={40} color="#004EFF" /> <p>Carregando sessão...</p></div>;
     }
 
-    // Se o usuário não estiver autenticado, redireciona. 
-    // Assumimos que o ID do corretor está no session.user.id (como em Next-main/src/app/profile/corretor/[id]/page.tsx)
     if (status === "unauthenticated" || !session?.user?.id) {
         router.push('/login');
         return null;
     }
     
-    // Converte o ID da sessão para número (assumindo que o ID é um número no backend)
+    // Pega o ID e o Token da sessão
     const corretorId = parseInt(session.user.id);
+    const authToken = session.user.token; // Pega o token da API
     
-    // Mock de ID do Vendedor: Para fins de demonstração, usar um valor fixo.
-    // Em um sistema real, seria o ID do cliente/construtora que está vendendo.
+    // Mock de ID do Vendedor
     const clienteVendedorIdMock = 1; 
-
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -44,7 +40,7 @@ export default function CadastroImovel() {
         const formData = new FormData(event.currentTarget);
         const images = fileInputRef.current?.files || null;
         
-        // 1. Coleta e validação básica dos dados
+        // ... (validação de dados inalterada) ...
         const valorRaw = (formData.get('valor') as string).replace(/[R$,.]/g, '').replace(',', '.');
         const quartosRaw = formData.get('quartos') as string;
         const areaRaw = formData.get('area') as string;
@@ -66,7 +62,6 @@ export default function CadastroImovel() {
             endereco: formData.get('endereco') as string,
             descricao: formData.get('descricao') as string,
             destaques: formData.get('destaques') as string,
-            // Adiciona campos obrigatórios para o backend
             status: 'Disponível' as 'Disponível',
             corretor_id: corretorId,
             cliente_vendedor_id: clienteVendedorIdMock, 
@@ -78,13 +73,11 @@ export default function CadastroImovel() {
              return;
         }
 
-
-        // 2. Envio ao serviço
-        const result = await registerProperty(propertyData, images);
+        // 2. Envio ao serviço (PASSANDO O TOKEN)
+        const result = await registerProperty(propertyData, images, authToken);
 
         if (result.success) {
             alert(result.message);
-            // Redireciona para a lista de produtos após o sucesso
             router.push('/produtos'); 
         } else {
             setError(result.message);
@@ -94,67 +87,68 @@ export default function CadastroImovel() {
     };
 
     return (
+        // ... (JSX do formulário inalterado) ...
         <div style={styles.pageContainer}>
-            <div style={styles.gradientContainer}>
-                <form onSubmit={handleSubmit} style={styles.formContainer}>
-                    <img src={logo.src} alt="logo" style={styles.logo} />
-                    <h1 style={styles.title}>Cadastro de Imóvel</h1>
+             <div style={styles.gradientContainer}>
+                 <form onSubmit={handleSubmit} style={styles.formContainer}>
+                     <img src={logo.src} alt="logo" style={styles.logo} />
+                     <h1 style={styles.title}>Cadastro de Imóvel</h1>
 
-                    {error && <p style={styles.errorText}>{error}</p>}
+                     {error && <p style={styles.errorText}>{error}</p>}
 
-                    {/* GRUPO DE INPUTS: Linha 1 */}
-                    <div style={styles.inputGrid}>
-                        <input type="text" name="nome" placeholder="Título/Nome do Imóvel" style={styles.inputField} required />
-                        <input type="text" name="endereco" placeholder="Endereço Completo" style={styles.inputField} required />
-                        <input type="text" name="local" placeholder="Localidade (Ex: Mogi das Cruzes)" style={styles.inputField} required />
-                        <select name="tipo_imovel" style={styles.inputField} required defaultValue="">
-                            <option value="" disabled>Tipo de Imóvel</option>
-                            {TIPO_IMOVEL_OPTIONS.map(tipo => (
-                                <option key={tipo} value={tipo}>{tipo}</option>
-                            ))}
-                        </select>
-                    </div>
+                     {/* GRUPO DE INPUTS: Linha 1 */}
+                     <div style={styles.inputGrid}>
+                         <input type="text" name="nome" placeholder="Título/Nome do Imóvel" style={styles.inputField} required />
+                         <input type="text" name="endereco" placeholder="Endereço Completo" style={styles.inputField} required />
+                         <input type="text" name="local" placeholder="Localidade (Ex: Mogi das Cruzes)" style={styles.inputField} required />
+                         <select name="tipo_imovel" style={styles.inputField} required defaultValue="">
+                             <option value="" disabled>Tipo de Imóvel</option>
+                             {TIPO_IMOVEL_OPTIONS.map(tipo => (
+                                 <option key={tipo} value={tipo}>{tipo}</option>
+                             ))}
+                         </select>
+                     </div>
 
-                    {/* GRUPO DE INPUTS: Linha 2 (Valores/Números) */}
-                    <div style={styles.inputGrid}>
-                        <input type="number" name="valor" step="1000" min="0" placeholder="Valor (R$)" style={styles.inputField} required />
-                        <input type="number" name="quartos" step="1" min="1" placeholder="Nº de Quartos" style={styles.inputField} required />
-                        <input type="number" name="area" step="1" min="1" placeholder="Área Total (m²)" style={styles.inputField} required />
-                        <label style={{...styles.inputField, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backgroundColor: '#f0f0f0'}}>
-                            Imagens (Max 10)
-                            <input type="file" ref={fileInputRef} name="images" accept="image/*" multiple max={10} style={{ display: 'none' }} />
-                        </label>
-                    </div>
+                     {/* GRUPO DE INPUTS: Linha 2 (Valores/Números) */}
+                     <div style={styles.inputGrid}>
+                         <input type="number" name="valor" step="1000" min="0" placeholder="Valor (R$)" style={styles.inputField} required />
+                         <input type="number" name="quartos" step="1" min="1" placeholder="Nº de Quartos" style={styles.inputField} required />
+                         <input type="number" name="area" step="1" min="1" placeholder="Área Total (m²)" style={styles.inputField} required />
+                         <label style={{...styles.inputField, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backgroundColor: '#f0f0f0'}}>
+                             Imagens (Max 10)
+                             <input type="file" ref={fileInputRef} name="images" accept="image/*" multiple max={10} style={{ display: 'none' }} />
+                         </label>
+                     </div>
 
-                    {/* TEXT AREAS */}
-                    <textarea name="descricao" placeholder="Descrição Detalhada do Imóvel" style={{ ...styles.textareaField, height: '80px' }} required />
-                    <textarea name="destaques" placeholder="Destaques (Um por linha, ex: Piscina, Área Gourmet)" style={{ ...styles.textareaField, height: '80px' }} required />
+                     {/* TEXT AREAS */}
+                     <textarea name="descricao" placeholder="Descrição Detalhada do Imóvel" style={{ ...styles.textareaField, height: '80px' }} required />
+                     <textarea name="destaques" placeholder="Destaques (Um por linha, ex: Piscina, Área Gourmet)" style={{ ...styles.textareaField, height: '80px' }} required />
                     
-                    <button type="submit" id="entrar" disabled={isLoading} style={{
-                        ...styles.button,
-                        backgroundImage: isLoading ? 'linear-gradient(to right, #6B7280, #9CA3AF)' : 'linear-gradient(to right, #004EFF, #99B8FE)',
-                        cursor: isLoading ? 'wait' : 'pointer'
-                    }}>
-                        {isLoading ? (
-                            <Loader2 style={{ animation: 'spin 1s linear infinite' }} size={24} color="#fff" />
-                        ) : (
-                            "Cadastrar Imóvel"
-                        )}
-                    </button>
+                     <button type="submit" id="entrar" disabled={isLoading} style={{
+                         ...styles.button,
+                         backgroundImage: isLoading ? 'linear-gradient(to right, #6B7280, #9CA3AF)' : 'linear-gradient(to right, #004EFF, #99B8FE)',
+                         cursor: isLoading ? 'wait' : 'pointer'
+                     }}>
+                         {isLoading ? (
+                             <Loader2 style={{ animation: 'spin 1s linear infinite' }} size={24} color="#fff" />
+                         ) : (
+                             "Cadastrar Imóvel"
+                         )}
+                     </button>
 
-                    <a onClick={() => router.push('/produtos')} style={{
-                        color: '#004EFF',
-                        textDecoration: 'underline',
-                        cursor: 'pointer',
-                        marginTop: '1rem'
-                    }}>Cancelar e Voltar</a>
-                </form>
-            </div>
-        </div>
+                     <a onClick={() => router.push('/produtos')} style={{
+                         color: '#004EFF',
+                         textDecoration: 'underline',
+                         cursor: 'pointer',
+                         marginTop: '1rem'
+                     }}>Cancelar e Voltar</a>
+                 </form>
+             </div>
+         </div>
     )
 }
 
-// Estilos
+// ... (Estilos inalterados) ...
 const styles: { [key: string]: React.CSSProperties } = {
     pageContainer: {
         width: '100vw',
@@ -188,7 +182,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        borderRadius: '18px', // Menor que 10% para caber no gradiente
+        borderRadius: '18px', 
         backgroundColor: 'rgb(255, 255, 255)',
         zIndex: 998,
         position: 'relative'

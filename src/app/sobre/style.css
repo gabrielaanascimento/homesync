@@ -1,0 +1,255 @@
+:root {
+            --primary-blue-sync: #0066ff; 
+            --secondary-color: #0066ff; 
+            --text-dark: #0066FF;
+            --text-light: #555;
+            --background-light: #f4f4f4;
+            --white: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: var(--primary-blue-sync);
+        }
+
+        h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        
+        .header {
+            background-color: var(--white);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo a {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary-blue-sync);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .link-login {
+            color: var(--primary-blue-sync);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 20px;
+            transition: opacity 0.3s;
+        }
+        
+        .link-login:hover {
+            opacity: 0.8;
+        }
+
+        .btn-trial {
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            background-color: transparent;
+            color: var(--primary-blue-sync);
+            border: 2px solid var(--primary-blue-sync);
+            border-radius: 30px;
+            padding: 10px 20px;
+            white-space: nowrap;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .btn-trial:hover {
+            background-color: var(--primary-blue-sync);
+            color: var(--white);
+        }
+
+        
+        .about-banner {
+            background-color: var(--background-light);
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .about-banner h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: var(--primary-blue-sync);
+            font-weight: 700;
+        }
+
+        .about-banner p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-light);
+        }
+
+        
+        .story-section {
+            padding: 80px 0;
+        }
+
+        .story-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-top: 40px;
+        }
+
+        .story-text, .story-image {
+            flex: 1;
+        }
+
+        .story-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .story-text h2 {
+            margin-top: 0;
+            color: var(--text-dark);
+        }
+
+        
+        .values-section {
+            background-color: var(--background-light);
+            padding: 80px 0;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .value-card {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .value-card i {
+            font-size: 40px;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .value-card h3 {
+            color: var(--primary-blue-sync);
+        }
+
+        
+        .footer {
+            background-color: var(--white);
+            border-top: 1px solid var(--background-light);
+            color: var(--text-dark);
+            padding: 20px 0;
+        }
+        
+        .footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        /* Ícones Sociais */
+        .social-icons a {
+            text-decoration: none;
+            margin-left: 10px;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--primary-blue-sync);
+            border-radius: 50%;
+            color: var(--primary-blue-sync);
+            background-color: var(--white);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--primary-blue-sync);
+            color: var(--white);
+        }
+
+        
+        @media (max-width: 768px) {
+            
+            
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .nav-actions {
+                margin-top: 15px;
+            }
+
+            
+            .story-content {
+                flex-direction: column;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            
+            .footer .container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .social-icons {
+                margin-top: 15px;
+            }
+        }

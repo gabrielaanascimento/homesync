@@ -1,3 +1,6 @@
+// src/components/profile/ProfilePage/index.tsx
+"use client";
+
 import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -8,26 +11,23 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import "./ProfilePage.css"; // o CSS adaptado que coloco abaixo
+import "./ProfilePage.css"; // Seu CSS
+import EditarPerfil from "../EditProfile";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-export interface Contact {
-  type: string;
-  label: string;
-  value: string;
-  link: string;
-}
-
+// Interface para as props do componente
 export interface ProfilePageProps {
   name: string;
   title: string;
   photo: string;
   totalSales: number;
-  averageSales: number;
+  averageSales: number; // API não fornece, usaremos 0
   rating: number;
+  // Prop de reviews agora é obrigatória para os dados dinâmicos
   reviews: { client: string; comment: string; stars: number }[];
-  contacts?: Contact[];
+  // Dados do gráfico (API não fornece, usaremos padrão)
+  salesData?: number[];
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({
@@ -38,13 +38,15 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   averageSales,
   rating,
   reviews,
+  salesData,
 }) => {
+  // Dados do gráfico: use os dados passados ou um fallback estático
   const dadosGrafico = {
     labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out"],
     datasets: [
       {
         label: "Vendas (R$)",
-        data: [80000, 95000, 70000, 110000, 90000, 100000, 125000, 98000, 113000, 102000],
+        data: salesData || [80, 95, 70, 110, 90, 100, 125, 98, 113, 102], // Dados de fallback
         backgroundColor: "#1d3fffcc",
         borderRadius: 8,
       },
@@ -55,13 +57,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
     responsive: true,
     plugins: { legend: { display: false } },
     scales: {
-      y: {
-        beginAtZero: true,
-        ticks: { color: "#555" },
-      },
-      x: {
-        ticks: { color: "#555" },
-      },
+      y: { beginAtZero: true, ticks: { color: "#555" } },
+      x: { ticks: { color: "#555" } },
     },
   };
 
@@ -72,6 +69,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
         <div>
           <h2>Corretor+</h2>
           <div className="profile">
+            {/* DADOS DINÂMICOS */}
             <img src={photo} alt={`Foto de ${name}`} />
             <h3>{name}</h3>
             <p>{title}</p>
@@ -92,32 +90,37 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className="cards">
           <div className="card">
             <h3>Total de Vendas</h3>
+            {/* DADO DINÂMICO */}
             <p>{totalSales}</p>
           </div>
           <div className="card">
             <h3>Média de Vendas</h3>
+            {/* DADO DINÂMICO (com padrão) */}
             <p>R$ {averageSales.toLocaleString()}</p>
           </div>
           <div className="card">
             <h3>Avaliação Geral</h3>
-            <p>⭐ {rating} / 5</p>
+            {/* DADO DINÂMICO */}
+            <p>⭐ {rating.toFixed(2)} / 5</p>
           </div>
         </div>
 
-        <div className="chart">
-          <h3>Desempenho Mensal</h3>
-          <Bar data={dadosGrafico} options={opcoesGrafico} />
-        </div>
+        <EditarPerfil />
 
+        {/* REVIEWS DINÂMICAS */}
         <div className="reviews">
           <h3>Avaliações Recentes</h3>
-          {reviews.map((rev, i) => (
-            <div key={i} className="review">
-              <strong>{rev.client}</strong>
-              <p>"{rev.comment}"</p>
-              <div className="stars">{"⭐".repeat(rev.stars)}</div>
-            </div>
-          ))}
+          {reviews.length > 0 ? (
+            reviews.map((rev, i) => (
+              <div key={i} className="review">
+                <strong>{rev.client}</strong>
+                <p>"{rev.comment}"</p>
+                <div className="stars">{"⭐".repeat(rev.stars)}</div>
+              </div>
+            ))
+          ) : (
+            <p style={{textAlign: 'center', color: '#555'}}>Nenhuma avaliação encontrada.</p>
+          )}
         </div>
       </main>
     </div>

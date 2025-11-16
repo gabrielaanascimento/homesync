@@ -1,15 +1,15 @@
+// src/app/produtos/page.tsx
 "use client";
 import { useState, useEffect } from "react";
 import Header from "@/components/Navbar/navbar";
 import Filters from "@/components/produtos/Filters";
 import PropertyList from "@/components/produtos/PropertyList";
-import { Property } from "@/types/property"; // Assumindo que este tipo foi ajustado
+import { Property } from "@/types/property";
 import { getAllProperties } from "@/services/getAllProperties";
 import "./page.css";
-import { useSession } from "next-auth/react";
+import PrivateRouteWrapper from "@/components/PrivateRouteWrapper"; // 1. IMPORTAR
 
 export default function HomeSync() {
-  const { data: session, status } = useSession();
   const [showFilters, setShowFilters] = useState(false);
   const [allProperties, setAllProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
@@ -43,18 +43,15 @@ export default function HomeSync() {
     let filtered = [...allProperties]; 
 
     if (filters.location) {
-      // CORREÇÃO: Usar o campo 'local' da API (que substitui location)
       filtered = filtered.filter((property) =>
         property.local.toLowerCase().includes(filters.location.toLowerCase())
       );
     }
 
-    // CORREÇÃO: Filtro por Preço (valor) - Tratando o input do filtro
     if (filters.minPrice) {
-      // Remove caracteres não numéricos, exceto ponto/vírgula, e converte para float
       const minPrice = parseFloat(filters.minPrice.replace(/[^0-9.,]/g, "").replace(",", "."));
       filtered = filtered.filter((property) => {
-        const price = property.valor; // Usa o campo 'valor' (number)
+        const price = property.valor;
         return !isNaN(minPrice) && price >= minPrice;
       });
     }
@@ -67,11 +64,10 @@ export default function HomeSync() {
       });
     }
 
-    // CORREÇÃO: Filtro por Área (area) - Tratando o input do filtro
     if (filters.minArea) {
       const minArea = parseFloat(filters.minArea.replace(/[^0-9.,]/g, "").replace(",", "."));
       filtered = filtered.filter((property) => {
-        const area = property.area || 0; // Usa o campo 'area' (number)
+        const area = property.area || 0;
         return !isNaN(minArea) && area >= minArea;
       });
     }
@@ -84,7 +80,6 @@ export default function HomeSync() {
       });
     }
 
-    // CORREÇÃO: Filtro por Quartos (quartos) - Usando o campo 'quartos'
     if (filters.bedrooms) {
       filtered = filtered.filter((property) => {
         const bedrooms = property.quartos || 0;
@@ -99,12 +94,9 @@ export default function HomeSync() {
     setFilteredProperties(filtered);
   };
 
-  if (status === "loading") {
-    return <p>Carregando sessão...</p>;
-  }
-
-  if (status === "authenticated") {
-    return (
+  // 2. ENVOLVER A PÁGINA
+  return (
+    <PrivateRouteWrapper>
       <div
         className="page-container"
         onMouseMove={handleMouseMove}
@@ -118,9 +110,8 @@ export default function HomeSync() {
           transition: "background 0.1s",
         }}
       >
-        {/* Navbar centralizada */}
         <div className="navbar-wrapper">
-          <Header id={session?.user?.id} />
+          <Header />
         </div>
 
         <div className="filters-container">
@@ -131,8 +122,6 @@ export default function HomeSync() {
           <PropertyList properties={filteredProperties} />
         </div>
       </div>
-    );
-  }
-
-  return (window.location.href = "/login");
+    </PrivateRouteWrapper>
+  );
 }

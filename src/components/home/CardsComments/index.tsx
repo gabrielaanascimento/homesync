@@ -1,59 +1,19 @@
+// src/components/home/CardsComments/index.tsx
 /* eslint-disable @next/next/no-img-element */
 import { cn } from "@/lib/utils";
 import { Marquee } from "../../ui/marquee";
+import { useEffect, useState } from "react";
+// Importa o serviço e o tipo
+import { Avaliacao, getAllComentarios } from "@/services/comentariosService"; 
 
-//Edição nos comentários do sistema, editei e adicionei comentários autênticos e em pt-br
-
-const reviews = [
-  {
-    name: "Antonio Soares",
-    username: "@antonio123",
-    body: "Eu realmente vejo um grande potencial nesta plataforma. Facilitou meu trabalho!",
-    img: "https://avatar.vercel.sh/jack", 
-  },
-  {
-    name: "André Júnior",
-    username: "@junior_2020",
-    body: "Achei um imóvel que é a cara do meu cliente com esse app. Recomendo",
-    img: "https://avatar.vercel.sh/jill",
-  },
-  {
-    name: "José Fabrício",
-    username: "@corretor007",
-    body: "Sistema muito bom 👍",
-    img: "https://avatar.vercel.sh/john",
-  },
-  {
-    name: "Thales Carnete",
-    username: "@thalescanet3",
-    body: "Os meninos se superaram nessa, o projeto ficou bom d+",
-    img: "https://avatar.vercel.sh/bob",
-  },
-  {
-    name: "Ana Alice",
-    username: "@Corretora203",
-    body: "Simplesmente incrível!",
-    img: "https://a.storyblok.com/f/191576/1176x882/9bdc5d8400/round_profile_picture_hero_before.webp",
-  },
-  {
-    name: "Gregory",
-    username: "@Greg_226",
-    body: "Muito bom",
-    img: "https://avatar.vercel.sh/bob",
-  },
-];
-
-const ReviewCard = ({
-  img,
-  name,
-  username,
-  body,
-}: {
+interface ReviewCardProps {
   img: string;
   name: string;
   username: string;
   body: string;
-}) => (
+}
+
+const ReviewCard = ({ img, name, username, body }: ReviewCardProps) => (
   <figure
     className={cn(
       "relative h-auto min-h-[150px] w-65 sm:w-70  cursor-pointer overflow-hidden rounded-xl border p-4",
@@ -75,6 +35,33 @@ const ReviewCard = ({
 );
 
 export function Marquee3D() {
+  const [reviews, setReviews] = useState<ReviewCardProps[]>([]);
+  
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const data: Avaliacao[] = await getAllComentarios();
+      
+      if (data && data.length > 0) {
+        const formattedReviews = data.map((review) => ({
+          name: review.autor_nome,
+          username: review.autor_username || `@${review.autor_nome.split(' ')[0].toLowerCase()}`,
+          body: review.corpo,
+          img: review.autor_imagem || `https://avatar.vercel.sh/${review.autor_nome}`,
+        }));
+        setReviews(formattedReviews);
+      } 
+    };
+    fetchReviews();
+  }, []);
+  
+  if (reviews.length === 0) {
+    return (
+        <div style={{textAlign: 'center', padding: '2rem', color: '#555'}}>
+            Nenhuma avaliação encontrada.
+        </div>
+    ); 
+  }
+
   // Cria 5 colunas distribuindo os reviews
   const columns = Array.from({ length: 5 }, (_, i) =>
     reviews.map((_, index) => reviews[(index + i) % reviews.length])
@@ -91,8 +78,8 @@ export function Marquee3D() {
           vertical
           style={{ "--duration": "30s" } as React.CSSProperties}
         >
-          {col.map((review) => (
-            <ReviewCard key={review.username} {...review} />
+          {col.map((review, idx) => (
+            <ReviewCard key={`${review.username}-${idx}`} {...review} />
           ))}
         </Marquee>
       ))}

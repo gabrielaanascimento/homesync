@@ -15,18 +15,11 @@ export default function RodaPe() {
         <div style={styles.columnsContainer}>
           <div style={styles.column}>
             <h3 style={styles.title}>HomeSync</h3>
-            <a href="#" style={styles.link}>
+            <a href="/sobre" style={styles.link}>
               Sobre Nós
             </a>
-            <a href="#" style={styles.link}>
-              Como Funciona
-            </a>
-            <a href="#" style={styles.link}>
-              Planos e Preços
-            </a>
-            <a href="#" style={styles.link}>
-              Cases de Sucesso
-            </a>
+            
+            
           </div>
 
           <div style={styles.column}>
@@ -50,14 +43,8 @@ export default function RodaPe() {
             <a href="#" style={styles.link}>
               Central de Ajuda
             </a>
-            <a href="#" style={styles.link}>
-              Blog
-            </a>
-            <a href="#" style={styles.link}>
-              LGPD e Segurança
-            </a>
-            <a href="#" style={styles.link}>
-              Termos de Uso
+            <a href="/politicas" style={styles.link}>
+              Politica de Privacidade
             </a>
           </div>
         </div>

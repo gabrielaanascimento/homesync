@@ -1,26 +1,18 @@
+// src/app/chat/page.tsx
 "use client";
 import React from 'react';
 import ChatApp from '@/components/chat/ChatApp';
-import { useSession } from 'next-auth/react';
+import PrivateRouteWrapper from '@/components/PrivateRouteWrapper'; // 1. IMPORTAR
 
 const App: React.FC = () => {
-    const { data: session, status } = useSession();
-
-    if (status === "loading") {
-        return <p>Carregando sessão...</p>;
-    }
-
-    if (status === "authenticated") {
-        return (
+    // 2. ENVOLVER A PÁGINA
+    return (
+        <PrivateRouteWrapper>
             <div className="App">
                 <ChatApp />
             </div>
-        );
-    }
-
-    // Redireciona se não houver autenticação
-    window.location.href = '/login';
-    return null; // Retorna null para evitar a renderização antes do redirecionamento
+        </PrivateRouteWrapper>
+    );
 }
 
 export default App;

@@ -1,3 +1,4 @@
+// src/components/Navbar/navbar.tsx
 "use client";
 
 import { FC, useState } from "react";
@@ -6,18 +7,41 @@ import IconLogo from "../Navbar/icones/HS.png";
 import IconChat from "../Navbar/icones/chat.png";
 import IconPerfil from "../Navbar/icones/perfil.png";
 import IconMenu from "../Navbar/icones/menu.png";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react"; // Importa useSession
 
 interface NavbarProps {
-  id?: string;
+  id?: string; // O ID ainda pode ser passado se necessário, mas pegaremos da sessão
 }
 
 const Navbar: FC<NavbarProps> = ({ id }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session } = useSession(); // Pega a sessão
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  // Lógica dinâmica para o link do perfil
+  const getProfileLink = () => {
+    if (!session?.user) return "/login";
+    
+    const userId = session.user.id;
+    const userType = session.user.tipo;
+
+    switch (userType) {
+      case 'corretor':
+        return `/profile/corretor/${userId}`;
+      case 'imobiliaria':
+        return `/profile/imobiliaria/${userId}`;
+      case 'construtora':
+        // Crie esta página se necessário
+        return `/profile/construtora/${userId}`; 
+      default:
+        return "/produtos"; // Fallback
+    }
+  };
+
+  const profileLink = getProfileLink();
 
   return (
     <>
@@ -51,7 +75,8 @@ const Navbar: FC<NavbarProps> = ({ id }) => {
             width={38}
             height={38}
             style={styles.icon}
-            onClick={() => (window.location.href = `/profile/corretor/${id}`)}
+            // ATUALIZADO: usa o link dinâmico
+            onClick={() => (window.location.href = profileLink)}
           />
           <Image
             src={IconMenu.src}
@@ -59,19 +84,20 @@ const Navbar: FC<NavbarProps> = ({ id }) => {
             width={38}
             height={38}
             style={styles.icon}
-            onClick={toggleMenu} // Evento de clique para abrir/fechar o menu
+            onClick={toggleMenu}
           />
         </div>
       </nav>
 
-      {/* Overlay para escurecer o fundo quando o menu está aberto */}
+      {/* Overlay */}
       {isMenuOpen && <div style={styles.overlay} onClick={toggleMenu}></div>}
 
       {/* Menu Lateral */}
       <div style={{...styles.sideMenu, transform: isMenuOpen ? 'translateX(0)' : 'translateX(100%)' }}>
         <a href="/imovel/cadastro" style={styles.menuItem}>Cadastrar Imóvel</a>
         <a href="/chat" style={styles.menuItem}>Chat</a>
-        <a href={`/profile/corretor/${id}`} style={styles.menuItem}>Perfil</a>
+        {/* ATUALIZADO: usa o link dinâmico */}
+        <a href={profileLink} style={styles.menuItem}>Perfil</a>
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
           style={styles.logoutButton}
@@ -83,6 +109,7 @@ const Navbar: FC<NavbarProps> = ({ id }) => {
   );
 };
 
+// ... (estilos permanecem os mesmos)
 const styles: { [key: string]: React.CSSProperties } = {
   navbar: {
     display: "flex",
@@ -95,7 +122,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
     borderRadius: "58px",
     position: 'relative',
-    zIndex: 1100, // z-index alto para a navbar
+    zIndex: 1100, 
   },
   logo: {
     cursor: "pointer",
@@ -110,7 +137,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   icon: {
     cursor: "pointer",
   },
-  // Estilos para o menu lateral
   overlay: {
     position: 'fixed',
     top: 0,

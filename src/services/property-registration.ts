@@ -1,10 +1,10 @@
-// gabrielaanascimento/homesync/homesync-9e54974e0e209196e3d557d82b6195c7d4979ffe/src/services/property-registration.ts
+// src/services/property-registration.ts
 
 import { Property } from "@/types/property";
 
+// 1. DEFINIÇÃO DA INTERFACE (O que estava faltando)
 // Define a estrutura de dados esperada para envio para o backend
-// O backend exige status, corretor_id e cliente_vendedor_id para criar a negociação (sistema_imoveis)
-interface PropertyData {
+export interface PropertyData {
   nome: string;
   valor: number;
   local: string;
@@ -20,6 +20,7 @@ interface PropertyData {
   cliente_vendedor_id: number;
 }
 
+// 2. INTERFACE DE RESULTADO (Já existia)
 interface RegistrationResult {
   success: boolean;
   message: string;
@@ -34,11 +35,10 @@ const API_BASE_URL = process.env.URL_API || 'https://homesyncapi.vercel.app';
  * @returns Um objeto com o status da operação e uma mensagem.
  */
 export const registerProperty = async (
-  propertyData: PropertyData, 
-  images: FileList | null
+  propertyData: PropertyData, // Agora o 'PropertyData' será encontrado
+  images: FileList | null,
+  token: string // 3. Parâmetro 'token' da última correção
 ): Promise<RegistrationResult> => {
-  // CORREÇÃO: Obter o token real do localStorage para autenticação
-  const token = "djskbzsbvksbfvkbsfvbsbfv" // typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
 
   if (!token) {
     return { success: false, message: 'Autenticação necessária. Faça login novamente.' };
@@ -52,7 +52,7 @@ export const registerProperty = async (
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Usa o token obtido
+        'Authorization': `Bearer ${token}` 
       },
       body: JSON.stringify(propertyData)
     });
@@ -64,7 +64,6 @@ export const registerProperty = async (
       return { success: false, message: `Erro no Cadastro (Dados): ${errorMsg}` };
     }
     
-    // O backend retorna o ID do registro em sistema_imoveis (sistemaId)
     sistemaImovelId = propertyResult.body?.id; 
     
     if (!sistemaImovelId) {
@@ -73,7 +72,6 @@ export const registerProperty = async (
 
   } catch (error) {
     console.error('Erro de rede ao cadastrar dados do imóvel:', error);
-    // Retorna uma mensagem de erro mais detalhada em caso de falha de rede/fetch
     return { success: false, message: 'Erro de conexão ao cadastrar os dados do imóvel. (Verifique o backend e o CORS)' };
   }
   
@@ -81,20 +79,13 @@ export const registerProperty = async (
   if (images && images.length > 0) {
     const formData = new FormData();
     for (let i = 0; i < images.length; i++) {
-      // O campo deve ser 'images' para corresponder ao middleware 'uploadImovelImages'
       formData.append('images', images[i]); 
     }
     
-    console.log(formData);
-    
-
-
     try {
-        // A rota de upload usa o ID do registro em 'sistema_imoveis'
         const imageResponse = await fetch(`${API_BASE_URL}/imovel/imoveis/${sistemaImovelId}/upload-images`, {
             method: 'POST',
             headers: {
-                // Não adicionamos 'Content-Type' para FormData, o navegador faz isso automaticamente
                 'Authorization': `Bearer ${token}`
             },
             body: formData,
@@ -103,7 +94,6 @@ export const registerProperty = async (
         const imageResult = await imageResponse.json();
 
         if (!imageResponse.ok || imageResult.success === false) {
-            // O imóvel foi cadastrado, mas o upload falhou
             const errorMsg = imageResult.body?.message || imageResult.message || 'Falha ao fazer upload das imagens.';
             return { success: false, message: `Erro no Upload (Imagens): ${errorMsg}. O imóvel foi cadastrado, mas sem fotos.` };
         }

@@ -1,40 +1,24 @@
+// src/app/api/auth/[...nextauth]/route.ts
+
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { JWT } from "next-auth/jwt";
-import { Session, User, Account, Profile } from "next-auth";
-import { redirect } from "next/navigation";
+import { login } from "@/services/login";
+import { User } from "next-auth"; // Importe o tipo User
 
-// Define a interface para o objeto de usuário retornado pela API
-interface AuthUser extends User {
-  id: string;
-  nome: string;
-  email: string;
-  telefone: string;
-  creci: string;
-}
-
-// Define a interface para as credenciais esperadas
-interface AuthCredentials {
-  email: string;
-  password: string;
-}
-
-// Define a interface para a sessão, estendendo a padrão para incluir os novos campos
-interface AuthSession extends Session {
+// Interface para a resposta da sua API de login
+interface ApiLoginResponse {
+  success: boolean;
+  message: string;
+  token: string;
   user: {
-    name?: string | null;
-    email: string;
-    image?: string | null;
     id: string;
-    nome: string;
+    name: string; // Sua API já retorna 'name'
+    email: string;
     telefone: string;
-    creci: string;
+    creci?: string;
+    tipo: 'corretor' | 'imobiliaria' | 'construtora';
   };
-}
-
-async function checkIfEmailExistsInDatabase(email: string): Promise<boolean> {
-  return email === "gabrielaugustoassisnascimento@gmail.com";
 }
 
 const handler = NextAuth({
@@ -45,41 +29,48 @@ const handler = NextAuth({
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "Email" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials, req): Promise<User | null> {
         if (!credentials) {
+          console.log("NextAuth: Sem credenciais.");
           return null;
         }
 
-        const { email, password } = credentials as AuthCredentials;
+        const { email, password } = credentials;
+        console.log(`NextAuth: Tentando autorizar: ${email}`); // LOG 1
 
         try {
-          const response = await fetch(`${process.env.NEXTAUTH_URL || "https://next-wwx4.vercel.app"}/api/auth/login`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              email: email,
-              password: password
-            })
-          });
+          const response = await login(email, password) as ApiLoginResponse;
 
-          if (response.ok) {
-            const user = await response.json();
-            return user as AuthUser;
+          // LOG 2: ESTE É O LOG MAIS IMPORTANTE!
+          // VAI MOSTRAR O QUE A SUA API DE LOGIN REALMENTE RETORNOU
+          console.log("NextAuth: Resposta do serviço de login:", JSON.stringify(response, null, 2));
+
+          if (response && response.success) {
+            console.log("NextAuth: Login bem-sucedido. Criando usuário da sessão."); // LOG 3
+            // O objeto retornado aqui DEVE bater com a interface 'User'
+            return {
+              id: response.user.id.toString(),
+              name: response.user.name,
+              email: response.user.email,
+              telefone: response.user.telefone,
+              creci: response.user.creci,
+              tipo: response.user.tipo,
+              token: response.token
+            };
           } else {
+            // LOG 4: Se o login falhou
+            console.warn(`NextAuth: Falha no login. Motivo: ${response?.message || 'Resposta nula ou sem success:true'}`);
             return null;
           }
         } catch (error) {
-          console.error("Authentication failed:", error);
+          console.error("NextAuth: ERRO FATAL na função authorize:", error);
           return null;
         }
       },
     }),
-
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -87,41 +78,32 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }) {
+      // 'user' só existe no primeiro login
       if (user) {
-        const authUser = user as AuthUser;
-        token.id = authUser.id;
-        token.nome = authUser.nome;
-        token.email = authUser.email;
-        token.telefone = authUser.telefone;
-        token.creci = authUser.creci;
+        // 'user' aqui é o objeto que 'authorize' retornou
+        token.id = user.id;
+        token.name = user.name ?? ''; // <-- CORRIGIDO para 'name'
+        token.email = user.email ?? '';
+        token.tipo = (user as any).tipo;
+        token.token = (user as any).token;
+        token.telefone = (user as any).telefone;
+        token.creci = (user as any).creci;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token) {
-        const authSession = session as AuthSession;
-        authSession.user.id = token.id as string;
-        authSession.user.nome = token.nome as string;
-        authSession.user.email = token.email as string;
-        authSession.user.telefone = token.telefone as string;
-        authSession.user.creci = token.creci as string;
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name as string; // <-- CORRIGIDO para 'name'
+        session.user.email = token.email as string;
+        session.user.tipo = token.tipo;
+        session.user.token = token.token as string;
+        session.user.telefone = token.telefone as string;
+        session.user.creci = token.creci as string;
       }
       return session;
     },
-
-    async signIn({ user, account, profile, email, credentials }) {
-      if (account?.provider === "google") {
-        const userEmail = user.email;
-        if (userEmail) {
-          const emailExists = await checkIfEmailExistsInDatabase(userEmail);
-
-          if (!emailExists) {
-            return `/login`;
-          }
-        }
-      }
-      return true;
-    },
+    // ... (seu callback signIn do Google) ...
   },
   secret: process.env.NEXTAUTH_SECRET,
 });

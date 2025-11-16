@@ -1,178 +1,270 @@
+// src/app/cadastro/corretor/page.tsx
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import logo from '@/img/logoLogin.png'
-import { cadastrar } from '@/services/cadastro';
+import { registerUser } from '@/services/cadastro';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 export default function CadastroCorretor() {
+    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const router = useRouter();
 
-    const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setUploading(true);
+            setError(null);
+            
+            const formData = new FormData();
+            formData.append('photo', file);
+            const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://homesyncapi.vercel.app';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/upload-photo`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                const result = await response.json(); // result = { success: true, url: "..." }
+                
+                if (!response.ok) {
+                    // Se não for OK, 'result' é o objeto de erro { message: "..." }
+                    throw new Error(result.message || 'Falha no upload');
+                }
+                
+                // --- CORREÇÃO AQUI ---
+                // O objeto 'result' já é o corpo da resposta.
+                // Não acesse 'result.body'.
+                setPhotoUrl(result.url); 
+
+            } catch (err: any) {
+                setError(err.message || "Falha ao enviar foto.");
+            } finally {
+                setUploading(false);
+            }
+        }
+    };
+
+    const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const formData = new FormData(event.currentTarget);
+        setError(null);
+        setIsLoading(true);
 
-        if (formData.get('password') !== formData.get('confirmPassword')) {
-            alert("As senhas não coincidem!");
+        const formData = new FormData(event.currentTarget);
+        const password = formData.get('password') as string;
+        const confirmPassword = formData.get('confirmPassword') as string;
+
+        if (password !== confirmPassword) {
+            setError("As senhas não coincidem!");
+            setIsLoading(false);
             return;
         }
 
-        const data = {
+        const commonData = {
             email: formData.get('email') as string,
-            password: formData.get('password') as string,
-            name: formData.get('name') as string,
+            senha: password,
+            nome_exibicao: formData.get('nome_exibicao') as string,
+            celular: (formData.get('telefone') as string).replace(/\D/g, ''),
+        };
+
+        const specificData = {
+            nome_completo: formData.get('name') as string,
+            cpf: (formData.get('cpf') as string).replace(/\D/g, ''),
             creci: formData.get('creci') as string,
-            cpf: formData.get('cpf') as string,
-            telefone: formData.get('telefone') as string,
-        }
-
-        if (!data.cpf || !data.creci || !data.email || !data.name || !data.password || !data.telefone) {
-            alert('Preencha todos os campos')
-        }
-
-        const response = await cadastrar(data.email, data.password, data.cpf, data.name, data.creci, data.telefone)
-
-        if(response) {
-            window.location.href = '/login'
+            afiliacao: formData.get('afiliacao') as string,
+            descricao: formData.get('descricao') as string,
+            foto: photoUrl
+        };
+        
+        const response = await registerUser('corretor', commonData, specificData);
+        
+        setIsLoading(false);
+        if (response.success) {
+            alert(response.message + "\nAgora, faça o login.");
+            window.location.href = '/login';
         } else {
-            alert('erro')
+            setError(response.message);
         }
-
     }
 
     return (
-        <div style={{
-            width: '100vw',
-            height: '100vh',
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column',
-            backgroundImage: 'linear-gradient(to bottom, #fff, #fff, #fff, rgba(153, 184, 254, 0.5))',
-            justifyContent: 'center',
-            alignItems: 'center',
-            fontFamily: '"Roboto", sans-serif',
-            margin: 0,
-            padding: 0
-        }}>
-            <div style={{
-                width: '40%',
-                height: '75%',
-                borderRadius: '10%',
-                zIndex: 997,
-                backgroundColor: 'gray',
-                justifyContent: 'center',
-                alignItems: 'center',
-                display: 'flex',
-                padding: '3px',
-                backgroundImage: 'linear-gradient(to bottom, #99B8FE, #DBA1FC)',
-            }}>
-                <form onSubmit={handleLogin} style={{
-                    padding: '20px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '10%',
-                    backdropFilter: '2px',
-                    backgroundColor: 'rgb(255, 255, 255)',
-                    zIndex: 998,
-                    position: 'relative'
-                }}>
-                    <img src={logo.src} alt="logo" style={{
-                        width: '100px',
-                        zIndex: 999,
-                        position: 'absolute',
-                        top: 0,
-                        transform: 'translateY(-65%)'
-                    }} />
-                    <input type="text" name="name" placeholder="Nome Completo" style={{
-                        marginTop: '2rem',
-                        width: '90%',
-                        height: '3rem',
-                        borderRadius: '20px',
-                        border: '1px solid #99B8FE',
-                        padding: '2.5px 0 2.5px 7px',
-                        color: 'black'
-                    }} required />
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: '1rem',
-                        width: '90%',
-                        height: '50%',
-                        gap: 3
-                    }}>
-                        <input type="text" name="cpf" placeholder="CPF" style={{
-                            width: '100%',
-                            height: '3rem',
-                            borderRadius: '20px',
-                            border: '1px solid #99B8FE',
-                            padding: '2.5px 0 2.5px 7px',
-                            color: 'black',
-                        }} required />
-                        <input type="text" name="telefone" placeholder="Celular" style={{
-                            width: '100%',
-                            height: '3rem',
-                            borderRadius: '20px',
-                            border: '1px solid #99B8FE',
-                            padding: '2.5px 0 2.5px 7px',
-                            color: 'black'
-                        }} required />
-                        <input type="email" name="email" placeholder="Email" style={{
-                            width: '100%',
-                            height: '3rem',
-                            borderRadius: '20px',
-                            border: '1px solid #99B8FE',
-                            padding: '2.5px 0 2.5px 7px',
-                            color: 'black'
-                        }} required />
-                        <input type="text" name="creci" placeholder="CRECI" style={{
-                            width: '100%',
-                            height: '3rem',
-                            borderRadius: '20px',
-                            border: '1px solid #99B8FE',
-                            padding: '2.5px 0 2.5px 7px',
-                            color: 'black'
-                        }} required />
-                        <input type="password" name="password" placeholder="Password" style={{
-                            width: '100%',
-                            height: '3rem',
-                            borderRadius: '20px',
-                            border: '1px solid #99B8FE',
-                            padding: '2.5px 0 2.5px 7px',
-                            color: 'black'
-                        }} required />
-                        <input type="password" name="confirmPassword" placeholder="Confirm Password" style={{
-                            width: '100%',
-                            height: '3rem',
-                            borderRadius: '20px',
-                            border: '1px solid #99B8FE',
-                            padding: '2.5px 0 2.5px 7px',
-                            color: 'black'
-                        }} required />
+        <div style={{ ...styles.pageContainer }}>
+            <div style={{ ...styles.gradientContainer }}>
+                <form onSubmit={handleRegister} style={{ ...styles.formContainer }}>
+                    <img src={logo.src} alt="logo" style={{ ...styles.logo }} />
+                    <h2 style={{ color: '#004EFF', fontWeight: 'bold' }}>Cadastro de Corretor</h2>
+                    
+                    {error && <p style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>{error}</p>}
+
+                    <div style={styles.photoUpload}>
+                        <img 
+                            src={photoUrl || "/semImagem.jpg"} 
+                            alt="Preview" 
+                            style={styles.photoPreview}
+                        />
+                        <label htmlFor="photo-upload" style={styles.photoLabel}>
+                            {uploading ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }}/> : "Escolher Foto"}
+                        </label>
+                        <input 
+                            id="photo-upload"
+                            type="file" 
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            style={{ display: 'none' }}
+                            disabled={uploading}
+                        />
+                    </div>
+                    
+                    <input type="text" name="name" placeholder="Nome Completo (Ex: Ana Silva)" style={{ ...styles.inputField, ...styles.fullWidth }} required />
+                    <input type="text" name="nome_exibicao" placeholder="Nome de Exibição (Ex: Ana Corretora)" style={{ ...styles.inputField, ...styles.fullWidth, marginTop: '10px' }} required />
+
+                    <div style={{ ...styles.grid }}>
+                        <input type="text" name="cpf" placeholder="CPF" style={{ ...styles.inputField }} required />
+                        <input type="tel" name="telefone" placeholder="Celular (com DDD)" style={{ ...styles.inputField }} required />
+                        <input type="email" name="email" placeholder="Email" style={{ ...styles.inputField }} required />
+                        <input type="text" name="creci" placeholder="CRECI" style={{ ...styles.inputField }} required />
+                        <input type="password" name="password" placeholder="Senha" style={{ ...styles.inputField }} required />
+                        <input type="password" name="confirmPassword" placeholder="Confirmar Senha" style={{ ...styles.inputField }} required />
                     </div>
 
-                    <button type="submit" id="entrar" style={{
-                        padding: '10px',
-                        borderRadius: '20px',
-                        border: 'none',
-                        backgroundColor: '#004EFF',
-                        width: '70%',
-                        color: '#fff',
-                        margin: '1rem',
-                        backgroundImage: 'linear-gradient(to right, #004EFF, #99B8FE)',
-                    }}>Cadastrar</button>
+                    <input type="text" name="afiliacao" placeholder="Afiliação (Opcional, ex: CRECI-SP)" style={{ ...styles.inputField, ...styles.fullWidth, marginTop: '10px' }} />
+                    <textarea name="descricao" placeholder="Sua descrição de perfil (Opcional)" style={{ ...styles.textarea, ...styles.fullWidth, marginTop: '10px' }} />
 
-                    <a onClick={() => window.history.back()} style={{
-                        color: '#004EFF',
-                        textDecoration: 'underline',
-                        cursor: 'pointer'
-                    }}>Voltar</a>
+                    <button type="submit" id="entrar" style={{ ...styles.button, opacity: (isLoading || uploading) ? 0.7 : 1 }} disabled={isLoading || uploading}>
+                        {isLoading ? 'Cadastrando...' : 'Cadastrar'}
+                    </button>
+
+                    <a onClick={() => router.back()} style={{ ...styles.link }}>Voltar</a>
                 </form>
             </div>
-            <footer>
-            </footer>
         </div>
     )
 }
+
+// Estilos (sem alterações)
+const styles: { [key: string]: React.CSSProperties } = {
+    pageContainer: {
+        width: '100vw',
+        minHeight: '100vh',
+        overflow: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundImage: 'linear-gradient(to bottom, #fff, #fff, #fff, rgba(153, 184, 254, 0.5))',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontFamily: '"Roboto", sans-serif',
+        margin: 0,
+        padding: '2rem 0'
+    },
+    gradientContainer: {
+        width: '40%',
+        maxWidth: '600px',
+        minWidth: '320px',
+        borderRadius: '20px',
+        zIndex: 997,
+        justifyContent: 'center',
+        alignItems: 'center',
+        display: 'flex',
+        padding: '3px',
+        backgroundImage: 'linear-gradient(to bottom, #99B8FE, #DBA1FC)',
+    },
+    formContainer: {
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        borderRadius: '18px',
+        backgroundColor: 'rgb(255, 255, 255)',
+        zIndex: 998,
+        position: 'relative',
+        paddingTop: '60px'
+    },
+    logo: {
+        width: '100px',
+        zIndex: 999,
+        position: 'absolute',
+        top: 0,
+        transform: 'translateY(-65%)'
+    },
+    inputField: {
+        width: '100%',
+        height: '3rem',
+        borderRadius: '20px',
+        border: '1px solid #99B8FE',
+        padding: '2.5px 15px',
+        color: 'black',
+        boxSizing: 'border-box'
+    },
+    fullWidth: {
+        width: '90%',
+    },
+    textarea: {
+        width: '90%',
+        height: '80px',
+        borderRadius: '20px',
+        border: '1px solid #99B8FE',
+        padding: '10px 15px',
+        color: 'black',
+        boxSizing: 'border-box',
+        fontFamily: '"Roboto", sans-serif',
+        fontSize: '14px'
+    },
+    grid: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '90%',
+        gap: '10px'
+    },
+    button: {
+        padding: '10px',
+        borderRadius: '20px',
+        border: 'none',
+        backgroundColor: '#004EFF',
+        width: '70%',
+        color: '#fff',
+        margin: '1.5rem 0 1rem 0',
+        backgroundImage: 'linear-gradient(to right, #004EFF, #99B8FE)',
+        cursor: 'pointer',
+        fontSize: '1rem',
+        fontWeight: 'bold',
+        opacity: 1
+    },
+    link: {
+        color: '#004EFF',
+        textDecoration: 'underline',
+        cursor: 'pointer'
+    },
+    photoUpload: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '10px',
+        marginBottom: '1rem',
+    },
+    photoPreview: {
+        width: '100px',
+        height: '100px',
+        borderRadius: '50%',
+        objectFit: 'cover',
+        border: '2px solid #99B8FE',
+    },
+    photoLabel: {
+        padding: '8px 12px',
+        backgroundColor: '#f0f0f0',
+        border: '1px solid #ccc',
+        borderRadius: '10px',
+        cursor: 'pointer',
+        fontWeight: '500',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+    }
+};

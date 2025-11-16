@@ -1,46 +1,48 @@
 // src/services/getCorretorById.ts
 
-// Define a interface baseada no seu backend (homesyncapi/src/models/users-models.ts)
+// 1. INTERFACE ATUALIZADA com todos os campos da API
 export interface Corretor {
     id: number;
-    nome: string;
     email: string;
-    creci: string;
-    cpf: string;
-    afiliacao?: string;
+    nome_exibicao: string;
     celular?: string;
+    tipo: 'corretor';
+    ativo: boolean;
+    data_criacao: string;
+    nome_completo: string;
+    cpf: string;
+    creci: string;
+    afiliacao?: string;
     descricao?: string;
+    avaliacao?: number;
     vendas_anual?: number;
+    conversao_final?: number;
+    conversao_data?: any; // JSONB do banco
     caracteristicas?: string;
     foto?: string;
 }
 
-const API_BASE_URL = process.env.URL_API || 'https://homesyncapi.vercel.app';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://homesyncapi.vercel.app';
 
-export const getCorretorById = async (id: string): Promise<Corretor | null> => {
+// 2. A função (agora correta) que aceita o token
+export const getCorretorById = async (id: string, token: string): Promise<Corretor | null> => {
     try {
-        // A rota correta na sua API é /corretor/corretores/:id
         const response = await fetch(`${API_BASE_URL}/corretor/corretores/${id}`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             }
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-            const errorData = await response.json();
-            const errorMessage = errorData.body?.message || `Erro HTTP: ${response.status} ao buscar o corretor.`;
+            const errorMessage = data.body?.message || data.message || `Erro HTTP: ${response.status}`;
             throw new Error(errorMessage);
         }
 
-        const data = await response.json();
-        
-        // A API retorna um objeto HttpResponse, o corretor está no corpo (body)
-        if (data.statusCode === 200 && data.body) {
-             return data.body as Corretor;
-        } else {
-             return null;
-        }
+        return data as Corretor;
 
     } catch (error) {
         console.error(`Falha ao buscar corretor com ID ${id}:`, error);
