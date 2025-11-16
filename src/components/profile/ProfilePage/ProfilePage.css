@@ -207,3 +207,29 @@ body, .container {
     flex-direction: column;
   }
 }
+
+/* Adicione isso ao final do arquivo, se necessário */
+
+.logout {
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 20px;
+  
+  /* Adicionado para resetar o estilo do botão */
+  background: none;
+  border: none;
+  font-family: 'Poppins', sans-serif; /* Garante a mesma fonte */
+  font-size: 0.9rem; /* Ajuste o tamanho se necessário */
+  cursor: pointer;
+  padding: 0;
+  width: 100%; /* Faz ocupar a largura */
+}
+
+.logout:hover {
+  background: rgba(255, 255, 255, 0.3); /* Mesmo hover dos itens de menu */
+  border-radius: 8px; /* Mesmo radius */
+  padding: 12px 20px; /* Mesmo padding */
+  margin: 8px 0; /* Mesma margem */
+}

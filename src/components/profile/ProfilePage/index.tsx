@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 import "./ProfilePage.css"; // Seu CSS
 import EditarPerfil from "../EditProfile";
+import { signOut } from "next-auth/react"; // 1. IMPORTAR O SIGNOUT
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -25,7 +26,6 @@ export interface ProfilePageProps {
   salesData?: number[];
   
   // --- CAMPOS ATUALIZADOS ---
-  // Adicione os novos campos que você quer exibir
   email: string;
   creci: string;
   celular?: string;
@@ -42,17 +42,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   photo,
   reviews,
   salesData,
-  // --- CAMPOS ATUALIZADOS ---
-  // Receba os novos campos aqui
   email,
   creci,
   celular,
-  // (Campos antigos ainda são recebidos, mas não serão usados nos cards)
   totalSales,
   averageSales,
   rating,
 }) => {
-  // Dados do gráfico (lógica inalterada)
+  // (Lógica do gráfico permanece inalterada...)
   const dadosGrafico = {
     labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out"],
     datasets: [
@@ -76,7 +73,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
 
   return (
     <div className="container">
-      {/* Sidebar (inalterada) */}
+      {/* Sidebar */}
       <aside className="sidebar">
         <div>
           <h2>Corretor+</h2>
@@ -86,42 +83,44 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <p>{title}</p>
           </div>
 
+          {/* 2. MENU ATUALIZADO */}
           <nav className="menu">
-            <a href="#">Perfil</a>
-            <a href="#">Minhas Vendas</a>
-            <a href="#">Avaliações</a>
-            <a href="#">Configurações</a>
+            <a href="/chat">Chat IA</a>
+            <a href="/imovel/cadastro">Cadastrar Imóvel</a>
           </nav>
         </div>
-        <a href="#" className="logout">Sair</a>
+        
+        {/* 3. BOTÃO SAIR FUNCIONAL */}
+        <button
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="logout"
+        >
+          Sair
+        </button>
       </aside>
 
       {/* Conteúdo Principal */}
       <main className="main">
-        {/* --- SEÇÃO DE CARDS ATUALIZADA --- */}
+        {/* Cards de Contato (inalterados desta vez) */}
         <div className="cards">
           <div className="card">
             <h3>Email</h3>
-            {/* DADO DINÂMICO NOVO */}
             <p style={{ fontSize: '1rem' }}>{email}</p> 
           </div>
           <div className="card">
             <h3>CRECI</h3>
-            {/* DADO DINÂMICO NOVO */}
             <p>{creci}</p>
           </div>
           <div className="card">
             <h3>Telefone</h3>
-            {/* DADO DINÂMICO NOVO */}
             <p>{celular || 'Não cadastrado'}</p>
           </div>
         </div>
-        {/* --- FIM DA SEÇÃO ATUALIZADA --- */}
 
-
+        {/* Botão "Editar Perfil" que abre o modal */}
         <EditarPerfil />
 
-        {/* REVIEWS DINÂMICAS (inalterado) */}
+        {/* Reviews (inalterado) */}
         <div className="reviews">
           <h3>Avaliações Recentes</h3>
           {reviews.length > 0 ? (
@@ -136,10 +135,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <p style={{textAlign: 'center', color: '#555'}}>Nenhuma avaliação encontrada.</p>
           )}
         </div>
-        <div className="EditProfile">
-          {/* //Editar dados  */}
-          <EditarPerfil />
-        </div>
+        
+        {/* 4. SEÇÃO DUPLICADA REMOVIDA */}
       </main>
     </div>
   );
