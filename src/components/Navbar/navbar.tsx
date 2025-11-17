@@ -34,7 +34,6 @@ const Navbar: FC<NavbarProps> = ({ id }) => {
       case 'imobiliaria':
         return `/profile/imobiliaria/${userId}`;
       case 'construtora':
-        // Crie esta página se necessário
         return `/profile/construtora/${userId}`; 
       default:
         return "/produtos"; // Fallback
