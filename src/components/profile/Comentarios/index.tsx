@@ -69,7 +69,7 @@ const Comentarios: React.FC<ComentariosProps> = ({ perfilId }) => {
                     <textarea 
                         value={novoComentario}
                         onChange={(e) => setNovoComentario(e.target.value)}
-                        placeholder="Deixe sua avaliação sobre este perfil..."
+                        placeholder="Deixe sua avaliação sobre a Home Sync..."
                         style={styles.textareaComentario}
                         required
                     />
@@ -122,7 +122,7 @@ const Comentarios: React.FC<ComentariosProps> = ({ perfilId }) => {
                         </div>
                     ))
                 ) : (
-                    <p style={{textAlign: 'center', padding: '1rem', color: '#555'}}>Este perfil ainda não possui avaliações.</p>
+                    <p style={{textAlign: 'center', padding: '1rem', color: '#555'}}>Este perfil ainda não fez avaliações.</p>
                 )}
             </div>
         </div>

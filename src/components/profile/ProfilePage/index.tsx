@@ -144,22 +144,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className="reviews"> {/* Reutilizando o estilo de card .reviews */}
           <EditarPerfilForm />
         </div>
-
-        {/* 4. AVALIAÇÕES (REVIEWS) */}
-        <div className="reviews">
-          <h3>Avaliações Recebidas</h3>
-          {reviews.length > 0 ? (
-            reviews.map((rev, i) => (
-              <div key={i} className="review">
-                <strong>{rev.client}</strong>
-                <p>"{rev.comment}"</p>
-                <div className="stars">{"⭐".repeat(rev.stars)}</div>
-              </div>
-            ))
-          ) : (
-            <p style={{textAlign: 'center', color: '#555'}}>Nenhuma avaliação encontrada.</p>
-          )}
-        </div>
         
         {/* 5. COMPONENTE DE COMENTÁRIOS */}
         <div className="comments-section">
