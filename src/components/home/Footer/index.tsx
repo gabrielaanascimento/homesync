@@ -1,4 +1,11 @@
+import { Mail } from 'lucide-react';
+
 export default function RodaPe() {
+
+  const subject = encodeURIComponent("Interesse em Imóveis HomeSync");
+    const body = encodeURIComponent("Olá, gostaria de obter mais informações sobre os imóveis disponíveis na HomeSync.");
+    const mailtoLink = `mailto:homesync.site@gmail.com?subject=${subject}&body=${body}`;
+
   return (
     <footer style={styles.footer}>
       <div style={styles.container}>
@@ -54,13 +61,14 @@ export default function RodaPe() {
           © 2025 HomeSync. Todos os direitos reservados.
         </p>
         <div style={styles.social}>
-          <a href="#">
-            <img src="./whats.png" alt="WhatsApp" width="40" />
+          
+          <a href={mailtoLink}>
+            <Mail size={40} color="#004EFF" />
           </a>
-          <a href="#">
+          <a href="https://www.facebook.com/profile.php?id=61584107721008">
             <img src="./face.png" alt="Facebook" width="40" />
           </a>
-          <a href="#">
+          <a href="https://www.instagram.com/homessync.site?igsh=M2c2cGt6bXJ4bHlo">
             <img src="./insta.png" alt="Instagram" width="40" />
           </a>
         </div>
