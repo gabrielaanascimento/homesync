@@ -46,11 +46,9 @@ function Login() {
           <img src={logo.src} alt="logo" className="logo" />
           <input type="text" name="email" className="email" placeholder="Email" />
           <input type="password" name="password" className="password" placeholder="Password" />
-          <div className="autenticacao"></div>
-          <p className="titleAuth">Ou entrar com:</p>
-          <ButtonGoogle />
           <button type="submit" id="entrar">Entrar</button>
           <a href="/cadastro">Ainda não tem uma conta?</a>
+          <a href="/">Voltar</a>
         </form>
       </div>
       <footer></footer>
