@@ -24,25 +24,23 @@ export default function RodaPe() {
 
           <div style={styles.column}>
             <h3 style={styles.title}>Clientes</h3>
-            <a href="#" style={styles.link}>
+            <a href="/cadastro/corretor" style={styles.link}>
               Para Corretores
             </a>
-            <a href="#" style={styles.link}>
+            <a href="/cadastro/imobiliaria" style={styles.link}>
               Para Imobiliárias
             </a>
-            <a href="#" style={styles.link}>
+            <a href="/cadastro/construtora" style={styles.link}>
               Para Construtoras
             </a>
-            <a href="#" style={styles.link}>
+            <a href="/cadastro" style={styles.link}>
               Cadastre-se Grátis
             </a>
           </div>
 
           <div style={styles.column}>
             <h3 style={styles.title}>Institucional</h3>
-            <a href="#" style={styles.link}>
-              Central de Ajuda
-            </a>
+          
             <a href="/politicas" style={styles.link}>
               Politica de Privacidade
             </a>

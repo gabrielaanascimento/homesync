@@ -7,6 +7,8 @@ import { signIn } from 'next-auth/react';
 import { nivel } from '@/services/nivel';
 import { ButtonGoogle } from '@/components/login/LoginGoogleBtn';
 import { useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
+
 
 
 function Login() {
@@ -36,11 +38,7 @@ function Login() {
     <div className="containerLogin">
       {loading && (
         <div className="loading-overlay">
-          <img 
-            src="https://blogson.com.br/wp-content/uploads/2017/10/d9933c4e2c272f33b74ef18cdf11a7d5.gif" 
-            alt="Carregando..." 
-            className="loading-imagem" 
-          />
+          <Loader2 style={{ animation: 'spin 1s linear infinite' }} size={40} color="#004EFF" />
         </div> 
       )}
       <div className="gradient">
@@ -52,7 +50,6 @@ function Login() {
           <p className="titleAuth">Ou entrar com:</p>
           <ButtonGoogle />
           <button type="submit" id="entrar">Entrar</button>
-          <a href="#" className="esqSenha"><i>Esqueceu sua senha</i></a>
           <a href="/cadastro">Ainda não tem uma conta?</a>
         </form>
       </div>
