@@ -3,13 +3,14 @@
 import "./styles.css";
 import { Property } from "@/types/property";
 import IconPin from "../img/pin.png";
-import IconQuartos from "../imgimg/quartos.png";
+import IconQuartos from "../img/quartos.png"; // <-- CORRIGIDO
 import IconRegua from "../img/regua.png";
 import { Trash2 } from "lucide-react"; // Ícone de lixeira
 
+// Usa 'Pick' para incluir apenas os campos necessários, incluindo o 'imovel_id' para navegação.
 type PropertyCardProps = Pick<
   Property,
-  | "imovel_id" 
+  | "imovel_id" // Adicionado para navegação
   | "image"
   | "nome"
   | "valor"
@@ -27,7 +28,7 @@ export default function PropertyCard({
   local,
   quartos,
   area,
-  imovel_id, 
+  imovel_id, // Adicionado aqui
   onDelete, // Recebe a função
 }: PropertyCardProps) {
 
@@ -41,6 +42,7 @@ export default function PropertyCard({
   return (
     <div
       className="property-card"
+      // CORREÇÃO: Usar o imovel_id para a navegação
       onClick={() => (window.location.href = `/imovel/${imovel_id}`)}
       rel="noopener noreferrer"
     >
