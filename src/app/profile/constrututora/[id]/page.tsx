@@ -4,14 +4,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from "next-auth/react";
 import { useRouter, useParams } from "next/navigation";
-// IMPORTANDO O NOVO SERVIÇO
-import { getConstrutoraById, Construtora } from '@/services/getConstrutoraById';
+import { getConstrutoraById, Construtora } from '@/services/getConstrutoraById'; 
 import { Loader2 } from 'lucide-react';
 import PrivateRouteWrapper from '@/components/PrivateRouteWrapper';
-import ProfilePage from '@/components/profile/ProfilePage'; // USANDO O COMPONENTE UNIFICADO
+import ProfilePage from '@/components/profile/ProfilePage'; 
 import { Avaliacao, getComentariosByPerfil } from '@/services/comentariosService';
 import { Property } from '@/types/property';
 import { getAllProperties } from '@/services/getAllProperties'; 
+import { deletePropertyById } from '@/services/deletePropertyById'; // Importado
 
 interface FormattedReview {
   client: string;
@@ -44,7 +44,7 @@ export default function ConstrutoraProfilePage() {
             setLoading(true);
             
             const [construtoraData, comentariosData, allProps] = await Promise.all([
-                getConstrutoraById(profileId, token), // Usando o novo serviço
+                getConstrutoraById(profileId, token), 
                 getComentariosByPerfil(profileId),
                 getAllProperties()
             ]);
@@ -62,7 +62,6 @@ export default function ConstrutoraProfilePage() {
 
             if (allProps) {
                 const construtoraIdNum = parseInt(profileId);
-                // Assumindo que imóveis de construtora também usam 'corretor_id'
                 setProperties(allProps.filter((p: Property) => p.corretor_id === construtoraIdNum));
             }
             setLoading(false);
@@ -70,6 +69,25 @@ export default function ConstrutoraProfilePage() {
         fetchData();
     }
   }, [profileId, status, session, router]);
+
+  // Função para deletar o imóvel
+  const handleDeleteProperty = async (id: number) => {
+    if (!session?.user?.token) {
+      alert("Sessão expirada. Faça login novamente.");
+      return;
+    }
+    
+    if (window.confirm("Tem certeza que deseja deletar este imóvel? Esta ação não pode ser desfeita.")) {
+      const result = await deletePropertyById(id, session.user.token);
+      if (result.success) {
+        alert(result.message);
+        // Remove o imóvel da lista local
+        setProperties(prev => prev.filter(p => p.id !== id));
+      } else {
+        alert(`Erro ao deletar: ${result.message}`);
+      }
+    }
+  };
 
   const productList = properties.map(p => ({
       id: p.id,
@@ -89,21 +107,19 @@ export default function ConstrutoraProfilePage() {
         <div>Perfil da construtora não encontrado. (ID: {profileId})</div>
       ) : (
         <ProfilePage
+          profileId={profileId} // <-- CORREÇÃO 1: Passando o profileId
           name={construtora.nome_exibicao || "Construtora"}
           title={construtora.razao_social || "Construtora Parceira"}
           photo={construtora.foto_logo || "/semImagem.jpg"}
           reviews={reviews} 
-
           email={construtora.email}
           creci={construtora.cnpj} // Passando CNPJ no lugar do CRECI
           celular={construtora.celular || 'Não cadastrado'}
-          
-          // Dados de mock (API não fornece)
           totalSales={construtora.vendas_anual || 0} 
           averageSales={0} 
           rating={construtora.avaliacao || 0} 
-          
           userProperties={productList}
+          onDeleteProperty={handleDeleteProperty} // <-- CORREÇÃO 2: Passando a função
         />
       )}
     </PrivateRouteWrapper>
