@@ -51,19 +51,7 @@ import Cabecalho from '@/components/home/Cabecalho'
         </div>
     </section>
 
-    <footer className="footer">
-        <div className="container">
-            <div className="copyright-text">
-                &copy; 2025 HomeSync. Todos os direitos reservados.
-            </div>
-            
-            <div className="social-icons">
-                <a href="#" aria-label="WhatsApp" target="_blank"><i className="fab fa-whatsapp"></i></a>
-                <a href="#" aria-label="Instagram" target="_blank"><i className="fab fa-instagram"></i></a>
-                <a href="#" aria-label="Email" target="_blank"><i className="fas fa-envelope"></i></a>
-            </div>
-        </div>
-    </footer>
+   
     </>
   )
 }
