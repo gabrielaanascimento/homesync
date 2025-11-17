@@ -1,4 +1,4 @@
-// gabrielaanascimento/homesync/homesync-76cb64e06ff844bd6ad572848ed1b06dd57d35ba/src/types/property.ts
+// gabrielaanascimento/homesync/homesync-4855366ad3a992712c652cfdd2b0b66e06804497/src/types/property.ts
 export interface Property {
     // --- Campos Operacionais e Chaves Estrangeiras ---
     id: number; // ID da Negociação (sistema_imoveis.id)
@@ -25,4 +25,8 @@ export interface Property {
     destaques?: string;
     area_construida?: number;
     andar?: number;
+
+    // --- DADOS DO CORRETOR (Adicionados pela nova query da API) ---
+    corretor_email?: string;
+    corretor_celular?: string;
 }
