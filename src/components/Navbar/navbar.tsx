@@ -98,7 +98,10 @@ const Navbar: FC<NavbarProps> = ({ id }) => {
         {/* ATUALIZADO: usa o link dinâmico */}
         <a href={profileLink} style={styles.menuItem}>Perfil</a>
         <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
+          onClick={() => {
+            signOut({ callbackUrl: "/login" })
+            localStorage.removeItem('chatHistory');
+          }}
           style={styles.logoutButton}
         >
           Logout

@@ -84,6 +84,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
     },
   };
 
+   const clearChat = () => {
+    localStorage.removeItem('chatHistory');
+  };
+
+
   return (
     <div className="container">
       {/* Sidebar */}
@@ -103,7 +108,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           </nav>
         </div>
         <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
+          onClick={() => {
+          signOut({ callbackUrl: "/login" })
+           clearChat()
+          }}
           className="logout"
         >
           Sair

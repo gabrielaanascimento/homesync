@@ -104,7 +104,7 @@ export default function ConstrutoraProfilePage() {
     <PrivateRouteWrapper>
       {loading ? (
         <div style={styles.loadingContainer}><Loader2 style={{ animation: 'spin 1s linear infinite' }} size={40} color="#004EFF" /> <p>Carregando perfil...</p></div>
-      ) : !construtora || !session ? ( // <-- CORREÇÃO AQUI
+      ) : !construtora || !session ? (  
         <div>Perfil da construtora não encontrado ou sessão inválida. (ID: {profileId})</div>
       ) : (
         <ProfilePage
