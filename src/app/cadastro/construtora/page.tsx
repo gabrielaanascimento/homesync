@@ -29,8 +29,16 @@ export default function CadastroConstrutora() {
                     body: formData,
                 });
                 const result = await response.json();
-                if (!response.ok) throw new Error(result.body?.message || 'Falha no upload');
-                setPhotoUrl(result.body.url);
+                
+                if (!response.ok) {
+                   // Se não for OK, 'result' é o objeto de erro { message: "..." }
+                   throw new Error(result.message || 'Falha no upload');
+                }
+                
+                // --- CORREÇÃO AQUI ---
+                // A API retorna a URL diretamente no 'result.url'
+                setPhotoUrl(result.url); 
+
             } catch (err: any) {
                 setError(err.message || "Falha ao enviar logo.");
             } finally {

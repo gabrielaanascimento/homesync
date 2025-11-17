@@ -1,10 +1,11 @@
-// src/app/profile/imobiliaria/[id]/page.tsx
+// src/app/profile/construtora/[id]/page.tsx
 "use client" 
 
 import React, { useEffect, useState } from 'react';
 import { useSession } from "next-auth/react";
 import { useRouter, useParams } from "next/navigation";
-import { getImobiliariaById, Imobiliaria } from '@/services/getImobiliariaById';
+// IMPORTANDO O NOVO SERVIÇO
+import { getConstrutoraById, Construtora } from '@/services/getConstrutoraById';
 import { Loader2 } from 'lucide-react';
 import PrivateRouteWrapper from '@/components/PrivateRouteWrapper';
 import ProfilePage from '@/components/profile/ProfilePage'; // USANDO O COMPONENTE UNIFICADO
@@ -12,20 +13,19 @@ import { Avaliacao, getComentariosByPerfil } from '@/services/comentariosService
 import { Property } from '@/types/property';
 import { getAllProperties } from '@/services/getAllProperties'; 
 
-// Interface para as reviews formatadas
 interface FormattedReview {
   client: string;
   comment: string;
   stars: number;
 }
 
-export default function ImobiliariaProfilePage() {
+export default function ConstrutoraProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const params = useParams();
   const profileId = params.id as string;
 
-  const [imobiliaria, setImobiliaria] = useState<Imobiliaria | null>(null);
+  const [construtora, setConstrutora] = useState<Construtora | null>(null);
   const [reviews, setReviews] = useState<FormattedReview[]>([]);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,23 +36,21 @@ export default function ImobiliariaProfilePage() {
         const token = session.user.token;
 
         if (profileId !== loggedInUserId) {
-            router.push(`/profile/imobiliaria/${loggedInUserId}`);
+            router.push(`/profile/construtora/${loggedInUserId}`);
             return;
         }
 
         const fetchData = async () => {
             setLoading(true);
             
-            // Busca dados da imobiliária, comentários e imóveis
-            const [imobData, comentariosData, allProps] = await Promise.all([
-                getImobiliariaById(profileId, token),
+            const [construtoraData, comentariosData, allProps] = await Promise.all([
+                getConstrutoraById(profileId, token), // Usando o novo serviço
                 getComentariosByPerfil(profileId),
                 getAllProperties()
             ]);
             
-            setImobiliaria(imobData);
+            setConstrutora(construtoraData);
 
-            // Formata comentários
             if (comentariosData && comentariosData.length > 0) {
               const formatted = comentariosData.map((c: Avaliacao) => ({
                 client: c.autor_nome,
@@ -62,11 +60,10 @@ export default function ImobiliariaProfilePage() {
               setReviews(formatted);
             }
 
-            // Filtra imóveis
             if (allProps) {
-                const imobIdNumber = parseInt(profileId);
-                // Assumindo que imóveis de imobiliária também usam 'corretor_id'
-                setProperties(allProps.filter((p: Property) => p.corretor_id === imobIdNumber));
+                const construtoraIdNum = parseInt(profileId);
+                // Assumindo que imóveis de construtora também usam 'corretor_id'
+                setProperties(allProps.filter((p: Property) => p.corretor_id === construtoraIdNum));
             }
             setLoading(false);
         };
@@ -74,7 +71,6 @@ export default function ImobiliariaProfilePage() {
     }
   }, [profileId, status, session, router]);
 
-  // Mapeia os produtos para o formato esperado pelo ProfilePage
   const productList = properties.map(p => ({
       id: p.id,
       image: p.image || "/semImagem.jpg",
@@ -82,31 +78,30 @@ export default function ImobiliariaProfilePage() {
       address: p.local,
       rooms: `${p.quartos || 0} quartos`,
       area: p.area || 0,
-      valor: p.valor || 0 // Passando o valor
+      valor: p.valor || 0
   }));
 
   return (
     <PrivateRouteWrapper>
       {loading ? (
         <div style={styles.loadingContainer}><Loader2 style={{ animation: 'spin 1s linear infinite' }} size={40} color="#004EFF" /> <p>Carregando perfil...</p></div>
-      ) : !imobiliaria ? (
-        <div>Perfil da imobiliária não encontrado. (ID: {profileId})</div>
+      ) : !construtora ? (
+        <div>Perfil da construtora não encontrado. (ID: {profileId})</div>
       ) : (
-        // Renderiza o componente ProfilePage unificado
         <ProfilePage
-          name={imobiliaria.nome_exibicao || "Imobiliária"}
-          title={imobiliaria.razao_social || "Imobiliária Parceira"}
-          photo={imobiliaria.foto_logo || "/semImagem.jpg"}
+          name={construtora.nome_exibicao || "Construtora"}
+          title={construtora.razao_social || "Construtora Parceira"}
+          photo={construtora.foto_logo || "/semImagem.jpg"}
           reviews={reviews} 
 
-          email={imobiliaria.email}
-          creci={imobiliaria.creci_juridico} // Passando creci_juridico como creci
-          celular={imobiliaria.celular || 'Não cadastrado'}
+          email={construtora.email}
+          creci={construtora.cnpj} // Passando CNPJ no lugar do CRECI
+          celular={construtora.celular || 'Não cadastrado'}
           
           // Dados de mock (API não fornece)
-          totalSales={0} 
+          totalSales={construtora.vendas_anual || 0} 
           averageSales={0} 
-          rating={0} 
+          rating={construtora.avaliacao || 0} 
           
           userProperties={productList}
         />

@@ -13,7 +13,6 @@ import { Avaliacao, getComentariosByPerfil } from '@/services/comentariosService
 import { Property } from '@/types/property';
 import { getAllProperties } from '@/services/getAllProperties';
 
-// ... (interface FormattedReview inalterada)
 interface FormattedReview {
   client: string;
   comment: string;
@@ -21,7 +20,6 @@ interface FormattedReview {
 }
 
 const CorretorProfilePage: React.FC = () => {
-  // ... (hooks inalterados)
   const { data: session, status } = useSession();
   const router = useRouter();
   const params = useParams();
@@ -33,7 +31,6 @@ const CorretorProfilePage: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
-  // ... (lógica do useEffect inalterada, ela já busca os imóveis)
   useEffect(() => {
     if (status === "authenticated" && profileId) {
       const loggedInUserId = session.user.id;
@@ -78,14 +75,15 @@ const CorretorProfilePage: React.FC = () => {
   }, [profileId, status, session, router]);
 
 
-  // 1. ATUALIZAÇÃO AQUI: Garante que o 'id' do imóvel seja incluído
+  // 1. ATUALIZAÇÃO AQUI: Garante que 'id' e 'valor' do imóvel sejam incluídos
   const productList = properties.map(p => ({
-      id: p.id, // <-- ID ADICIONADO AQUI
+      id: p.id, // <-- ID
       image: p.image || "/semImagem.jpg",
       name: p.nome,
       address: p.local,
       rooms: `${p.quartos || 0} quartos`,
-      area: p.area || 0
+      area: p.area || 0,
+      valor: p.valor || 0 // <-- VALOR ADICIONADO
   }));
 
   return (
@@ -95,7 +93,7 @@ const CorretorProfilePage: React.FC = () => {
       ) : !corretor ? (
         <div>Perfil do corretor não encontrado. (ID: {profileId})</div>
       ) : (
-        // 2. Passa a lista (agora com ID) para o componente
+        // 2. Passa a lista (agora com id e valor) para o componente
         <ProfilePage
           name={corretor.nome_exibicao || "Corretor"}
           title={corretor.descricao || "Corretor de Imóveis"}
@@ -110,7 +108,7 @@ const CorretorProfilePage: React.FC = () => {
           averageSales={0} 
           rating={parseFloat(corretor.avaliacao as any) || 0}
           
-          userProperties={productList} // Passa a lista com IDs
+          userProperties={productList} // Passa a lista com IDs e Valor
         />
       )}
     </PrivateRouteWrapper>

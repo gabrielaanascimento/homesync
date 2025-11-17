@@ -1,13 +1,17 @@
+// src/components/produtos/products/index.tsx
 import React from "react";
 import "./styles.css";
-import { ItemProducts } from "../ItemProduct";
+import PropertyCard from "../PropertyCard"; // Alterado de ItemProducts
 
+// Interface interna para as props que este componente recebe
 interface Property {
   image: string;
-  name: string;
-  address: string;
-  rooms: string;
-  area: number; // área como número
+  name: string; // Vem como 'name' do ProfilePage
+  address: string; // Vem como 'address' do ProfilePage
+  rooms: string; // Vem como 'rooms' (ex: "3 quartos")
+  area: number;
+  valor: number; // Adicionado
+  id: number; // Adicionado
 }
 
 interface PropsProducts {
@@ -16,12 +20,11 @@ interface PropsProducts {
   filters?: {
     minArea?: string;
     maxArea?: string;
-    // outros filtros se necessário
   };
 }
 
 export const Products = ({ title, properties, filters }: PropsProducts) => {
-  // Filtragem por área
+  // Filtragem
   const filteredProperties = properties.filter((property) => {
     const minArea = filters?.minArea ? parseInt(filters.minArea) : null;
     const maxArea = filters?.maxArea ? parseInt(filters.maxArea) : null;
@@ -36,14 +39,17 @@ export const Products = ({ title, properties, filters }: PropsProducts) => {
     <div className="containerProducts">
       <h1 className="titleProducts">{title}</h1>
       <div className="containerItemsProducts">
-        {filteredProperties.map((property, idx) => (
-          <ItemProducts
-            key={idx}
+        {filteredProperties.map((property) => (
+          <PropertyCard
+            key={property.id}
+            imovel_id={property.id}
             image={property.image}
-            name={property.name}
-            address={property.address}
-            rooms={property.rooms}
-            area={property.area} // passa como number
+            nome={property.name}
+            valor={property.valor}
+            local={property.address}
+            // Extrai o número da string "X quartos"
+            quartos={parseInt(property.rooms.split(' ')[0]) || 0}
+            area={property.area}
           />
         ))}
       </div>

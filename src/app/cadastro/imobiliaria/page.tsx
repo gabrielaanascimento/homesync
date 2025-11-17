@@ -1,12 +1,9 @@
-// src/app/cadastro/imobiliaria/page.tsx
 "use client"
 import React, { useState } from 'react';
 import logo from '@/img/logoLogin.png';
 import { registerUser } from '@/services/cadastro';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
-// (Importar o uploadService se você ainda não o tem)
-// import { uploadPhoto } from '@/services/uploadService'; 
 
 export default function CadastroImobiliaria() {
     const [error, setError] = useState<string | null>(null);
@@ -21,7 +18,6 @@ export default function CadastroImobiliaria() {
             setUploading(true);
             setError(null);
             
-            // Reutilizando a lógica de upload (assumindo rota /upload-photo pública)
             const formData = new FormData();
             formData.append('photo', file);
             const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://homesyncapi.vercel.app';
@@ -32,8 +28,14 @@ export default function CadastroImobiliaria() {
                     body: formData,
                 });
                 const result = await response.json();
-                if (!response.ok) throw new Error(result.body?.message || 'Falha no upload');
-                setPhotoUrl(result.body.url);
+                
+                if (!response.ok) {
+                   // Se não for OK, 'result' é o objeto de erro { message: "..." }
+                   throw new Error(result.message || 'Falha no upload');
+                }
+                
+                setPhotoUrl(result.url); 
+
             } catch (err: any) {
                 setError(err.message || "Falha ao enviar logo.");
             } finally {

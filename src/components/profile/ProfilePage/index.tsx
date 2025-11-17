@@ -12,7 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import "./ProfilePage.css"; 
-import EditarPerfil from "../EditProfile"; // O componente em si
+import EditarPerfil from "../EditProfile";
 import { signOut } from "next-auth/react";
 import { Products } from "@/components/produtos/products"; 
 
@@ -25,6 +25,7 @@ interface ProductItem {
   address: string;
   rooms: string;
   area: number;
+  valor: number; // <-- ADICIONADO
 }
 
 export interface ProfilePageProps {
@@ -34,7 +35,7 @@ export interface ProfilePageProps {
   reviews: { client: string; comment: string; stars: number }[];
   salesData?: number[];
   email: string;
-  creci: string;
+  creci?: string; // <-- Torna o CRECI opcional (para aceitar CNPJ etc.)
   celular?: string;
   totalSales: number; 
   averageSales: number;
@@ -49,7 +50,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   reviews,
   salesData,
   email,
-  creci,
+  creci, // Recebe CRECI ou CNPJ
   celular,
   userProperties,
 }) => {
@@ -79,7 +80,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
       {/* Sidebar */}
       <aside className="sidebar">
         <div>
-          <h2>Corretor+</h2>
+          <h2>HomeSync+</h2> 
           <div className="profile">
             <img src={photo} alt={`Foto de ${name}`} />
             <h3>{name}</h3>
@@ -89,16 +90,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <a href="/chat">Chat IA</a>
             <a href="/imovel/cadastro">Cadastrar Imóvel</a>
             
-            {/* 1. COMPONENTE MOVIDO PARA CÁ E USANDO A NOVA PROP */}
             <EditarPerfil 
               renderButton={(openModal) => (
                 <a 
                   href="#" 
                   onClick={(e) => {
-                    e.preventDefault(); // Previne o link de navegar
-                    openModal();        // Abre o modal
+                    e.preventDefault(); 
+                    openModal();        
                   }}
-                  // Estilo idêntico aos outros <a> do menu
                   className="menu-button-style"
                 >
                   Editar Perfil
@@ -123,10 +122,14 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <h3>Email</h3>
             <p style={{ fontSize: '1rem' }}>{email}</p> 
           </div>
-          <div className="card">
-            <h3>CRECI</h3>
-            <p>{creci}</p>
-          </div>
+          {/* Mostra CRECI/CNPJ apenas se existir */}
+          {creci && (
+            <div className="card">
+              {/* Detecta se é CNPJ ou CRECI pelo tamanho */}
+              <h3>{creci.length > 10 ? "CNPJ" : "CRECI"}</h3>
+              <p>{creci}</p>
+            </div>
+          )}
           <div className="card">
             <h3>Telefone</h3>
             <p>{celular || 'Não cadastrado'}</p>
@@ -135,6 +138,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
         
         {/* 2. GALERIA DE IMÓVEIS */}
         <div className="properties-gallery">
+          {/* Passa userProperties (agora com 'valor' e 'id') */}
           <Products title="Meus Imóveis" properties={userProperties} />
         </div>
 
