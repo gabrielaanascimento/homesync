@@ -48,7 +48,7 @@ function Login() {
           <input type="password" name="password" className="password" placeholder="Password" />
           <button type="submit" id="entrar">Entrar</button>
           <a href="/cadastro">Ainda não tem uma conta?</a>
-          <a href="/">Voltar</a>
+          <a href="/" style={{ position: 'relative', marginTop: '20px', textDecoration: 'line' }}>Voltar</a>
         </form>
       </div>
       <footer></footer>
