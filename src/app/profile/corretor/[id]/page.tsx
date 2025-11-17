@@ -11,8 +11,9 @@ import ProfilePage from '@/components/profile/ProfilePage';
 import { Avaliacao, getComentariosByPerfil } from '@/services/comentariosService';
 import { Property } from '@/types/property';
 import { getAllProperties } from '@/services/getAllProperties';
-import { deletePropertyById } from '@/services/deletePropertyById'; // Importado
+import { deletePropertyById } from '@/services/deletePropertyById';
 
+// Interface para as reviews formatadas
 interface FormattedReview {
   client: string;
   comment: string;
@@ -27,16 +28,15 @@ const CorretorProfilePage: React.FC = () => {
 
   const [corretor, setCorretor] = useState<Corretor | null>(null);
   const [reviews, setReviews] = useState<FormattedReview[]>([]);
-  
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
   useEffect(() => {
-    // ... (lógica do useEffect inalterada) ...
     if (status === "authenticated" && profileId) {
       const loggedInUserId = session.user.id;
       const token = session.user.token;
 
+      // Redireciona se o ID do perfil não for o do usuário logado
       if (profileId !== loggedInUserId) {
         router.push(`/profile/corretor/${loggedInUserId}`);
         return;
@@ -53,6 +53,7 @@ const CorretorProfilePage: React.FC = () => {
 
         setCorretor(corretorData);
 
+        // Formata os comentários
         if (comentariosData && comentariosData.length > 0) {
           const formatted = comentariosData.map((c: Avaliacao) => ({
             client: c.autor_nome,
@@ -62,6 +63,7 @@ const CorretorProfilePage: React.FC = () => {
           setReviews(formatted);
         }
 
+        // Filtra os imóveis do usuário
         if (allProps) {
             const corretorIdNum = parseInt(profileId);
             const userProps = allProps.filter((p: Property) => p.corretor_id === corretorIdNum);
@@ -75,7 +77,7 @@ const CorretorProfilePage: React.FC = () => {
     }
   }, [profileId, status, session, router]);
 
-  // FUNÇÃO PARA DELETAR O IMÓVEL
+  // Função para deletar o imóvel
   const handleDeleteProperty = async (id: number) => {
     if (!session?.user?.token) {
       alert("Sessão expirada. Faça login novamente.");
@@ -94,25 +96,27 @@ const CorretorProfilePage: React.FC = () => {
     }
   };
 
+  // Mapeia os imóveis para o formato do componente <Products>
   const productList = properties.map(p => ({
-      id: p.id,
+      id: p.id, 
       image: p.image || "/semImagem.jpg",
       name: p.nome,
       address: p.local,
       rooms: `${p.quartos || 0} quartos`,
       area: p.area || 0,
-      valor: p.valor || 0
+      valor: p.valor || 0 // Passa o valor
   }));
 
   return (
     <PrivateRouteWrapper>
       {loadingProfile ? (
         <div style={styles.loadingContainer}><Loader2 style={{ animation: 'spin 1s linear infinite' }} size={40} color="#004EFF" /> <p>Carregando perfil...</p></div>
-      ) : !corretor ? (
-        <div>Perfil do corretor não encontrado. (ID: {profileId})</div>
+      ) : !corretor || !session ? ( // <-- CORREÇÃO AQUI
+        <div>Perfil do corretor não encontrado ou sessão inválida. (ID: {profileId})</div>
       ) : (
         <ProfilePage
-          profileId={profileId} // Passa o ID
+          profileId={profileId} // Passa o ID para os comentários
+          userType={session.user.tipo} // Passa o tipo para permissões
           name={corretor.nome_exibicao || "Corretor"}
           title={corretor.descricao || "Corretor de Imóveis"}
           photo={corretor.foto || "/semImagem.jpg"}
@@ -121,7 +125,7 @@ const CorretorProfilePage: React.FC = () => {
           creci={corretor.creci}
           celular={corretor.celular || 'Não cadastrado'}
           totalSales={corretor.vendas_anual || 0}
-          averageSales={0} 
+          averageSales={0} // Mock
           rating={parseFloat(corretor.avaliacao as any) || 0}
           userProperties={productList} 
           onDeleteProperty={handleDeleteProperty} // Passa a função
@@ -130,7 +134,8 @@ const CorretorProfilePage: React.FC = () => {
     </PrivateRouteWrapper>
   );
 };
-// ... (estilos inalterados) ...
+
+// Estilos
 const styles: { [key: string]: React.CSSProperties } = {
     loadingContainer: {
         display: 'flex',

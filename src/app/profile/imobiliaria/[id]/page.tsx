@@ -11,7 +11,7 @@ import ProfilePage from '@/components/profile/ProfilePage';
 import { Avaliacao, getComentariosByPerfil } from '@/services/comentariosService';
 import { Property } from '@/types/property';
 import { getAllProperties } from '@/services/getAllProperties';
-import { deletePropertyById } from '@/services/deletePropertyById'; // Importado
+import { deletePropertyById } from '@/services/deletePropertyById';
 
 interface FormattedReview {
   client: string;
@@ -31,8 +31,7 @@ export default function ImobiliariaProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ... (lógica do useEffect inalterada) ...
-     if (status === "authenticated" && profileId) {
+    if (status === "authenticated" && profileId) {
         const loggedInUserId = session.user.id;
         const token = session.user.token;
 
@@ -63,6 +62,7 @@ export default function ImobiliariaProfilePage() {
 
             if (allProps) {
                 const imobIdNumber = parseInt(profileId);
+                // Assume que imóveis da imobiliária estão ligados ao seu ID
                 setProperties(allProps.filter((p: Property) => p.corretor_id === imobIdNumber));
             }
             setLoading(false);
@@ -71,7 +71,7 @@ export default function ImobiliariaProfilePage() {
     }
   }, [profileId, status, session, router]);
 
-  // FUNÇÃO PARA DELETAR O IMÓVEL
+  // Função para deletar o imóvel
   const handleDeleteProperty = async (id: number) => {
     if (!session?.user?.token) {
       alert("Sessão expirada. Faça login novamente.");
@@ -89,6 +89,7 @@ export default function ImobiliariaProfilePage() {
     }
   };
 
+  // Mapeia os imóveis para o formato do componente
   const productList = properties.map(p => ({
       id: p.id,
       image: p.image || "/semImagem.jpg",
@@ -103,21 +104,22 @@ export default function ImobiliariaProfilePage() {
     <PrivateRouteWrapper>
       {loading ? (
         <div style={styles.loadingContainer}><Loader2 style={{ animation: 'spin 1s linear infinite' }} size={40} color="#004EFF" /> <p>Carregando perfil...</p></div>
-      ) : !imobiliaria ? (
-        <div>Perfil da imobiliária não encontrado. (ID: {profileId})</div>
+      ) : !imobiliaria || !session ? ( // <-- CORREÇÃO AQUI
+        <div>Perfil da imobiliária não encontrado ou sessão inválida. (ID: {profileId})</div>
       ) : (
         <ProfilePage
           profileId={profileId} // Passa o ID
+          userType={session.user.tipo} // Passa o tipo
           name={imobiliaria.nome_exibicao || "Imobiliária"}
           title={imobiliaria.razao_social || "Imobiliária Parceira"}
           photo={imobiliaria.foto_logo || "/semImagem.jpg"}
           reviews={reviews} 
           email={imobiliaria.email}
-          creci={imobiliaria.creci_juridico} 
+          creci={imobiliaria.creci_juridico} // Passando creci_juridico
           celular={imobiliaria.celular || 'Não cadastrado'}
-          totalSales={0} 
-          averageSales={0} 
-          rating={0} 
+          totalSales={0} // Mock
+          averageSales={0} // Mock
+          rating={0} // Mock
           userProperties={productList}
           onDeleteProperty={handleDeleteProperty} // Passa a função
         />
@@ -126,7 +128,7 @@ export default function ImobiliariaProfilePage() {
   );
 }
 
-// ... (estilos inalterados) ...
+// Estilos
 const styles: { [key: string]: React.CSSProperties } = {
     loadingContainer: {
         display: 'flex',

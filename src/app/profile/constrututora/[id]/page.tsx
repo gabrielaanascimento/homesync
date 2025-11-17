@@ -11,7 +11,7 @@ import ProfilePage from '@/components/profile/ProfilePage';
 import { Avaliacao, getComentariosByPerfil } from '@/services/comentariosService';
 import { Property } from '@/types/property';
 import { getAllProperties } from '@/services/getAllProperties'; 
-import { deletePropertyById } from '@/services/deletePropertyById'; // Importado
+import { deletePropertyById } from '@/services/deletePropertyById'; 
 
 interface FormattedReview {
   client: string;
@@ -62,6 +62,7 @@ export default function ConstrutoraProfilePage() {
 
             if (allProps) {
                 const construtoraIdNum = parseInt(profileId);
+                // Assume que imóveis da construtora estão ligados ao seu ID
                 setProperties(allProps.filter((p: Property) => p.corretor_id === construtoraIdNum));
             }
             setLoading(false);
@@ -81,7 +82,6 @@ export default function ConstrutoraProfilePage() {
       const result = await deletePropertyById(id, session.user.token);
       if (result.success) {
         alert(result.message);
-        // Remove o imóvel da lista local
         setProperties(prev => prev.filter(p => p.id !== id));
       } else {
         alert(`Erro ao deletar: ${result.message}`);
@@ -89,6 +89,7 @@ export default function ConstrutoraProfilePage() {
     }
   };
 
+  // Mapeia os imóveis para o formato do componente
   const productList = properties.map(p => ({
       id: p.id,
       image: p.image || "/semImagem.jpg",
@@ -103,23 +104,24 @@ export default function ConstrutoraProfilePage() {
     <PrivateRouteWrapper>
       {loading ? (
         <div style={styles.loadingContainer}><Loader2 style={{ animation: 'spin 1s linear infinite' }} size={40} color="#004EFF" /> <p>Carregando perfil...</p></div>
-      ) : !construtora ? (
-        <div>Perfil da construtora não encontrado. (ID: {profileId})</div>
+      ) : !construtora || !session ? ( // <-- CORREÇÃO AQUI
+        <div>Perfil da construtora não encontrado ou sessão inválida. (ID: {profileId})</div>
       ) : (
         <ProfilePage
-          profileId={profileId} // <-- CORREÇÃO 1: Passando o profileId
+          profileId={profileId} // Passa o ID
+          userType={session.user.tipo} // Passa o tipo
           name={construtora.nome_exibicao || "Construtora"}
           title={construtora.razao_social || "Construtora Parceira"}
           photo={construtora.foto_logo || "/semImagem.jpg"}
           reviews={reviews} 
           email={construtora.email}
-          creci={construtora.cnpj} // Passando CNPJ no lugar do CRECI
+          creci={construtora.cnpj} // Passando CNPJ
           celular={construtora.celular || 'Não cadastrado'}
           totalSales={construtora.vendas_anual || 0} 
-          averageSales={0} 
+          averageSales={0} // Mock
           rating={construtora.avaliacao || 0} 
           userProperties={productList}
-          onDeleteProperty={handleDeleteProperty} // <-- CORREÇÃO 2: Passando a função
+          onDeleteProperty={handleDeleteProperty} // Passa a função
         />
       )}
     </PrivateRouteWrapper>

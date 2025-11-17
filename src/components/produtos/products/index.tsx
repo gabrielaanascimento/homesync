@@ -1,35 +1,30 @@
 // src/components/produtos/products/index.tsx
 import React from "react";
 import "./styles.css";
-import PropertyCard from "../PropertyCard"; // Alterado de ItemProducts
+import PropertyCard from "../PropertyCard"; 
 
-// Interface interna para as props que este componente recebe
 interface Property {
+  // ... (interface inalterada)
+  id: number;
   image: string;
-  name: string; 
+  name: string;
   address: string;
   rooms: string;
   area: number;
   valor: number;
-  id: number;
 }
 
 interface PropsProducts {
   title?: string;
   properties: Property[];
-  filters?: {
-    minArea?: string;
-    maxArea?: string;
-  };
-  onDeleteProperty?: (id: number) => void; // Prop de deleção opcional
+  filters?: { /* ... */ };
+  onDeleteProperty?: (id: number) => void; 
+  userType?: 'corretor' | 'imobiliaria' | 'construtora'; // 1. TIPO ADICIONADO
 }
 
-export const Products = ({ title, properties, filters, onDeleteProperty }: PropsProducts) => {
-  // Filtragem
-  const filteredProperties = properties.filter((property) => {
-    // ... (lógica de filtro inalterada) ...
-    return true;
-  });
+export const Products = ({ title, properties, filters, onDeleteProperty, userType }: PropsProducts) => {
+  // ... (filtro inalterado) ...
+  const filteredProperties = properties;
 
   return (
     <div className="containerProducts">
@@ -45,8 +40,8 @@ export const Products = ({ title, properties, filters, onDeleteProperty }: Props
             local={property.address}
             quartos={parseInt(property.rooms.split(' ')[0]) || 0}
             area={property.area}
-            // Passa a função de deletar para o card
             onDelete={onDeleteProperty ? () => onDeleteProperty(property.id) : undefined}
+            userType={userType} // 2. PROP PASSADA ADIANTE
           />
         ))}
       </div>

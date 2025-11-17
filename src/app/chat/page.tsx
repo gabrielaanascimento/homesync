@@ -1,17 +1,16 @@
-
+// src/app/chat/page.tsx
 "use client";
 import React from 'react';
 import ChatApp from '@/components/chat/ChatApp';
-import PrivateRouteWrapper from '@/components/PrivateRouteWrapper'; 
+import BrokerOnlyRoute from '@/components/BrokerOnlyRoute';
 
 const App: React.FC = () => {
-    
     return (
-        <PrivateRouteWrapper>
+        <BrokerOnlyRoute>
             <div className="App">
                 <ChatApp />
             </div>
-        </PrivateRouteWrapper>
+        </BrokerOnlyRoute>
     );
 }
 

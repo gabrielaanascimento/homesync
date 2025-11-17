@@ -12,14 +12,14 @@ import {
   Legend,
 } from "chart.js";
 import "./ProfilePage.css"; 
-// Importado como um formulário inline, não mais um botão de modal
-import EditarPerfilForm from "../EditProfile"; 
-import Comentarios from "../Comentarios"; // Importado para ser usado
+import EditarPerfilForm from "../EditProfile"; // Importa o formulário inline
+import Comentarios from "../Comentarios"; // Importa o componente de comentários
 import { signOut } from "next-auth/react";
 import { Products } from "@/components/produtos/products"; 
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
+// Interface para os imóveis
 interface ProductItem {
   id: number; 
   image: string;
@@ -30,25 +30,28 @@ interface ProductItem {
   valor: number;
 }
 
+// Interface completa para as props do componente
 export interface ProfilePageProps {
-  profileId: string; // Adicionado para passar aos Comentários
+  profileId: string; // Para o componente de Comentários
+  userType: 'corretor' | 'imobiliaria' | 'construtora'; // Para lógica de permissão
   name: string;
   title: string;
   photo: string;
   reviews: { client: string; comment: string; stars: number }[];
   salesData?: number[];
   email: string;
-  creci?: string;
+  creci?: string; // Opcional (pode ser CNPJ)
   celular?: string;
   totalSales: number; 
   averageSales: number;
   rating: number;
   userProperties: ProductItem[];
-  onDeleteProperty: (id: number) => void; // Adicionado para passar ao <Products>
+  onDeleteProperty: (id: number) => void; // Função para deletar
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({
-  profileId, // Recebido
+  profileId,
+  userType,
   name,
   title,
   photo,
@@ -58,9 +61,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   creci,
   celular,
   userProperties,
-  onDeleteProperty, // Recebido
+  onDeleteProperty, 
 }) => {
-  // (Lógica do gráfico inalterada)
+  // Lógica do gráfico
   const dadosGrafico = {
     labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out"],
     datasets: [
@@ -95,7 +98,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           <nav className="menu">
             <a href="/chat">Chat IA</a>
             <a href="/imovel/cadastro">Cadastrar Imóvel</a>
-            {/* O botão "Editar Perfil" foi REMOVIDO daqui */}
+            {/* O botão "Editar Perfil" foi removido daqui */}
           </nav>
         </div>
         <button
@@ -131,7 +134,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           <Products 
             title="Meus Imóveis" 
             properties={userProperties} 
-            onDeleteProperty={onDeleteProperty} // Passando a função de deletar
+            onDeleteProperty={onDeleteProperty}
+            userType={userType} // Passa o tipo de usuário para o card
           />
         </div>
 
@@ -142,7 +146,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
 
         {/* 4. AVALIAÇÕES (REVIEWS) */}
         <div className="reviews">
-          <h3>Avaliações Recentes</h3>
+          <h3>Avaliações Recebidas</h3>
           {reviews.length > 0 ? (
             reviews.map((rev, i) => (
               <div key={i} className="review">
