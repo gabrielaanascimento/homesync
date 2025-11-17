@@ -9,9 +9,9 @@ import { Loader2 } from 'lucide-react';
 import PrivateRouteWrapper from '@/components/PrivateRouteWrapper';
 import ProfilePage from '@/components/profile/ProfilePage';
 import { Avaliacao, getComentariosByPerfil } from '@/services/comentariosService';
-
 import { Property } from '@/types/property';
 import { getAllProperties } from '@/services/getAllProperties';
+import { deletePropertyById } from '@/services/deletePropertyById'; // Importado
 
 interface FormattedReview {
   client: string;
@@ -32,6 +32,7 @@ const CorretorProfilePage: React.FC = () => {
   const [loadingProfile, setLoadingProfile] = useState(true);
 
   useEffect(() => {
+    // ... (lógica do useEffect inalterada) ...
     if (status === "authenticated" && profileId) {
       const loggedInUserId = session.user.id;
       const token = session.user.token;
@@ -74,16 +75,33 @@ const CorretorProfilePage: React.FC = () => {
     }
   }, [profileId, status, session, router]);
 
+  // FUNÇÃO PARA DELETAR O IMÓVEL
+  const handleDeleteProperty = async (id: number) => {
+    if (!session?.user?.token) {
+      alert("Sessão expirada. Faça login novamente.");
+      return;
+    }
+    
+    if (window.confirm("Tem certeza que deseja deletar este imóvel? Esta ação não pode ser desfeita.")) {
+      const result = await deletePropertyById(id, session.user.token);
+      if (result.success) {
+        alert(result.message);
+        // Remove o imóvel da lista local
+        setProperties(prev => prev.filter(p => p.id !== id));
+      } else {
+        alert(`Erro ao deletar: ${result.message}`);
+      }
+    }
+  };
 
-  // 1. ATUALIZAÇÃO AQUI: Garante que 'id' e 'valor' do imóvel sejam incluídos
   const productList = properties.map(p => ({
-      id: p.id, // <-- ID
+      id: p.id,
       image: p.image || "/semImagem.jpg",
       name: p.nome,
       address: p.local,
       rooms: `${p.quartos || 0} quartos`,
       area: p.area || 0,
-      valor: p.valor || 0 // <-- VALOR ADICIONADO
+      valor: p.valor || 0
   }));
 
   return (
@@ -93,29 +111,26 @@ const CorretorProfilePage: React.FC = () => {
       ) : !corretor ? (
         <div>Perfil do corretor não encontrado. (ID: {profileId})</div>
       ) : (
-        // 2. Passa a lista (agora com id e valor) para o componente
         <ProfilePage
+          profileId={profileId} // Passa o ID
           name={corretor.nome_exibicao || "Corretor"}
           title={corretor.descricao || "Corretor de Imóveis"}
           photo={corretor.foto || "/semImagem.jpg"}
           reviews={reviews} 
-
           email={corretor.email}
           creci={corretor.creci}
           celular={corretor.celular || 'Não cadastrado'}
-          
           totalSales={corretor.vendas_anual || 0}
           averageSales={0} 
           rating={parseFloat(corretor.avaliacao as any) || 0}
-          
-          userProperties={productList} // Passa a lista com IDs e Valor
+          userProperties={productList} 
+          onDeleteProperty={handleDeleteProperty} // Passa a função
         />
       )}
     </PrivateRouteWrapper>
   );
 };
-
-// Estilos
+// ... (estilos inalterados) ...
 const styles: { [key: string]: React.CSSProperties } = {
     loadingContainer: {
         display: 'flex',

@@ -12,7 +12,9 @@ import {
   Legend,
 } from "chart.js";
 import "./ProfilePage.css"; 
-import EditarPerfil from "../EditProfile";
+// Importado como um formulário inline, não mais um botão de modal
+import EditarPerfilForm from "../EditProfile"; 
+import Comentarios from "../Comentarios"; // Importado para ser usado
 import { signOut } from "next-auth/react";
 import { Products } from "@/components/produtos/products"; 
 
@@ -25,34 +27,38 @@ interface ProductItem {
   address: string;
   rooms: string;
   area: number;
-  valor: number; // <-- ADICIONADO
+  valor: number;
 }
 
 export interface ProfilePageProps {
+  profileId: string; // Adicionado para passar aos Comentários
   name: string;
   title: string;
   photo: string;
   reviews: { client: string; comment: string; stars: number }[];
   salesData?: number[];
   email: string;
-  creci?: string; // <-- Torna o CRECI opcional (para aceitar CNPJ etc.)
+  creci?: string;
   celular?: string;
   totalSales: number; 
   averageSales: number;
   rating: number;
   userProperties: ProductItem[];
+  onDeleteProperty: (id: number) => void; // Adicionado para passar ao <Products>
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({
+  profileId, // Recebido
   name,
   title,
   photo,
   reviews,
   salesData,
   email,
-  creci, // Recebe CRECI ou CNPJ
+  creci,
   celular,
   userProperties,
+  onDeleteProperty, // Recebido
 }) => {
   // (Lógica do gráfico inalterada)
   const dadosGrafico = {
@@ -80,7 +86,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
       {/* Sidebar */}
       <aside className="sidebar">
         <div>
-          <h2>HomeSync+</h2> 
+          <h2>HomeSync+</h2>
           <div className="profile">
             <img src={photo} alt={`Foto de ${name}`} />
             <h3>{name}</h3>
@@ -89,21 +95,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           <nav className="menu">
             <a href="/chat">Chat IA</a>
             <a href="/imovel/cadastro">Cadastrar Imóvel</a>
-            
-            <EditarPerfil 
-              renderButton={(openModal) => (
-                <a 
-                  href="#" 
-                  onClick={(e) => {
-                    e.preventDefault(); 
-                    openModal();        
-                  }}
-                  className="menu-button-style"
-                >
-                  Editar Perfil
-                </a>
-              )}
-            />
+            {/* O botão "Editar Perfil" foi REMOVIDO daqui */}
           </nav>
         </div>
         <button
@@ -122,10 +114,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <h3>Email</h3>
             <p style={{ fontSize: '1rem' }}>{email}</p> 
           </div>
-          {/* Mostra CRECI/CNPJ apenas se existir */}
           {creci && (
             <div className="card">
-              {/* Detecta se é CNPJ ou CRECI pelo tamanho */}
               <h3>{creci.length > 10 ? "CNPJ" : "CRECI"}</h3>
               <p>{creci}</p>
             </div>
@@ -138,13 +128,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
         
         {/* 2. GALERIA DE IMÓVEIS */}
         <div className="properties-gallery">
-          {/* Passa userProperties (agora com 'valor' e 'id') */}
-          <Products title="Meus Imóveis" properties={userProperties} />
+          <Products 
+            title="Meus Imóveis" 
+            properties={userProperties} 
+            onDeleteProperty={onDeleteProperty} // Passando a função de deletar
+          />
         </div>
 
-        {/* 3. <EditarPerfil /> FOI REMOVIDO DAQUI */}
+        {/* 3. FORMULÁRIO DE EDIÇÃO (INLINE) */}
+        <div className="reviews"> {/* Reutilizando o estilo de card .reviews */}
+          <EditarPerfilForm />
+        </div>
 
-        {/* 4. REVIEWS DINÂMICAS */}
+        {/* 4. AVALIAÇÕES (REVIEWS) */}
         <div className="reviews">
           <h3>Avaliações Recentes</h3>
           {reviews.length > 0 ? (
@@ -158,6 +154,11 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
           ) : (
             <p style={{textAlign: 'center', color: '#555'}}>Nenhuma avaliação encontrada.</p>
           )}
+        </div>
+        
+        {/* 5. COMPONENTE DE COMENTÁRIOS */}
+        <div className="comments-section">
+           <Comentarios perfilId={profileId} />
         </div>
       </main>
     </div>

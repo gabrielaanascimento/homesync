@@ -7,12 +7,12 @@ import { useRouter, useParams } from "next/navigation";
 import { getImobiliariaById, Imobiliaria } from '@/services/getImobiliariaById';
 import { Loader2 } from 'lucide-react';
 import PrivateRouteWrapper from '@/components/PrivateRouteWrapper';
-import ProfilePage from '@/components/profile/ProfilePage'; // USANDO O COMPONENTE UNIFICADO
+import ProfilePage from '@/components/profile/ProfilePage';
 import { Avaliacao, getComentariosByPerfil } from '@/services/comentariosService';
 import { Property } from '@/types/property';
-import { getAllProperties } from '@/services/getAllProperties'; 
+import { getAllProperties } from '@/services/getAllProperties';
+import { deletePropertyById } from '@/services/deletePropertyById'; // Importado
 
-// Interface para as reviews formatadas
 interface FormattedReview {
   client: string;
   comment: string;
@@ -31,7 +31,8 @@ export default function ImobiliariaProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (status === "authenticated" && profileId) {
+    // ... (lógica do useEffect inalterada) ...
+     if (status === "authenticated" && profileId) {
         const loggedInUserId = session.user.id;
         const token = session.user.token;
 
@@ -43,7 +44,6 @@ export default function ImobiliariaProfilePage() {
         const fetchData = async () => {
             setLoading(true);
             
-            // Busca dados da imobiliária, comentários e imóveis
             const [imobData, comentariosData, allProps] = await Promise.all([
                 getImobiliariaById(profileId, token),
                 getComentariosByPerfil(profileId),
@@ -52,7 +52,6 @@ export default function ImobiliariaProfilePage() {
             
             setImobiliaria(imobData);
 
-            // Formata comentários
             if (comentariosData && comentariosData.length > 0) {
               const formatted = comentariosData.map((c: Avaliacao) => ({
                 client: c.autor_nome,
@@ -62,10 +61,8 @@ export default function ImobiliariaProfilePage() {
               setReviews(formatted);
             }
 
-            // Filtra imóveis
             if (allProps) {
                 const imobIdNumber = parseInt(profileId);
-                // Assumindo que imóveis de imobiliária também usam 'corretor_id'
                 setProperties(allProps.filter((p: Property) => p.corretor_id === imobIdNumber));
             }
             setLoading(false);
@@ -74,7 +71,24 @@ export default function ImobiliariaProfilePage() {
     }
   }, [profileId, status, session, router]);
 
-  // Mapeia os produtos para o formato esperado pelo ProfilePage
+  // FUNÇÃO PARA DELETAR O IMÓVEL
+  const handleDeleteProperty = async (id: number) => {
+    if (!session?.user?.token) {
+      alert("Sessão expirada. Faça login novamente.");
+      return;
+    }
+    
+    if (window.confirm("Tem certeza que deseja deletar este imóvel? Esta ação não pode ser desfeita.")) {
+      const result = await deletePropertyById(id, session.user.token);
+      if (result.success) {
+        alert(result.message);
+        setProperties(prev => prev.filter(p => p.id !== id));
+      } else {
+        alert(`Erro ao deletar: ${result.message}`);
+      }
+    }
+  };
+
   const productList = properties.map(p => ({
       id: p.id,
       image: p.image || "/semImagem.jpg",
@@ -82,7 +96,7 @@ export default function ImobiliariaProfilePage() {
       address: p.local,
       rooms: `${p.quartos || 0} quartos`,
       area: p.area || 0,
-      valor: p.valor || 0 // Passando o valor
+      valor: p.valor || 0
   }));
 
   return (
@@ -92,30 +106,27 @@ export default function ImobiliariaProfilePage() {
       ) : !imobiliaria ? (
         <div>Perfil da imobiliária não encontrado. (ID: {profileId})</div>
       ) : (
-        // Renderiza o componente ProfilePage unificado
         <ProfilePage
+          profileId={profileId} // Passa o ID
           name={imobiliaria.nome_exibicao || "Imobiliária"}
           title={imobiliaria.razao_social || "Imobiliária Parceira"}
           photo={imobiliaria.foto_logo || "/semImagem.jpg"}
           reviews={reviews} 
-
           email={imobiliaria.email}
-          creci={imobiliaria.creci_juridico} // Passando creci_juridico como creci
+          creci={imobiliaria.creci_juridico} 
           celular={imobiliaria.celular || 'Não cadastrado'}
-          
-          // Dados de mock (API não fornece)
           totalSales={0} 
           averageSales={0} 
           rating={0} 
-          
           userProperties={productList}
+          onDeleteProperty={handleDeleteProperty} // Passa a função
         />
       )}
     </PrivateRouteWrapper>
   );
 }
 
-// Estilos
+// ... (estilos inalterados) ...
 const styles: { [key: string]: React.CSSProperties } = {
     loadingContainer: {
         display: 'flex',
