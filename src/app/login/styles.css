@@ -101,6 +101,7 @@ button {
   background-color: #004eff;
   width: 70%;
   color: #fff;
+  margin-top: 2rem;
   margin: 1rem;
   transition: transform 0.3s ease, background-color 0.3s ease;
 }
