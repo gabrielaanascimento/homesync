@@ -96,9 +96,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             <p>{title}</p>
           </div>
           <nav className="menu">
-            <a href="/chat">Chat IA</a>
-            <a href="/imovel/cadastro">Cadastrar Imóvel</a>
-            {/* O botão "Editar Perfil" foi removido daqui */}
+            {userType === 'corretor' && (
+             <a href="/chat">Chat IA</a>
+            )}
+           <a href="/imovel/cadastro">Cadastrar Imóvel</a>
           </nav>
         </div>
         <button
