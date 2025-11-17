@@ -38,7 +38,7 @@ function Login() {
     <div className="containerLogin">
       {loading && (
         <div className="loading-overlay">
-          <Loader2 style={{ animation: 'spin 1s linear infinite' }} size={40} color="#004EFF" />
+          <Loader2 style={{ animation: 'spin 1s linear infinite' }} size={80} color="#004EFF" />
         </div> 
       )}
       <div className="gradient">
