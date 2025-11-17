@@ -3,20 +3,18 @@
 
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useSession } from "next-auth/react"; // Importado para pegar o token
-
-// REMOVIDA a prop 'renderButton' e a lógica de 'open'
+import { useSession } from "next-auth/react"; 
 
 export default function EditarPerfilForm() {
-  const { data: session } = useSession(); // Pega a sessão
+  const { data: session } = useSession(); 
   const userId = session?.user?.id;
   const token = session?.user?.token;
+  const userType = session?.user?.tipo; // Pega o tipo de usuário
 
-  // REMOVIDO: const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // (Estados de formulário permanecem os mesmos)
+  // Estados do formulário
   const [nomeExibicao, setNomeExibicao] = useState("");
   const [email, setEmail] = useState("");
   const [celular, setCelular] = useState("");
@@ -25,29 +23,63 @@ export default function EditarPerfilForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Determina o endpoint da API com base no tipo de usuário
+  const getApiEndpoints = () => {
+    if (!userType) return null;
+    let basePath = "";
+    switch (userType) {
+      case 'corretor':
+        basePath = 'corretor/corretores';
+        break;
+      case 'imobiliaria':
+        basePath = 'corretor/imobiliarias'; // Verifique se esta é a rota correta na sua API
+        break;
+      case 'construtora':
+        basePath = 'corretor/construtoras'; // Verifique se esta é a rota correta na sua API
+        break;
+      default:
+        return null;
+    }
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://homesyncapi.vercel.app';
+    return {
+      get: `${API_URL}/${basePath}/${userId}`,
+      put: `${API_URL}/${basePath}/${userId}`
+    };
+  };
+
   // GET — Busca dados do usuário logado
   useEffect(() => {
     async function fetchData() {
-      // Usa o ID e Token da sessão
-      if (!userId || !token) {
+      const endpoints = getApiEndpoints();
+      
+      if (!userId || !token || !endpoints) {
         setLoading(false);
+        if (!endpoints) setError("Tipo de usuário inválido.");
         return;
       }
+      
       try {
-        // ATENÇÃO: A rota da API é /corretor/corretores/:id
-        // Isso pode não funcionar para imobiliárias e construtoras
-        // O ideal seria ter rotas de update separadas na API
-        const res = await fetch(
-          `https://homesyncapi.vercel.app/corretor/corretores/${userId}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+        const res = await fetch(endpoints.get, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        // Lógica robusta para tratar erros de JSON
+        if (!res.ok) {
+          let errorMessage = "Falha ao carregar dados do perfil.";
+          try {
+            const errorData = await res.json();
+            errorMessage = errorData.message || errorData.body?.message || errorMessage;
+          } catch (e) {
+            // A resposta de erro não era JSON
+            const errorText = await res.text();
+            errorMessage = errorText || errorMessage;
           }
-        );
-        if (!res.ok) throw new Error("Falha ao carregar dados do perfil.");
+          throw new Error(errorMessage);
+        }
         
-        const json = await res.json();
-        
-        // Assumindo que a API de corretor, imobiliária e construtora
-        // retornam os mesmos campos básicos.
+        const json = await res.json(); 
+
+        // Assume que todos os tipos de usuário têm estes campos
         setNomeExibicao(json.nome_exibicao);
         setEmail(json.email);
         setCelular(json.celular);
@@ -59,14 +91,16 @@ export default function EditarPerfilForm() {
       }
     }
     fetchData();
-  }, [userId, token]); // Depende do token e userId
+  }, [userId, token, userType]); // Adicionado userType às dependências
 
   // PUT — Salvar atualizações
   async function handleSave(e: React.FormEvent) {
-    e.preventDefault(); // É um formulário agora
+    e.preventDefault(); 
     
-    if (!userId || !token) {
-      setError("Sessão inválida. Faça login novamente.");
+    const endpoints = getApiEndpoints();
+
+    if (!userId || !token || !endpoints) {
+      setError("Sessão inválida ou tipo de usuário não suportado. Faça login novamente.");
       return;
     }
 
@@ -74,30 +108,38 @@ export default function EditarPerfilForm() {
     setError("");
     setSuccess("");
     try {
-      // ATENÇÃO: Mesma observação da rota da API acima
-      const res = await fetch(
-        `https://homesyncapi.vercel.app/corretor/corretores/${userId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            nome_exibicao: nomeExibicao,
-            email,
-            celular,
-            senha: senha || undefined, 
-          }),
+      const res = await fetch(endpoints.put, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          nome_exibicao: nomeExibicao,
+          email,
+          celular,
+          senha: senha || undefined, // Só envia a senha se não for vazia
+        }),
+      });
+
+      // Lógica robusta para tratar erros de JSON
+      if (!res.ok) {
+        let errorMessage = "Falha ao salvar. Verifique os campos.";
+        try {
+            const errorData = await res.json();
+            errorMessage = errorData.message || errorData.body?.message || errorMessage;
+        } catch (e) {
+             const errorText = await res.text();
+             errorMessage = errorText || errorMessage;
         }
-      );
-      if (!res.ok) throw new Error("Falha ao salvar. Verifique os campos.");
+        throw new Error(errorMessage);
+      }
+
       setSuccess("Dados atualizados com sucesso!");
       setSenha(""); // Limpa o campo de senha
       
       setTimeout(() => {
         setSuccess("");
-        // Não precisamos recarregar a página inteira, apenas limpar a msg
       }, 3000);
 
     } catch(err: any) {
@@ -116,7 +158,7 @@ export default function EditarPerfilForm() {
     );
   }
 
-  // Renderiza o formulário diretamente, sem modal
+  // Renderiza o formulário
   return (
     <form onSubmit={handleSave} style={styles.formContainer}>
       <h3 style={styles.title}>Editar Perfil</h3>
@@ -175,7 +217,7 @@ export default function EditarPerfilForm() {
   );
 }
 
-// Estilos adaptados para um formulário inline
+// Estilos (sem alterações)
 const styles: { [key: string]: React.CSSProperties } = {
   loadingContainer: {
     display: 'flex',
@@ -192,15 +234,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     gap: '1rem',
     alignItems: 'center',
     width: '100%',
-    borderRadius: '15px', // Borda do .reviews
+    borderRadius: '15px', 
     backgroundColor: 'rgb(255, 255, 255)',
     zIndex: 1,
     position: 'relative',
     boxSizing: 'border-box',
-    border: '1px solid #eee', // Adiciona uma borda sutil
+    border: '1px solid #eee', 
   },
   title: {
-    color: '#1d3fff', // Cor do .reviews h3
+    color: '#1d3fff', 
     fontWeight: 'bold',
     fontSize: '1.5rem',
     marginBottom: '1rem',
